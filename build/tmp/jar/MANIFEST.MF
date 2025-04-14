@@ -1,0 +1,10 @@
+Manifest-Version: 1.0
+Specification-Title: dc_m
+Specification-Vendor: DaiChang
+Specification-Version: 1
+Implementation-Title: daichangmod
+Implementation-Version: 1.0
+Implementation-Vendor: DaiChang
+Implementation-Timestamp: 2025-04-14T00:42:34+0800
+MixinConfigs: dc_m.mixins.json
+
