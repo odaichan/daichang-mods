@@ -3,11 +3,9 @@ package net.daichang.dccoremod;
 import cpw.mods.cl.ModuleClassLoader;
 import cpw.mods.modlauncher.serviceapi.ILaunchPluginService;
 import org.objectweb.asm.ClassReader;
+import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.Type;
-import org.objectweb.asm.tree.AbstractInsnNode;
-import org.objectweb.asm.tree.ClassNode;
-import org.objectweb.asm.tree.MethodInsnNode;
-import org.objectweb.asm.tree.MethodNode;
+import org.objectweb.asm.tree.*;
 import sun.misc.Unsafe;
 
 import java.io.InputStream;
@@ -25,9 +23,11 @@ import java.util.Map;
 import java.util.function.BiFunction;
 
 public class DCLaunchPluginService implements ILaunchPluginService {
-    public static void CoreLogger(String msg){
-        System.out.println("[DC Mod Core]：" + msg);
+
+    public static void logger(String msg){
+        System.out.println("[DC ASM]：" + msg);
     }
+    private static final String DC_METHOD_OWER;
     private static final VarHandle packageLookup;
     private static final VarHandle parentLoaders;
     private static final MethodHandle getClassBytes;
@@ -48,18 +48,47 @@ public class DCLaunchPluginService implements ILaunchPluginService {
         boolean writer = false;
         for (MethodNode methodNode : classNode.methods) {
             for (AbstractInsnNode abstractInsnNode : methodNode.instructions) {
-                if (!classNode.name.contains("net/daichang/") && !classNode.name.contains("net/minecraft/") && !classNode.name.contains("nonamecrackers2/witherstormmod/")) {
-                    if (abstractInsnNode instanceof MethodInsnNode call) {
-                        if ("m_21223_".equals(call.name) && "()F".equals(call.desc)) {
-                            CoreLogger("Removed getHealth Method " + call.owner);
-                            removeMethod(methodNode, call);
-                            writer = true;
+                if (!classNode.name.contains("net/daichang/")
+                        && !classNode.name.contains("net/mehvahdjukaar/dummmmmmy/")
+                        && !classNode.name.contains("net/arna/jcraft/")
+                        && !classNode.name.contains("io/redspace/ironsspellbooks/")
+                        && !classNode.name.contains("com/mega/uom/item/")
+                        && !classNode.name.contains("com/obscuria/aquamirae/common/effects/")
+                        && !classNode.name.contains("com/jerotes/jerotesvillage/world/inventory/MobInventoryGUIMenu")
+                        && !classNode.name.contains("vazkii/neat/")
+                        && !classNode.name.contains("com/mega/uom/client/music/")
+                        && !classNode.name.contains("net/minecraft/")
+                        && !classNode.name.contains("io/redspace/ironsspellbooks/api/util/Utils")
+                        && !classNode.name.contains("net/minecraftforge/")) {
+                    if (abstractInsnNode instanceof MethodInsnNode call && call.getOpcode() != Opcodes.INVOKESPECIAL) {
+                        switch (call.name) {
+                            case "m_21223_" -> {
+                                rMethod(call, "getHealth", "(Lnet/minecraft/world/entity/LivingEntity;)F");
+                                logger("Changed GetHealth Method :"  + classNode.name) ;
+                                writer = true;
+                            }
+                            case "m_6084_" -> {
+                                rMethod(call, "isAlive", "(Lnet/minecraft/world/entity/Entity;)Z");
+                                logger("Changed IsAlive Method :"  + classNode.name);
+                                writer = true;
+                            }
                         }
                     }
                 }
             }
         }
         return writer;
+    }
+
+    private static void rField(MethodNode method, FieldInsnNode field, String name, String desc) {
+        method.instructions.set(field, new MethodInsnNode(Opcodes.INVOKESTATIC, DC_METHOD_OWER, name, desc, false));
+    }
+
+    private static void rMethod(MethodInsnNode call, String name, String desc) {
+        call.setOpcode(Opcodes.INVOKESTATIC);
+        call.owner = DC_METHOD_OWER;
+        call.name = name;
+        call.desc = desc;
     }
 
     private static void removeMethod(MethodNode methodNode, MethodInsnNode insnNode) {
@@ -138,6 +167,7 @@ public class DCLaunchPluginService implements ILaunchPluginService {
     static {
         Field lookupF;
         Unsafe unsafe;
+        DC_METHOD_OWER = "net/daichang/dcmods/utils/asm/MethodUtil";
         try {
             Field unsafeField = Unsafe.class.getDeclaredField("theUnsafe");
             lookupF = MethodHandles.Lookup.class.getDeclaredField("IMPL_LOOKUP");
@@ -157,12 +187,6 @@ public class DCLaunchPluginService implements ILaunchPluginService {
         } catch (NoSuchFieldException | IllegalAccessException | NoSuchMethodException e) {
             throw new RuntimeException(e);
         }
-        targetClassLoader = Thread.currentThread().getContextClassLoader() instanceof ModuleClassLoader moduleClassLoader
-                ? moduleClassLoader
-                : (ModuleClassLoader) Thread.getAllStackTraces().keySet().stream()
-                .map(Thread::getContextClassLoader)
-                .filter(cl -> cl instanceof ModuleClassLoader)
-                .findAny()
-                .orElseThrow();
+        targetClassLoader = Thread.currentThread().getContextClassLoader() instanceof ModuleClassLoader moduleClassLoader ? moduleClassLoader : (ModuleClassLoader) Thread.getAllStackTraces().keySet().stream().map(Thread::getContextClassLoader).filter(cl -> cl instanceof ModuleClassLoader).findAny().orElseThrow();
     }
 }

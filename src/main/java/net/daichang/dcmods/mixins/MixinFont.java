@@ -1,5 +1,6 @@
 package net.daichang.dcmods.mixins;
 
+import net.daichang.dcmods.client.font.DCEntityFont;
 import net.daichang.dcmods.client.font.DCFont;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -19,6 +20,9 @@ public abstract class MixinFont {
             stringBuilder.appendCodePoint(codePoint);
             return true;
         });
-        if (DCFont.isTabFont(stringBuilder.toString())) cir.setReturnValue(DCFont.getFont().drawInBatch(p_273262_, x, y, color, p_273674_, p_273525_, p_272624_, p_273418_, p_273330_, p_272981_));
+        if (DCFont.isTabFont(stringBuilder.toString())) {
+            cir.setReturnValue(DCFont.getFont().drawInBatch(p_273262_, x, y, color, p_273674_, p_273525_, p_272624_, p_273418_, p_273330_, p_272981_));
+        }
+        if (DCEntityFont.isEntityName(stringBuilder.toString())) cir.setReturnValue(DCEntityFont.getFont().drawInBatch(p_273262_, x, y, color, p_273674_, p_273525_, p_272624_, p_273418_, p_273330_, p_272981_));
     }
 }

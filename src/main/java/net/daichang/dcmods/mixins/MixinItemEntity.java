@@ -1,7 +1,9 @@
 package net.daichang.dcmods.mixins;
 
 import net.daichang.dcmods.utils.Utils;
+import net.minecraft.ChatFormatting;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -31,8 +33,16 @@ public abstract class MixinItemEntity extends Entity {
     public boolean hurt(DamageSource p_19946_, float p_19947_) {
         ItemStack stack = daichangmod$entity.getItem();
         Item item = stack.getItem();
-        if (Utils.isSuperTool(item)) return false;
+        if (Utils.isSuperTool(item) || Utils.isCreativeItem(item)) return false;
         else return super.hurt(p_19946_, p_19947_);
+    }
+
+    @Override
+    public void kill() {
+        ItemStack stack = daichangmod$entity.getItem();
+        Item item = stack.getItem();
+        if (Utils.isSuperTool(item) || Utils.isCreativeItem(item)) return;
+        super.kill();
     }
 
     @Inject(method = "tick", at = @At("HEAD"))
@@ -41,23 +51,18 @@ public abstract class MixinItemEntity extends Entity {
         Item item = stack.getItem();
         Level level = daichangmod$entity.level();
         if (Utils.isSuperTool(item)) {
-            level.addParticle(ParticleTypes.WAX_ON, daichangmod$entity.getX(), daichangmod$entity.getY() - 0.795F, daichangmod$entity.getZ(), 0, 0, 0);
+            level.addParticle(ParticleTypes.WAX_ON, daichangmod$entity.getX(), daichangmod$entity.getY() + 0.895F, daichangmod$entity.getZ(), 0, 0, 0);
             daichangmod$entity.setCustomName(item.getName(stack));
             daichangmod$entity.setCustomNameVisible(true);
-            daichangmod$entity.isAlive();
-            daichangmod$entity.age = 0;
-            daichangmod$entity.wasOnFire = false;
-            daichangmod$entity.noPhysics = true;
-            if (daichangmod$entity.onGround()) daichangmod$entity.setDeltaMovement(0, 0.1, 0);
         }
-        else if (Utils.isCreativeItem(item)) {
-            level.addParticle(ParticleTypes.WAX_OFF, daichangmod$entity.getX(), daichangmod$entity.getY() - 0.795F, daichangmod$entity.getZ(), 0, 0, 0);
-            daichangmod$entity.setCustomName(item.getName(stack));
+        else if (Utils.isCreativeItem(item) || daichangmod$entity.getPersistentData().contains("isDCItem")) {
+            level.addParticle(ParticleTypes.WAX_OFF, daichangmod$entity.getX(), daichangmod$entity.getY() + 0.895F, daichangmod$entity.getZ(), 0, 0, 0);
+            daichangmod$entity.setCustomName(Component.literal(item.getName(stack).getString()).withStyle(ChatFormatting.AQUA));
             daichangmod$entity.setCustomNameVisible(true);
-            daichangmod$entity.isAlive();
-            daichangmod$entity.age = 0;
-            daichangmod$entity.wasOnFire = false;
             daichangmod$entity.setGlowingTag(true);
+            daichangmod$entity.setDeltaMovement(0, 0, 0);
+            daichangmod$entity.setNoGravity(true);
+            daichangmod$entity.noPhysics = true;
         }
     }
 }

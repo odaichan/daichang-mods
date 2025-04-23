@@ -1,0 +1,34 @@
+{
+  "time_stop": {
+    "sounds": [
+      {
+        "name": "dc_m:time_stop",
+        "stream": false
+      }
+    ]
+  },
+  "time_resume": {
+    "sounds": [
+      {
+        "name": "dc_m:time_resume",
+        "stream": false
+      }
+    ]
+  },
+  "boss_fight": {
+    "sounds": [
+      {
+        "name": "dc_m:boss_fight",
+        "stream": false
+      }
+    ]
+  },
+  "boss_death": {
+    "sounds": [
+      {
+        "name": "dc_m:boss_death",
+        "stream": false
+      }
+    ]
+  }
+}

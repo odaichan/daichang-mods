@@ -1,5 +1,7 @@
-net/daichang/dcmods/mixins/MixinLiquidBlock LEVEL f_54688_
-net/daichang/dcmods/mixins/MixinLivingEntity DATA_HEALTH_ID f_20961_
+net/daichang/dcmods/mixins/ItemRendererMixin minecraft f_265848_
+net/daichang/dcmods/mixins/MixinEntity deltaMovement f_19827_
+net/daichang/dcmods/mixins/MixinGameRenderer minecraft f_109059_
+net/daichang/dcmods/mixins/MixinGameRenderer postEffect f_109050_
 net/daichang/dcmods/mixins/sword_block/HumanoidModelMixin rightArm f_102811_
 net/daichang/dcmods/mixins/sword_block/HumanoidModelMixin leftArm f_102812_
 net/daichang/dcmods/mixins/sword_block/HumanoidModelMixin head f_102808_
@@ -13,16 +15,10 @@ net/daichang/dcmods/mixins/sword_block/HumanoidModelMixin hat f_102809_
 net/daichang/dcmods/mixins/sword_block/HumanoidModelMixin crouching f_102817_
 net/daichang/dcmods/mixins/sword_block/PlayerItemInHandLayerMixin itemInHandRenderer f_234864_
 net/daichang/dcmods/mixins/sword_block/UseAnimMixin $VALUES $VALUES
-net/daichang/dcmods/mixins/TimeStopMixin$GameRendererMixin tick f_109065_
-net/daichang/dcmods/mixins/TimeStopMixin$GameRendererMixin minecraft f_109059_
-net/daichang/dcmods/mixins/TimeStopMixin$GameRendererMixin mainCamera f_109054_
-net/daichang/dcmods/mixins/TimeStopMixin$GameRendererMixin itemActivationTicks f_109047_
-net/daichang/dcmods/mixins/TimeStopMixin$GameRendererMixin darkenWorldAmount f_109068_
-net/daichang/dcmods/mixins/TimeStopMixin$GameRendererMixin effectActive f_109053_
-net/daichang/dcmods/mixins/TimeStopMixin$GameRendererMixin postEffect f_109050_
-net/daichang/dcmods/mixins/TimeStopMixin$CameraMixin entity f_90551_
-net/daichang/dcmods/mixins/TimeStopMixin$ItemInHandRendererMixin minecraft f_109299_
-net/daichang/dcmods/mixins/TimeStopMixin$InventoryMixin player f_35978_
+net/daichang/dcmods/mixins/ItemRendererMixin renderQuadList (Lcom/mojang/blaze3d/vertex/PoseStack;Lcom/mojang/blaze3d/vertex/VertexConsumer;Ljava/util/List;Lnet/minecraft/world/item/ItemStack;II)V m_115162_
+net/daichang/dcmods/mixins/MixinEntity setDeltaMovement (Lnet/minecraft/world/phys/Vec3;)V m_20256_
+net/daichang/dcmods/mixins/MixinGameRenderer loadEffect (Lnet/minecraft/resources/ResourceLocation;)V m_109128_
+net/daichang/dcmods/mixins/MixinGameRenderer shutdownEffect ()V m_109086_
 net/daichang/dcmods/mixins/MixinItemEntity dampensVibrations ()Z m_213854_
 net/daichang/dcmods/mixins/MixinLivingEntityRender getFlipDegrees (Lnet/minecraft/world/entity/LivingEntity;)F m_6441_
 net/daichang/dcmods/mixins/sword_block/HumanoidModelMixin rotlerpRad (FFF)F m_102835_

@@ -1,0 +1,28 @@
+{
+  "parent": "minecraft:item/bow",
+  "textures": {
+    "layer0": "dc_m:item/bow"
+  },
+  "overrides": [
+    {
+      "predicate": {
+        "dc_m:pulling": 1.0
+      },
+      "model": "dc_m:item/dc_bow_pull_0"
+    },
+    {
+      "predicate": {
+        "dc_m:pulling": 1.0,
+        "dc_m:pull": 0.65
+      },
+      "model": "dc_m:item/dc_bow_pull_1"
+    },
+    {
+      "predicate": {
+        "dc_m:pulling": 1.0,
+        "dc_m:pull": 0.9
+      },
+      "model": "dc_m:item/dc_bow_pull_2"
+    }
+  ]
+}

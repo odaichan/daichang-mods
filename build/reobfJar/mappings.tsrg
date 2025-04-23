@@ -9654,26 +9654,21 @@ com/mojang/realmsclient/util/task/WorldCreationTask com/mojang/realmsclient/util
 		3 p_90471_ p_90471_
 	run ()V run
 com/mojang/realmsclient/util/task/package-info com/mojang/realmsclient/util/task/package-info
-net/daichang/dcmods/mixins/MixinItemEntity net/daichang/dcmods/mixins/MixinItemEntity
-	dampensVibrations ()Z m_213854_
-net/daichang/dcmods/mixins/MixinLivingEntity net/daichang/dcmods/mixins/MixinLivingEntity
-	DATA_HEALTH_ID f_20961_
-net/daichang/dcmods/mixins/MixinLivingEntityRender net/daichang/dcmods/mixins/MixinLivingEntityRender
-	getFlipDegrees (Lnet/minecraft/world/entity/LivingEntity;)F m_6441_
-net/daichang/dcmods/mixins/TimeStopMixin$CameraMixin net/daichang/dcmods/mixins/TimeStopMixin$CameraMixin
-	entity f_90551_
-net/daichang/dcmods/mixins/TimeStopMixin$GameRendererMixin net/daichang/dcmods/mixins/TimeStopMixin$GameRendererMixin
-	darkenWorldAmount f_109068_
-	effectActive f_109053_
-	itemActivationTicks f_109047_
-	mainCamera f_109054_
+net/daichang/dcmods/mixins/ItemRendererMixin net/daichang/dcmods/mixins/ItemRendererMixin
+	minecraft f_265848_
+	renderQuadList (Lcom/mojang/blaze3d/vertex/PoseStack;Lcom/mojang/blaze3d/vertex/VertexConsumer;Ljava/util/List;Lnet/minecraft/world/item/ItemStack;II)V m_115162_
+net/daichang/dcmods/mixins/MixinEntity net/daichang/dcmods/mixins/MixinEntity
+	deltaMovement f_19827_
+	setDeltaMovement (Lnet/minecraft/world/phys/Vec3;)V m_20256_
+net/daichang/dcmods/mixins/MixinGameRenderer net/daichang/dcmods/mixins/MixinGameRenderer
 	minecraft f_109059_
 	postEffect f_109050_
-	tick f_109065_
-net/daichang/dcmods/mixins/TimeStopMixin$InventoryMixin net/daichang/dcmods/mixins/TimeStopMixin$InventoryMixin
-	player f_35978_
-net/daichang/dcmods/mixins/TimeStopMixin$ItemInHandRendererMixin net/daichang/dcmods/mixins/TimeStopMixin$ItemInHandRendererMixin
-	minecraft f_109299_
+	loadEffect (Lnet/minecraft/resources/ResourceLocation;)V m_109128_
+	shutdownEffect ()V m_109086_
+net/daichang/dcmods/mixins/MixinItemEntity net/daichang/dcmods/mixins/MixinItemEntity
+	dampensVibrations ()Z m_213854_
+net/daichang/dcmods/mixins/MixinLivingEntityRender net/daichang/dcmods/mixins/MixinLivingEntityRender
+	getFlipDegrees (Lnet/minecraft/world/entity/LivingEntity;)F m_6441_
 net/daichang/dcmods/mixins/sword_block/HumanoidModelMixin net/daichang/dcmods/mixins/sword_block/HumanoidModelMixin
 	body f_102810_
 	crouching f_102817_

@@ -24,6 +24,7 @@ public abstract class MixinLivingEntityRender<T extends MixinLivingEntity> {
             f = Mth.sqrt(f);
             if (f > 1.0F) f = 1.0F;
             p_115318_.mulPose(Axis.ZP.rotationDegrees(f * this.getFlipDegrees(living)));
+            living.isDeadOrDying();
         }
     }
 }

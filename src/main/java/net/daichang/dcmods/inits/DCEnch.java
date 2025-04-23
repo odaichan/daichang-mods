@@ -1,10 +1,10 @@
 package net.daichang.dcmods.inits;
 
 import net.daichang.dcmods.DCMod;
-import net.daichang.dcmods.enchantment.EnchFastBow;
-import net.daichang.dcmods.enchantment.EnchLiquidBlock;
-import net.daichang.dcmods.enchantment.EnchNightVision;
-import net.daichang.dcmods.enchantment.EnchSuperSharp;
+import net.daichang.dcmods.common.enchantment.EnchFastBow;
+import net.daichang.dcmods.common.enchantment.EnchLiquidBlock;
+import net.daichang.dcmods.common.enchantment.EnchNightVision;
+import net.daichang.dcmods.common.enchantment.EnchSuperSharp;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;

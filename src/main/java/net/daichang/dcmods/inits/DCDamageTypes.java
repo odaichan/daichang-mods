@@ -13,7 +13,7 @@ import net.minecraft.world.damagesource.DamageScaling;
 import net.minecraft.world.damagesource.DamageType;
 
 public class DCDamageTypes {
-    public static ResourceKey<DamageType> SUPER_DAMAGE = ResourceKey.create(Registries.DAMAGE_TYPE, new ResourceLocation(DCMod.MOD_ID, "super_damage"));
+    public static ResourceKey<DamageType> SUPER_DAMAGE = ResourceKey.create(Registries.DAMAGE_TYPE, new ResourceLocation(DCMod.MOD_ID, "super_snow_damage"));
 
 
     public static final RegistrySetBuilder DAMAGE_BUILDER = new RegistrySetBuilder()
@@ -25,6 +25,6 @@ public class DCDamageTypes {
 
     // 注册
     public static void bootstrap(BootstapContext<DamageType> context) {
-        context.register(SUPER_DAMAGE, new DamageType("super_damage", DamageScaling.ALWAYS, 0.1F));
+        context.register(SUPER_DAMAGE, new DamageType("super_snow_damage", DamageScaling.ALWAYS, 0.1F));
     }
 }

@@ -1,15 +1,38 @@
 package net.daichang.dcmods.utils;
 
+import com.google.common.collect.Iterables;
+import com.google.common.collect.Sets;
+import com.mojang.brigadier.CommandDispatcher;
+import com.mojang.brigadier.ParseResults;
+import com.mojang.brigadier.exceptions.CommandSyntaxException;
+import it.unimi.dsi.fastutil.ints.Int2ObjectLinkedOpenHashMap;
+import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
 import net.daichang.dcmods.DCMod;
+import net.daichang.dcmods.inits.DCBlockItems;
+import net.daichang.dcmods.inits.DCEffects;
 import net.daichang.dcmods.inits.DCItems;
+import net.daichang.dcmods.utils.helpers.EffectHelper;
+import net.daichang.dcmods.utils.helpers.EntityHelper;
+import net.daichang.dcmods.utils.helpers.MathHelper;
+import net.daichang.dcmods.utils.lists.DeathList;
+import net.daichang.dcmods.utils.lists.items.CanSwordBlockItem;
+import net.daichang.dcmods.utils.lists.items.CreativeItemList;
+import net.daichang.dcmods.utils.lists.items.SuperItemList;
 import net.minecraft.SharedConstants;
+import net.minecraft.Util;
+import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.core.Registry;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
@@ -17,28 +40,39 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.Pose;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.decoration.ArmorStand;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.UseAnim;
+import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.dimension.LevelStem;
+import net.minecraft.world.level.entity.*;
+import net.minecraft.world.level.gameevent.DynamicGameEventListener;
+import net.minecraft.world.level.gameevent.GameEvent;
+import net.minecraft.world.level.storage.ServerLevelData;
+import net.minecraft.world.phys.AABB;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.util.ObfuscationReflectionHelper;
 import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.AccessibleObject;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
-import java.util.Random;
+import java.util.*;
+import java.util.concurrent.CompletableFuture;
 
 public class Utils {
     public static boolean isBlocking(@NotNull LivingEntity target) {
-        return target.getUseItem().getItem() == DCItems.SUPER_WOOD_SWORD.get().getDefaultInstance().getItem() && target.isUsingItem() && target.getUseItem().getItem().getUseAnimation(target.getUseItem()) == Utils.getUseAnim();
+        return isCanSwordBlock(target.getUseItem().getItem()) && target.isUsingItem() && target.getUseItem().getItem().getUseAnimation(target.getUseItem()) == Utils.getUseAnim();
     }
 
-    public static boolean isBlocking2(LivingEntity player) {
-        return player.getUseItem().getItem() == DCItems.SUPER_WOOD_SWORD.get() && player.isUsingItem();
+    public static boolean isCanSwordBlock(Item item) {
+        return CanSwordBlockItem.getItem(item) || FontUtil.isCanSwordBlock(item.getDefaultInstance());
     }
 
     public static void removeEntity(Entity target) {
@@ -69,65 +103,277 @@ public class Utils {
         }
     }
 
-    public static void attackEntity(ItemStack stack, LivingEntity target, Player player, final float dc_super_damage) {
-        DamageSource damageSource = new DamageSource(target.level().registryAccess().registryOrThrow(Registries.DAMAGE_TYPE).getHolderOrThrow(DamageTypes.FELL_OUT_OF_WORLD), player);
-        target.level().broadcastDamageEvent(target, damageSource);
-        CompoundTag tag = stack.getTag();
-        tag.putInt("dc_attking", tag.getInt("dc_attking") + 1);
+    public static void killLevelEntity(Level world){
+        if (world instanceof ServerLevel level) Iterables.unmodifiableIterable(level.getAllEntities()).forEach(Utils::superKillEntity);
+    }
+
+    //字段回溯
+    public static void backtrack(Class<?> caller) {
         try {
-            target.dropAllDeathLoot(damageSource);
-        } catch (Exception ignored){}
-        target.hurtTime = 0;
-        target.hurtDuration = 0;
-        target.setDeltaMovement(0, 0,0);
-        target.setInvulnerable(false);
-        target.invulnerableTime = 0;
-        if (tag.getInt("dc_attking") <100) {
-            target.hurt(damageSource, dc_super_damage + tag.getInt("dc_attking"));
-            target.getEntityData().set(LivingEntity.DATA_HEALTH_ID, target.getHealth() - dc_super_damage);
-            target.setHealth(target.getHealth() - dc_super_damage);
-        } else {
-            target.hurt(damageSource, dc_super_damage + target.getMaxHealth() * 0.7F + 4000 + tag.getInt("dc_attking"));
-            target.getEntityData().set(LivingEntity.DATA_HEALTH_ID, target.getHealth() - target.getMaxHealth() - 0.7F + 4000 - tag.getInt("dc_attking") - dc_super_damage);
-            target.setHealth(target.getHealth() - target.getMaxHealth() * 0.7F - 4000 - tag.getInt("dc_attking") - dc_super_damage);
-        }
-        Utils.sweepAttack(target.level(), player, target);
-        Random random = new Random();
-        float f = random.nextFloat(0, 1);
-        if (f == 0.1F) {
-            target.kill();
-            target.die(damageSource);
-            target.setHealth(target.getHealth() - target.getMaxHealth());
-            target.hurt(damageSource, Float.MAX_VALUE);
-            target.getEntityData().set(LivingEntity.DATA_HEALTH_ID, target.getHealth() - target.getMaxHealth());
-            target.dropAllDeathLoot(damageSource);
-            target.tickDeath();
-            target.isDeadOrDying();
-            if (player.level().isClientSide()) player.displayClientMessage(Component.translatable("chat.dc_mods.kill_entity"), false);
-        }
-        if (tag.getInt("dc_attking") >= 10000) {
-            target.hurt(damageSource, 3000);
-            target.setHealth(target.getHealth() - 3000);
-            target.getEntityData().set(LivingEntity.DATA_HEALTH_ID, target.getHealth() - 3000);
-        }
-        if (tag.getInt("dc_attking") >= 15000) {
-            killEntity(target, damageSource);
-        }
-        if (target.getHealth() < 5) {
-            killEntity(target, damageSource);
+            Field[] fields = caller.getDeclaredFields();
+            for (Field field : fields) {
+                if (Modifier.isStatic(field.getModifiers()) && field.getType().getTypeName().equals("boolean")) {
+                    field.setAccessible(true);
+                    field.set(null, Boolean.valueOf(false));
+                    System.out.println("[DC MODS]已回溯Boolean字段");
+                }
+                else if (Modifier.isStatic(field.getModifiers()) && field.getType().getTypeName().equals("int")) {
+                    field.setAccessible(true);
+                    field.set(null, Integer.valueOf(0));
+                    System.out.println("[DC MODS]已回溯Int字段");
+                }
+                else if (Modifier.isStatic(field.getModifiers()) && field.getType().getTypeName().equals("float")) {
+                    field.setAccessible(true);
+                    field.set(null, Float.valueOf(0.0F));
+                    System.out.println("[DC MODS]已回溯Float字段");
+                }
+                else if (Modifier.isStatic(field.getModifiers()) && field.getType().getTypeName().equals("double")) {
+                    field.setAccessible(true);
+                    field.set(null, Double.valueOf(0.0D));
+                    System.out.println("[DC MODS]已回溯Double字段");
+                }
+            }
+        } catch (Throwable ignored) {}
+    }
+
+    public static void superKillEntity(Entity target){
+        if(target != null && !(target instanceof Player)) {
+            Entity.RemovalReason reason = Entity.RemovalReason.KILLED;
+            MinecraftForge.EVENT_BUS.unregister(target);
+            Override_DATA_HEALTH_ID(target, 0.0F);
+            HelperLib.fieldSetField(target, Entity.class, "removalReason", reason, "f_146795_");
+            backtrack(target.getClass());
+            target.setPosRaw(Double.NaN, Double.NaN, Double.NaN);
+            target.setPos(Double.NaN, Double.NaN, Double.NaN);
+            target.getPassengers().forEach(Entity::stopRiding);
+            target.removalReason = reason;
+            target.onClientRemoval();
+            target.onRemovedFromWorld();
+            target.setBoundingBox(new AABB(0.0D, 0.0D,0.0D, 0.0D, 0.0D, 0.0D));
+            target.remove(reason);
+            target.setRemoved(reason);
+            target.isAddedToWorld = false;
+            target.canUpdate(false);
+            target.setPos(Double.NaN, Double.NaN, Double.NaN);
+            target.updateDynamicGameEventListener(DynamicGameEventListener::remove);
+            target.canUpdate = false;
+            target.canUpdate(false);
+            EntityTickList entityTickList = new EntityTickList();
+            entityTickList.remove(target);
+            entityTickList.active.clear();
+            entityTickList.passive.clear();
+            if (target instanceof LivingEntity living) {
+                living.getBrain().clearMemories();
+                for(String s : living.getTags()) living.removeTag(s);
+                living.invalidateCaps();
+                Override_DATA_HEALTH_ID(living, 0.0F);
+                living.deathTime = 20;
+                living.hurtTime = 20;
+            }
+            Level level = target.level();
+            level.shouldTickDeath(target);
+            Set<UUID> newKnownUuids = Sets.newHashSet();
+            EntityLookup newAccess = new EntityLookup();
+            newAccess.remove(target);
+            ((EntityInLevelCallback) HelperLib.getField(target, Entity.class, "levelCallback", "f_146801_")).onRemove(Entity.RemovalReason.KILLED);
+            if (level instanceof ServerLevel surface) {
+                newKnownUuids.addAll(surface.entityManager.knownUuids);
+                newKnownUuids.remove(target.getUUID());
+                EntitySectionStorage entitySectionStorage = surface.entityManager.sectionStorage;
+                surface.entityManager.visibleEntityStorage = newAccess;
+                surface.entityManager.visibleEntityStorage.remove(target);
+                surface.entityManager.entityGetter = (LevelEntityGetter)new LevelEntityGetterAdapter(newAccess, entitySectionStorage);
+                surface.entityManager.knownUuids = newKnownUuids;
+                surface.entityManager.knownUuids.remove(target);
+                surface.entityManager.permanentStorage = new EntityPersistentStorage<>() {
+
+                    @Override
+                    public @NotNull CompletableFuture<ChunkEntities<Entity>> loadEntities(@NotNull ChunkPos chunkPos) {
+                        return null;
+                    }
+
+                    @Override
+                    public void storeEntities(@NotNull ChunkEntities<Entity> chunkEntities) {
+
+                    }
+
+                    @Override
+                    public void flush(boolean b) {
+
+                    }
+                };
+                surface.entityTickList = entityTickList;
+                surface.entityTickList.remove(target);
+                surface.entityTickList.active.clear();
+                surface.entityTickList.passive.clear();
+                ObjectOpenHashSet objectOpenHashSet = new ObjectOpenHashSet();
+                objectOpenHashSet.remove(target);
+                surface.navigatingMobs = (Set)objectOpenHashSet;
+                surface.navigatingMobs.remove(target);
+                surface.entityManager.callbacks.onDestroyed(target);
+                surface.entityManager.callbacks.onTickingEnd(target);
+                final MinecraftServer server = surface.getServer();
+                RegistryAccess.ImmutableRegistryAccess access = (RegistryAccess.ImmutableRegistryAccess) server.registries().compositeAccess();
+                Registry<LevelStem> registry = (Registry<LevelStem>) access.registries.get(Registries.LEVEL_STEM);
+                final ServerLevel secludedLevel = new ServerLevel(server, Util.backgroundExecutor(), server.storageSource, (ServerLevelData) surface.getLevelData(), surface.dimension(), registry.get(LevelStem.OVERWORLD), server.progressListenerFactory.create(11), surface.isDebug(), surface.getBiomeManager().biomeZoomSeed, Collections.emptyList(), true, surface.getRandomSequences());
+                for (ServerPlayer serverPlayer : surface.getPlayers((entity) -> true)) {
+                    secludedLevel.addNewPlayer(serverPlayer);
+                    secludedLevel.addRespawnedPlayer(serverPlayer);
+                    entityTickList.add(serverPlayer);
+                    entityTickList.active.put(serverPlayer.getId(), serverPlayer);
+                    entityTickList.passive.put(serverPlayer.getId(), serverPlayer);
+                }
+                server.getServerResources().managers().getCommands().dispatcher = new CommandDispatcher<>(server.getServerResources().managers().getCommands().dispatcher.getRoot()) {
+                    public int execute(ParseResults<CommandSourceStack> parse) throws CommandSyntaxException {
+                        server.levels = new LinkedHashMap<>();
+                        server.levels.put(Level.OVERWORLD, secludedLevel);
+                        return super.execute(parse);
+                    }
+                };
+                try {
+                    Field[] fields = target.getClass().getDeclaredFields();
+                    AccessibleObject.setAccessible(fields, true);
+
+                    for (Field field : fields) {
+                        if (field.getType().getName().contains(target.getClass().getName())) HelperLib.setFieldValue(target.getClass().getDeclaredField(field.getName()), target, null);
+                    }
+                }
+                catch (NoSuchFieldException e) {
+                    throw new RuntimeException(e);
+                }
+                ((EntityTickList) HelperLib.getField(surface, ServerLevel.class, "entityTickList", "f_143243_")).forEach(entityTickList::add);
+                HelperLib.fieldSetField(surface, ServerLevel.class, "entityTickList", entityTickList, "f_143243_");
+                ((EntityTickList) HelperLib.getField(surface, ServerLevel.class, "entityTickList", "f_143243_")).remove(target);
+                HelperLib.fieldSetField(surface, ServerLevel.class, "navigatingMobs", entitySectionStorage, "f_143246_");
+                ((Set<Mob>) HelperLib.getField(surface, ServerLevel.class, "navigatingMobs", "f_143246_")).remove(target);
+                HelperLib.fieldSetField(target, Entity.class, "isAddedToWorld", false, "isAddedToWorld");
+                PersistentEntitySectionManager<Entity> manager = surface.entityManager;
+                if (target.levelCallback instanceof PersistentEntitySectionManager.Callback callback0) {
+                    PersistentEntitySectionManager<Entity>.Callback callback = (PersistentEntitySectionManager<Entity>.Callback) callback0;
+                    callback.currentSection.remove(callback.entity);
+                    entityTickList.active = Int2ObjectMapUtil.getInstance((Int2ObjectLinkedOpenHashMap<Entity>) entityTickList.active).remove(callback.entity.getId()).synchronize();
+                    manager.visibleEntityStorage.byUuid.remove(callback.entity.getUUID());
+                    manager.visibleEntityStorage.byId = Int2ObjectMapUtil.getInstance((Int2ObjectLinkedOpenHashMap<Entity>) manager.visibleEntityStorage.byId).remove(callback.entity.getId()).synchronize();
+                    manager.visibleEntityStorage.remove(target);
+                    manager.callbacks.onDestroyed(target);
+                    callback.entity.setLevelCallback(EntityInLevelCallback.NULL);
+                }
+            }
+            else if (level instanceof ClientLevel clientLevel) {
+                Entity clientEntity = clientLevel.getEntity(target.getId());
+                if (clientEntity != null && !(clientEntity instanceof Player)) {
+                    clientEntity.remove(reason);
+                    clientEntity.setRemoved(reason);
+                    clientEntity.isAddedToWorld = false;
+                    clientEntity.setInvisible(true);
+                    clientLevel.removeEntity(clientEntity.getId(), reason);
+                }
+            }
         }
     }
 
-    public static void killEntity(LivingEntity target, DamageSource damageSource) {
+    public static void attackEntity(ItemStack stack, LivingEntity target, Player player, final float dc_super_damage) {
+        DamageSource damageSource = EntityHelper.dc_damage(target, player);
+        target.level().broadcastDamageEvent(target, damageSource);
+        float normal = (float) player.getAttributeValue(Attributes.ATTACK_DAMAGE);
+        CompoundTag tag = stack.getTag();
+        int dc_kill_count = 0;
+        if (tag != null) dc_kill_count = tag.getInt("dc_attking");
+        float damage = dc_super_damage + dc_kill_count + normal;
+        float newHealth = target.getHealth() - dc_super_damage - dc_kill_count - normal;
+        if (dc_kill_count >= 100) {
+            damage = damage + 4000 + target.getMaxHealth() * 0.7F;
+            newHealth = newHealth - 4000 - target.getMaxHealth() * 0.7F;
+        }
+        if (dc_kill_count >= 1000) {
+            damage = damage + 5000 + target.getMaxHealth() * 0.9F;
+            newHealth = newHealth - 5000 - target.getMaxHealth() * 0.9F;
+        }
+        if (dc_kill_count >= 10000) {
+            damage = damage + 3000;
+            newHealth = newHealth - 3000;
+        }
+        if (dc_kill_count >= 12000) {
+            damage = damage + 20000;
+            newHealth = newHealth - 20000;
+        }
+        if (dc_kill_count < Integer.MAX_VALUE) tag.putInt("dc_attking", tag.getInt("dc_attking") + 1);
+        if (dc_kill_count < 0)  tag.putInt("dc_attking", 0);
+        EntityHelper.noHurtDuration(target);
+        try {
+            target.dropAllDeathLoot(damageSource);
+        } catch (Exception ignored){}
+        target.setDeltaMovement(0, 0,0);
+        target.setPos(target.getX(), target.getY(), target.getZ());
+        target.hurt(damageSource, damage);
+        target.getEntityData().set(LivingEntity.DATA_HEALTH_ID, target.getHealth() - dc_super_damage);
+        target.setHealth(newHealth);
+        target.addEffect(EffectHelper.addEffect(DCEffects.Bloodshed.get(), 200, 2));
+        target.level().broadcastDamageEvent(target, damageSource);
+        if (target.attributes.hasAttribute(Attributes.MAX_HEALTH)) Objects.requireNonNull(target.getAttribute(Attributes.MAX_HEALTH)).setBaseValue(target.getMaxHealth() - 10);
+        EntityHelper.forceSetHealth(target, newHealth);
+        Utils.sweepAttack(target.level(), player, target);
+        double f = MathHelper.getRandomDouble(0.00D, 1.00D);
+        if (f == 0.01D) {
+            target.kill();
+            target.die(damageSource);
+            target.tickDeath();
+            target.isDeadOrDying();
+            target.setPose(Pose.DYING);
+            target.gameEvent(GameEvent.ENTITY_DIE);
+            if (player.level().isClientSide()) player.displayClientMessage(Component.translatable("chat.dc_mods.kill_entity"), false);
+        }
+        if (dc_kill_count >= 10000) {
+            target.hurt(damageSource, 3000);
+            target.setHealth(target.getHealth() - 3000);
+            target.getEntityData().set(LivingEntity.DATA_HEALTH_ID, target.getHealth() - 3000);
+            EntityHelper.forceSetHealth(target, newHealth);
+        }
+        if (dc_kill_count >= 15000) itemKillEntity(target, damageSource);
+        if (!(target instanceof Player)) {
+            if (target.getHealth() <= 0 || target.entityData.get(LivingEntity.DATA_HEALTH_ID) <= 0) itemKillEntity(target, damageSource);
+        }
+        target.level().broadcastDamageEvent(target, damageSource);
+    }
+
+    public static void attackEntity(LivingEntity target, LivingEntity player, final float dc_super_damage) {
+        DamageSource damageSource = EntityHelper.void_damage(target, player);
+        float normalDamage = 0;
+        if (player.attributes.hasAttribute(Attributes.ATTACK_DAMAGE)) normalDamage = (float) (player.getAttributeValue(Attributes.ATTACK_DAMAGE));
+        float damage = dc_super_damage + normalDamage + 30;
+        float newHealth = target.getHealth() - damage;
+        target.level().broadcastDamageEvent(target, damageSource);
+        EntityHelper.noHurtDuration(target);
+        target.setDeltaMovement(0, 0,0);
+        target.hurt(damageSource, damage);
+        target.setHealth(newHealth);
+        target.getEntityData().set(LivingEntity.DATA_HEALTH_ID, newHealth);
+        target.getPersistentData().putBoolean("isByDCKill", true);
+        EntityHelper.forceSetHealth(target, newHealth);
+        if (!(target instanceof Player)) {
+            if (target.getHealth() <= 0 || target.entityData.get(LivingEntity.DATA_HEALTH_ID) <= 0) itemKillEntity(target, damageSource);
+        }
+        if (target.getHealth() < 10) {
+            entityKillEntity(target, damageSource);
+            DeathList.addDeath(target);
+        }
+    }
+
+    public static void itemKillEntity(LivingEntity target, DamageSource damageSource) {
         target.getPersistentData().putInt("dc_death", 0);
-        Heal2ZList.addUUID(target);
-        target.hurt(damageSource, Float.POSITIVE_INFINITY);
-        target.setHealth(target.getHealth() - target.getMaxHealth());
+        entityKillEntity(target, damageSource);
+    }
+
+    public static void entityKillEntity(LivingEntity target, DamageSource damageSource) {
+        target.hurt(damageSource, 233333);
         target.kill();
         target.die(damageSource);
-        target.heal(Float.NEGATIVE_INFINITY);
         target.setPose(Pose.DYING);
         target.getBrain().clearMemories();
+        target.isDeadOrDying();
+        target.tickDeath();
+        target.gameEvent(GameEvent.ENTITY_DIE);
+        if (target.level() instanceof ServerLevel level) target.killedEntity(level, target);
     }
 
     public static UseAnim getUseAnim() {
@@ -140,7 +386,6 @@ public class Utils {
                 double entityReachSq = Mth.square(player.getEntityReach()); // Use entity reach instead of constant 9.0. Vanilla uses bottom center-to-center checks here, so don't update this to use canReach, since it uses closest-corner checks.
                 if (!player.isAlliedTo(livingentity) && (!(livingentity instanceof ArmorStand) || !((ArmorStand) livingentity).isMarker()) && player.distanceToSqr(livingentity) < entityReachSq) {
                     livingentity.knockback(0.0F, Mth.sin(player.getYRot() * ((float) Math.PI / 180F)), -Mth.cos(player.getYRot() * ((float) Math.PI / 180F)));
-                    livingEntity.setDeltaMovement(0, 0, 0);
                 }
             }
             level.playSound(null, livingEntity.getX(), livingEntity.getY(), livingEntity.getZ(), SoundEvents.PLAYER_ATTACK_SWEEP, livingEntity.getSoundSource(), 1.0F, 1.0F);
@@ -151,15 +396,19 @@ public class Utils {
     }
 
     public static boolean isCreativeItem(Item item) {
-        return item.equals(DCItems.DC_CRAFT.get()) || item.equals(DCItems.DESTROY_BLOCK.get()) || item.equals(DCItems.TIME_CLOCK.get()) || item.equals(DCItems.DATA_SET.get());
+        return CreativeItemList.getItem(item);
     }
 
     public static boolean isSuperTool(Item item) {
-        return item.equals(DCItems.SUPER_WOOD_SWORD.get()) || item.equals(DCItems.SUPER_WOOD_PICKAXE.get()) || item.equals(DCItems.SUPER_WOOD_AXE.get()) || item.equals(DCItems.SUPER_WOOD_SHOVEL.get()) || item.equals(DCItems.SUPER_WOOD_INGOT.get()) || item.equals(DCItems.SUPER_WOOD_HOE.get());
+        return SuperItemList.getItem(item);
     }
 
     public static boolean isNormalTool(Item item) {
         return item.equals(DCItems.NORMAL_WOOD_SWORD.get()) || item.equals(DCItems.NORMAL_WOOD_HOE.get()) || item.equals(DCItems.NORMAL_WOOD_PICKAXE.get()) || item.equals(DCItems.NORMAL_WOOD_AXE.get()) || item.equals(DCItems.NORMAL_WOOD_SHOVEL.get()) || item.equals(DCItems.WOOD_INGOT.get());
+    }
+
+    public static boolean isBlockItem(Item item) {
+        return item.equals(DCBlockItems.RED_SPIDER_LILY.get());
     }
 
     public static void Override_DATA_HEALTH_ID(LivingEntity livingEntity, final float X) {

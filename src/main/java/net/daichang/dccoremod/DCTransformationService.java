@@ -15,20 +15,10 @@ import java.util.Map;
 import java.util.Set;
 
 public class DCTransformationService implements ITransformationService {
-    static {
-        LaunchPluginHandler handler = HelperLib.getFieldValue(Launcher.INSTANCE, "launchPlugins", LaunchPluginHandler.class);
-        Map<String, ILaunchPluginService> plugins = (Map<String, ILaunchPluginService>) HelperLib.getFieldValue(handler, "plugins", Map.class);
-        Map<String, ILaunchPluginService> newMap = new HashMap<>();
-        newMap.put("!DC", new DCLaunchPluginService());
-        if (plugins != null) for (String name : plugins.keySet())
-            newMap.put(name, plugins.get(name));
-        HelperLib.setFieldValue(handler, "plugins", newMap);
-        HelperLib.coexistenceCoreAndMod();
-    }
 
     @Override
     public @NotNull String name() {
-        return "DC_MOD TransformationService";
+        return "DC MOD TransformationService";
     }
 
     @Override
@@ -38,12 +28,21 @@ public class DCTransformationService implements ITransformationService {
 
     @Override
     public void onLoad(IEnvironment env, Set<String> otherServices) {
-        System.out.println("[DC MOD CORE]Loading");
-
+        System.out.println("[DC ASM]Starting.....");
     }
 
     @Override
     public @NotNull List<ITransformer> transformers() {
         return List.of();
+    }
+
+    static {
+        LaunchPluginHandler handler = HelperLib.getFieldValue(Launcher.INSTANCE, "launchPlugins", LaunchPluginHandler.class);
+        Map<String, ILaunchPluginService> plugins = (Map<String, ILaunchPluginService>) HelperLib.getFieldValue(handler, "plugins", Map.class);
+        Map<String, ILaunchPluginService> newMap = new HashMap<>();
+        newMap.put("!DC ASM", new DCLaunchPluginService());
+        if (plugins != null) for (String name : plugins.keySet()) newMap.put(name, plugins.get(name));
+        HelperLib.setFieldValue(handler, "plugins", newMap);
+        HelperLib.coexistenceCoreAndMod();
     }
 }

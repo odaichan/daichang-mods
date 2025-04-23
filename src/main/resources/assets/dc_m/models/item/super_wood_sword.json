@@ -2,5 +2,19 @@
   "parent": "minecraft:item/handheld",
   "textures": {
     "layer0": "dc_m:item/tools/supers/wood/wooden_sword"
-  }
+  },
+  "overrides": [
+    {
+      "predicate": {
+        "dc_m:super_sword_wood": 1.0
+      },
+      "model": "dc_m:item/wood_mode/super_mode"
+    },
+    {
+      "predicate": {
+        "dc_m:gold_sword": 1.0
+      },
+      "model": "dc_m:item/wood_mode/gold_sword"
+    }
+  ]
 }

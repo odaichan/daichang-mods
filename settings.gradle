@@ -5,6 +5,18 @@ pluginManagement {
             name = 'MinecraftForge'
             url = 'https://maven.minecraftforge.net/'
         }
+        maven { url = 'https://maven.parchmentmc.org' }
+        maven {
+            name = "CurseMaven"
+            url = "https://www.cursemaven.com/"
+            content {
+                includeGroup "curse.maven"
+            }
+        }
+        maven {
+            name "novaCommitteeReleases"
+            url "https://maven.nova-committee.cn/releases"
+        }
     }
 }
 

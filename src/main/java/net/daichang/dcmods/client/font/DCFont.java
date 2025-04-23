@@ -26,55 +26,62 @@ public class DCFont extends Font {
     }
 
     public static boolean isTabFont(String s) {
-        return s.equals(getString("tabs.dc_mods,tab")) || s.equals(getString("tabs.dc_mods,tab_creative"));
+        return s.contains(getString("tabs.dc_mods.tab")) || s.contains(getString("tabs.dc_mods.tab_creative")) || s.contains(getString("tabs.dc_mods.tab_block"));
+    }
+
+    public static boolean isWarnTip(String s) {
+        return s.contains(getString("tooltip.dc_mods.dc_warn")) || s.contains(getString("tooltip.dc_mods.remove_warn")) || s.contains(getString("item.dc_m.dc_super_remove"));
     }
 
     public static boolean isDaiChangTip(String s) {
-        return s.equals(getString("tooltip.dc_mods.minecraft"))
-                || s.equals(getString("tooltip.dc_mods.drop_loot"))
-                || s.equals(getString("tooltip.dc_mods.health_get"))
-                || s.equals(getString("tooltip.dc_mods.kill"))
-                || s.equals(getString("tooltip.dc_mods.attacking_entity_cooldown"))
-                || s.equals(getString("tooltip.dc_mods.pickaxe_1"))
-                || s.equals(getString("tooltip.dc_mods.axe"))
-                || s.equals(getString("tooltip.dc_mods.shovel"))
-                || s.equals(getString("tooltip.dc_mods.hoe"))
-                || s.equals(getString("tooltip.dc_mods.bleed"))
+        return s.contains(getString("tooltip.dc_mods.minecraft"))
+                || s.contains(getString("tooltip.dc_mods.drop_loot"))
+                || s.contains(getString("tooltip.dc_mods.health_get"))
+                || s.contains(getString("tooltip.dc_mods.kill"))
+                || s.contains(getString("tooltip.dc_mods.attacking_entity_cooldown"))
+                || s.contains(getString("tooltip.dc_mods.pickaxe_1"))
+                || s.contains(getString("tooltip.dc_mods.axe"))
+                || s.contains(getString("tooltip.dc_mods.shovel"))
+                || s.contains(getString("tooltip.dc_mods.hoe"))
+                || s.contains(getString("tooltip.dc_mods.bleed"))
+                || s.contains(getString("tooltip.dc_mods.bleed"))
                 ;
     }
 
     public static boolean isDCEnchFont(String s) {
-        return s.equals(getString("enchantment.dc_m.super_sharp")) || s.equals(getString("enchantment.dc_m.night_vison")) || s.equals(getString("enchantment.dc_m.liquid_walk"));
+        return s.contains(getString("enchantment.dc_m.super_sharp")) || s.contains(getString("enchantment.dc_m.night_vison")) || s.contains(getString("enchantment.dc_m.liquid_walk"));
     }
 
     public static boolean isSwordTip(String s) {
-        return s.equals(getString("tooltip.dc_mods.hurts"))
-                || s.equals(getString("tooltip.dc_mods.tips"))
-                || s.equals(getString("tooltip.dc_mods.tips_1"))
-                || s.equals(getString("tooltip.dc_mods.tips_2"))
-                || s.equals(getString("tooltip.dc_mods.attacking_entity"))
-                || s.equals(getString("tooltip.dc_mods.sword_boxing"))
-                ||  s.equals(getString("tooltip.dc_mods.tip_3"))
-                || s.equals(getString("tooltip.dc_mods.kill_entity"))
+        return s.contains(getString("tooltip.dc_mods.hurts"))
+                || s.contains(getString("tooltip.dc_mods.tips"))
+                || s.contains(getString("tooltip.dc_mods.tips_1"))
+                || s.contains(getString("tooltip.dc_mods.tips_2"))
+                || s.contains(getString("tooltip.dc_mods.attacking_entity"))
+                || s.contains(getString("tooltip.dc_mods.sword_boxing"))
+                ||  s.contains(getString("tooltip.dc_mods.tip_3"))
+                || s.contains(getString("tooltip.dc_mods.kill_entity"))
                 ;
     }
 
     public static boolean isSuperItemName(String s) {
-        return s.equals(getString("item.dc_m.super_wood_ingot"))
-                || s.equals(getString("item.dc_m.super_wood_sword"))
-                || s.equals(getString("item.dc_m.super_wood_pickaxe"))
-                || s.equals(getString("item.dc_m.super_wood_axe"))
-                || s.equals(getString("item.dc_m.super_wood_shovel"))
-                || s.equals(getString("item.dc_m.super_wood_hoe"))
+        return s.contains(getString("item.dc_m.super_wood_ingot"))
+                || s.contains(getString("item.dc_m.super_wood_sword"))
+                || s.contains(getString("item.dc_m.super_wood_pickaxe"))
+                || s.contains(getString("item.dc_m.super_wood_axe"))
+                || s.contains(getString("item.dc_m.super_wood_shovel"))
+                || s.contains(getString("item.dc_m.super_wood_hoe"))
+                || s.contains(getString("item.dc_m.dc_bow"))
+                || s.contains(getString("item.dc_m.dc_arrow"))
                 ;
     }
 
     public static boolean isCreativeItem(String s) {
-        return s.equals(getString("item.dc_m.dc_craft")) || s.equals(getString("item.dc_m.data_set")) || s.equals(getString("item.dc_m.destroy_block")) || s.equals(getString("item.dc_m.time_clock"));
+        return s.contains(getString("item.dc_m.dc_craft")) || s.contains(getString("item.dc_m.data_set")) || s.contains(getString("item.dc_m.destroy_block")) || s.contains(getString("item.dc_m.time_clock"));
     }
 
     public static boolean isCraftTip(String s) {
-        return s.equals(getString("tooltip.dc_mods.dc_craft"));
+        return s.contains(getString("tooltip.dc_mods.dc_craft"));
     }
 
     public static boolean isMinecraftName(String s) {
@@ -106,9 +113,10 @@ public class DCFont extends Font {
             else if (isCreativeItem(text)) c = rgb & 0xFF87CEEB;
             else if (isSwordTip(text)) c = rgb &  0xFF40E0D0;
             else if (isMinecraftName(text) || isCraftTip(s)) c = rgb & 0xFF004D40;
-            else if (text.equals(getString("tooltip.dc_mods.is_strong"))) c = rgb & 0xFFFF0000;
+            else if (text.equals(getString("tooltip.dc_mods.is_strong")) || isWarnTip(text)) c = rgb & 0xFFFF0000;
             else if (text.equals(getString("tooltip.dc_mods.strong"))) c = rgb & 0xFFA9A9A9;
             else if (text.contains(getString("attribute.dc_mods.super_damage"))) c = rgb & 0x01ADD8E6 ;
+            else if (text.contains(getString("modifier.dc_m.super_wood_ingot"))) c = rgb & 0x800080;
             else if (isDCEnchFont(text)) c = rgb & 0xFFF0F0F0;
             else if (isTabFont(text)) c = rgb & 0xFFFFD700;
             else if (isDaiChangTip(text)) c = rgb & 0xFFD700;

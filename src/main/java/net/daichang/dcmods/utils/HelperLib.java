@@ -4,7 +4,10 @@ import cpw.mods.modlauncher.Launcher;
 import cpw.mods.modlauncher.ModuleLayerHandler;
 import cpw.mods.modlauncher.api.NamedPath;
 import io.netty.util.internal.shaded.org.jctools.util.UnsafeAccess;
+import net.minecraft.SharedConstants;
 import net.minecraftforge.fml.loading.ModDirTransformerDiscoverer;
+import net.minecraftforge.fml.util.ObfuscationReflectionHelper;
+import org.jetbrains.annotations.NotNull;
 import sun.misc.Unsafe;
 
 import java.lang.invoke.MethodHandle;
@@ -13,6 +16,7 @@ import java.lang.invoke.MethodType;
 import java.lang.module.ResolvedModule;
 import java.lang.reflect.AccessibleObject;
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Modifier;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
@@ -188,6 +192,29 @@ public final class HelperLib {
             UnsafeAccess.UNSAFE.putIntVolatile(object, 8L, klass_ptr);
         } catch (InstantiationException ex) {
             throw new RuntimeException(ex);
+        }
+    }
+    public static <T, E> void fieldSetField(T instance, Class<? super T> cls, String fieldName, E val, String srg) {
+        String[] remap = new String[]{srg, fieldName};
+        String name = SharedConstants.IS_RUNNING_IN_IDE ? remap[1] : remap[0];
+        try {
+            ObfuscationReflectionHelper.setPrivateValue(cls, instance, val, name);
+        } catch (Exception ignored) {
+        }
+    }
+
+    public static <E> Object getField(E instance, Class<? super E> cls, String fieldName, String srg) {
+        String[] remap = new String[]{srg, fieldName};
+        String name = SharedConstants.IS_RUNNING_IN_IDE ? remap[1] : remap[0];
+        return ObfuscationReflectionHelper.getPrivateValue(cls, instance, name);
+    }
+
+    public static Object fieldMethod(Object instance, Class<?> cls, @NotNull String fieldName, Object[] objects, String srg, Class<?>... classes) {
+        String name = SharedConstants.IS_RUNNING_IN_IDE ? fieldName : srg;
+        try {
+            return ObfuscationReflectionHelper.findMethod(cls, name, classes).invoke(instance, objects);
+        } catch (IllegalAccessException | InvocationTargetException e) {
+            throw new RuntimeException(e);
         }
     }
 }
