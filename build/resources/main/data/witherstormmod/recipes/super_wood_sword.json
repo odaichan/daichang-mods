@@ -1,0 +1,11 @@
+{
+  "type": "witherstormmod:anvil",
+  "cost": 1,
+  "left": {
+    "item": "dc_m:normal_wood_sword"
+  },
+  "result": "dc_m:super_wood_sword",
+  "right": {
+    "item": "witherstormmod:command_block_book"
+  }
+}

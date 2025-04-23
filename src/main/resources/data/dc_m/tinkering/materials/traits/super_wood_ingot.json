@@ -1,0 +1,12 @@
+{
+  "default": [
+    {
+      "name": "dc_m:super_wood_ingot",
+      "level": 1
+    },
+    {
+      "name" : "modifier.tconstruct.shiny",
+      "level" : 1
+    }
+  ]
+}

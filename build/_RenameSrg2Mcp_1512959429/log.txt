@@ -1,0 +1,15 @@
+Java Launcher: D:\tools\Java\jdk17\bin\java.exe
+Arguments: '--task, SRG_TO_MCP, --input, C:\Users\diyou\.gradle\caches\modules-2\files-2.1\curse.maven\tinkers-construct-74072\6266282\8f7c7746e65a2b3d1486db6ea8677219d45a8b1f\tinkers-construct-74072-6266282.jar, --output, C:\Users\diyou\.gradle\caches\forge_gradle\deobf_dependencies\curse\maven\tinkers-construct-74072\6266282_mapped_parchment_2023.09.03-1.20.1\tinkers-construct-74072-6266282_mapped_parchment_2023.09.03-1.20.1.jar, --mcp, C:\Users\diyou\.gradle\caches\parchmentgradle\org\parchmentmc\data\parchment-1.20.1\2023.09.03\parchment-1.20.1-2023.09.03.zip, --strip-signatures'
+Classpath:
+ - C:\Users\diyou\.gradle\caches\forge_gradle\maven_downloader\net\minecraftforge\installertools\1.4.4\installertools-1.4.4-fatjar.jar
+Working directory: D:\JavaWorkspace\DaiChangMod\build\_RenameSrg2Mcp_1512959429
+Main class: net.minecraftforge.installertools.ConsoleTool
+====================================
+Task: SRG_TO_MCP
+Input:  C:\Users\diyou\.gradle\caches\modules-2\files-2.1\curse.maven\tinkers-construct-74072\6266282\8f7c7746e65a2b3d1486db6ea8677219d45a8b1f\tinkers-construct-74072-6266282.jar
+Output: C:\Users\diyou\.gradle\caches\forge_gradle\deobf_dependencies\curse\maven\tinkers-construct-74072\6266282_mapped_parchment_2023.09.03-1.20.1\tinkers-construct-74072-6266282_mapped_parchment_2023.09.03-1.20.1.jar
+MCP:    C:\Users\diyou\.gradle\caches\parchmentgradle\org\parchmentmc\data\parchment-1.20.1\2023.09.03\parchment-1.20.1-2023.09.03.zip
+Loading MCP Data
+Processing ZIP file
+Stripped Manifest of sha digests
+Process complete

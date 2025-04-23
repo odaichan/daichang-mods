@@ -1,0 +1,15 @@
+Java Launcher: D:\tools\Java\jdk17\bin\java.exe
+Arguments: '--task, SRG_TO_MCP, --input, C:\Users\diyou\.gradle\caches\modules-2\files-2.1\curse.maven\tcondiadema-1218668\6394251\ef35a854674070c006840d734ce06bce7c3ec762\tcondiadema-1218668-6394251.jar, --output, C:\Users\diyou\.gradle\caches\forge_gradle\deobf_dependencies\curse\maven\tcondiadema-1218668\6394251_mapped_parchment_2023.09.03-1.20.1\tcondiadema-1218668-6394251_mapped_parchment_2023.09.03-1.20.1.jar, --mcp, C:\Users\diyou\.gradle\caches\parchmentgradle\org\parchmentmc\data\parchment-1.20.1\2023.09.03\parchment-1.20.1-2023.09.03.zip, --strip-signatures'
+Classpath:
+ - C:\Users\diyou\.gradle\caches\forge_gradle\maven_downloader\net\minecraftforge\installertools\1.4.4\installertools-1.4.4-fatjar.jar
+Working directory: D:\JavaWorkspace\DaiChangMod\build\_RenameSrg2Mcp_1518642477
+Main class: net.minecraftforge.installertools.ConsoleTool
+====================================
+Task: SRG_TO_MCP
+Input:  C:\Users\diyou\.gradle\caches\modules-2\files-2.1\curse.maven\tcondiadema-1218668\6394251\ef35a854674070c006840d734ce06bce7c3ec762\tcondiadema-1218668-6394251.jar
+Output: C:\Users\diyou\.gradle\caches\forge_gradle\deobf_dependencies\curse\maven\tcondiadema-1218668\6394251_mapped_parchment_2023.09.03-1.20.1\tcondiadema-1218668-6394251_mapped_parchment_2023.09.03-1.20.1.jar
+MCP:    C:\Users\diyou\.gradle\caches\parchmentgradle\org\parchmentmc\data\parchment-1.20.1\2023.09.03\parchment-1.20.1-2023.09.03.zip
+Loading MCP Data
+Processing ZIP file
+Stripped Manifest of sha digests
+Process complete
