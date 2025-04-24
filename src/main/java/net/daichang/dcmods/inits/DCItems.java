@@ -54,6 +54,11 @@ public class DCItems {
 
     public static final RegistryObject<Item> DC_WITHER_SPAWN;
 
+
+    public static final RegistryObject<Item> LoliPickaxe;
+
+    public static final RegistryObject<Item> WOOD_TOTEM;
+
     static {
         WOOD_INGOT = registry("wood_ingot", ()-> new Item(new Item.Properties().stacksTo(16).rarity(Rarity.COMMON)));
         DC_BOW = registry("dc_bow", DCBow::new);
@@ -76,7 +81,7 @@ public class DCItems {
 
         //SUPER ITEMS
         SUPER_WOOD_INGOT = registry("super_wood_ingot", ()-> new BaseSuperItem(new Item.Properties().rarity(Rarity.EPIC).stacksTo(16)));
-        SUPER_WOOD_SWORD = registry("super_wood_sword", ()-> new DCSuperSwordItem(DCTier.SUPERS, 3, 1.6F,34.7f , new Item.Properties().rarity(Rarity.EPIC)));
+        SUPER_WOOD_SWORD = registry("super_wood_sword", ()-> new DCSuperSwordItem(DCTier.SUPERS, 3, 1.6F,13.7f , new Item.Properties().rarity(Rarity.EPIC)));
         SUPER_WOOD_PICKAXE = registry("super_wood_pickaxe", () -> new DCSuperPickaxeItem(DCTier.SUPERS, 1, -2.8F, new Item.Properties().rarity(Rarity.EPIC)));
         SUPER_WOOD_AXE = registry("super_wood_axe", () -> new DCAxeItem(DCTier.SUPERS, 9.0F, -3.0F, new Item.Properties().rarity(Rarity.EPIC)));
         SUPER_WOOD_SHOVEL = registry("super_wood_shovel", ()-> new DCShovelItem(DCTier.SUPERS, 1.5F, -3.0F, new Item.Properties().rarity(Rarity.EPIC)));
@@ -84,5 +89,10 @@ public class DCItems {
 
         //SPAWN EGG
         DC_WITHER_SPAWN = registry("dc_wither_spawn_egg", DCWitherSpawnEgg::new);
+
+        LoliPickaxe = registry("loli_pickaxe", DCLoliPickaxe::new);
+
+
+        WOOD_TOTEM = registry("super_wood_totem", SuperWoodTotem::new);
     }
 }

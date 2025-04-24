@@ -2,8 +2,8 @@ package net.daichang.dcmods.common.entity;
 
 import net.daichang.dcmods.client.PacketHandler;
 import net.daichang.dcmods.client.font.DCFont;
-import net.daichang.dcmods.client.network.ElainaPacket;
-import net.daichang.dcmods.client.network.SonicBoomPacket;
+import net.daichang.dcmods.client.network.S2CElainaPacket;
+import net.daichang.dcmods.client.network.S2CSonicBoomPacket;
 import net.daichang.dcmods.event.DCForgeEventHandler;
 import net.daichang.dcmods.inits.*;
 import net.daichang.dcmods.utils.Utils;
@@ -181,9 +181,7 @@ public class DCLoveElaina extends Monster implements PowerableMob, RangedAttackM
     @Override
     public boolean doHurtTarget(@NotNull Entity target) {
         addAttackCount(1);
-        if (target instanceof LivingEntity living && !(target instanceof Player)) {
-            Utils.attackEntity(living, this, 10);
-        }
+        if (target instanceof LivingEntity living && !(target instanceof Player)) Utils.attackEntity(living, this);
         else if (target instanceof Player player){
             player.hurt(EntityHelper.void_damage(player, this), 10);
             player.setHealth(player.getHealth() - 5);
@@ -195,7 +193,7 @@ public class DCLoveElaina extends Monster implements PowerableMob, RangedAttackM
         }
         if (level instanceof ServerLevel serverLevel) {
             for (ServerPlayer player : serverLevel.players()) {
-                PacketHandler.CHANNEL.send(PacketDistributor.PLAYER.with(()->player), new ElainaPacket(new Vec3(target.getX(), target.getY(), target.getZ())));
+                PacketHandler.CHANNEL.send(PacketDistributor.PLAYER.with(()->player), new S2CElainaPacket(new Vec3(target.getX(), target.getY(), target.getZ())));
             }
         }
         if (getAttackValue() >= 7) {
@@ -340,8 +338,8 @@ public class DCLoveElaina extends Monster implements PowerableMob, RangedAttackM
                         this.heal(200);
                     }
                     if (entity instanceof LivingEntity target && !(entity instanceof Player)) {
-                        Utils.attackEntity(target, this, 3000);
-                        Utils.attackEntity(target, target, 3000);
+                        Utils.attackEntity(target, this);
+                        Utils.attackEntity(target, target);
                         RainbowLightingEntity lighting = new RainbowLightingEntity(DCEntities.RAINBOW_LIGHTING.get(), level);
                         lighting.setPos(target.getX(), target.getY(), target.getY());
                         target.addEffect(EffectHelper.addEffect(DCEffects.Bloodshed.get()));
@@ -398,8 +396,8 @@ public class DCLoveElaina extends Monster implements PowerableMob, RangedAttackM
 
     void lastKill(Entity entity) {
         if (entity instanceof LivingEntity target && !(entity instanceof Player)) {
-            Utils.attackEntity(target, this, 3000);
-            Utils.attackEntity(target, target, 3000);
+            Utils.attackEntity(target, this);
+            Utils.attackEntity(target, target);
         }
         else if (entity instanceof ServerPlayer player && player.gameMode.isSurvival()) {
             player.hurt(EntityHelper.void_damage(player, this), 10);
@@ -445,7 +443,7 @@ public class DCLoveElaina extends Monster implements PowerableMob, RangedAttackM
                 .add(Attributes.ATTACK_DAMAGE, 19.2)
                 .add(Attributes.ARMOR_TOUGHNESS, 18.9D)
                 .add(ForgeMod.ENTITY_REACH.get(), 4.6D)
-                .add(DCAttributes.DC_SUPER_DAMAGE.get(), 89.3D)
+                .add(DCAttributes.DC_SUPER_DAMAGE.get(), 45.2D)
                 .add(DCAttributes.DC_DEFENSE.get(), 10.0D)
                 .add(Attributes.ARMOR, 27.3D)
                 .add(Attributes.FLYING_SPEED, 0.7D);
@@ -479,7 +477,7 @@ public class DCLoveElaina extends Monster implements PowerableMob, RangedAttackM
         Vec3 thisVec = new Vec3(getX(), getY(), getZ());
         Vec3 targetVec = new Vec3(livingEntity.getX(), livingEntity.getX(), livingEntity.getZ());
         if (level instanceof ServerLevel serverLevel) {
-            for (ServerPlayer player : serverLevel.players()) PacketHandler.CHANNEL.send(PacketDistributor.PLAYER.with(()->player), new SonicBoomPacket(thisVec, targetVec));
+            for (ServerPlayer player : serverLevel.players()) PacketHandler.CHANNEL.send(PacketDistributor.PLAYER.with(()->player), new S2CSonicBoomPacket(thisVec, targetVec));
         }
     }
 

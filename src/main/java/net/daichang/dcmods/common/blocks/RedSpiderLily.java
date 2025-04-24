@@ -1,6 +1,7 @@
 package net.daichang.dcmods.common.blocks;
 
 import net.daichang.dcmods.common.entity.DCLoveElaina;
+import net.daichang.dcmods.inits.DCBlockItems;
 import net.daichang.dcmods.inits.DCEffects;
 import net.daichang.dcmods.utils.helpers.EffectHelper;
 import net.daichang.dcmods.utils.helpers.EntityHelper;
@@ -8,16 +9,16 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.effect.MobEffect;
+import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.FlowerBlock;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
-import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.NotNull;
 
@@ -29,7 +30,7 @@ public class RedSpiderLily extends FlowerBlock {
     }
 
     @Override
-    public void animateTick(BlockState state, Level level, BlockPos blockPos, RandomSource randomSource) {
+    public void animateTick(@NotNull BlockState state, @NotNull Level level, @NotNull BlockPos blockPos, @NotNull RandomSource randomSource) {
         super.animateTick(state, level, blockPos, randomSource);
         VoxelShape $$4 = this.getShape(state, level, blockPos, CollisionContext.empty());
         Vec3 $$5 = $$4.bounds().getCenter();
@@ -44,17 +45,19 @@ public class RedSpiderLily extends FlowerBlock {
     }
 
     @Override
-    public @NotNull VoxelShape getCollisionShape(@NotNull BlockState p_60572_, @NotNull BlockGetter p_60573_, @NotNull BlockPos p_60574_, @NotNull CollisionContext p_60575_) {
-        return Shapes.empty();
+    public boolean onDestroyedByPlayer(BlockState state, Level level, BlockPos pos, Player player, boolean willHarvest, FluidState fluid) {
+        player.getInventory().add(DCBlockItems.RED_SPIDER_LILY.get().getDefaultInstance());
+        player.addEffect(EffectHelper.addEffect(MobEffects.DARKNESS));
+        return super.onDestroyedByPlayer(state, level, pos, player, willHarvest, fluid);
     }
 
     @Override
     public void entityInside(@NotNull BlockState p_60495_, @NotNull Level p_60496_, @NotNull BlockPos p_60497_, @NotNull Entity p_60498_) {
         super.entityInside(p_60495_, p_60496_, p_60497_, p_60498_);
         if (p_60498_ instanceof LivingEntity living) {
-            living.addEffect(EffectHelper.addEffect(DCEffects.Bloodshed.get(), 60, 2, true));
             if (!(living instanceof Player) && !(living instanceof DCLoveElaina)) {
                 float damageValue = living.getMaxHealth() * 0.1F + 20;
+                living.addEffect(EffectHelper.addEffect(DCEffects.Bloodshed.get(), 60, 2, true));
                 float healthValue = living.getHealth() - living.getMaxHealth() * 0.1F - 20F;
                 living.hurt(EntityHelper.generic_kill_damage(living, living), damageValue);
                 living.setHealth(healthValue);

@@ -30,5 +30,41 @@
         "stream": false
       }
     ]
+  },
+  "loli_succrss": {
+    "sounds": [
+      {
+        "name": "dc_m:lolisuccess",
+        "stream": false
+      }
+    ]
+  },
+  "lolirecord": {
+    "sounds": [
+      {
+        "name": "dc_m:lolirecord",
+        "stream": false
+      }
+    ]
+  },
+  "dc_hit_entity": {
+    "sounds": [
+      {
+        "name": "dc_m:hit1",
+        "stream": false
+      },
+      {
+        "name": "dc_m:hit2",
+        "stream": false
+      },
+      {
+        "name": "dc_m:hit3",
+        "stream": false
+      },
+      {
+        "name": "dc_m:hit4",
+        "stream": false
+      }
+    ]
   }
 }

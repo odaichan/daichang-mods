@@ -30,25 +30,25 @@ public class PacketHandler {
             int packetId = 0;
             CHANNEL.registerMessage(
                     packetId++,
-                    SonicBoomPacket.class,
-                    SonicBoomPacket::encode,
-                    SonicBoomPacket::decode,
+                    S2CSonicBoomPacket.class,
+                    S2CSonicBoomPacket::encode,
+                    S2CSonicBoomPacket::decode,
                     (o1, o2) -> {},
                     Optional.of(NetworkDirection.PLAY_TO_CLIENT)
             );
             CHANNEL.registerMessage(
                     packetId++,
-                    ElainaPacket.class,
-                    ElainaPacket::encode,
-                    ElainaPacket::decode,
+                    S2CElainaPacket.class,
+                    S2CElainaPacket::encode,
+                    S2CElainaPacket::decode,
                     (o1, o2) -> {},
                     Optional.of(NetworkDirection.PLAY_TO_CLIENT)
             );
             CHANNEL.registerMessage(
                     packetId++,
-                    ElainaCameraPacket.class,
-                    ElainaCameraPacket::encode,
-                    ElainaCameraPacket::decode,
+                    S2CElainaCameraPacket.class,
+                    S2CElainaCameraPacket::encode,
+                    S2CElainaCameraPacket::decode,
                     (o1, o2) -> {},
                     Optional.of(NetworkDirection.PLAY_TO_CLIENT)
             );
@@ -57,26 +57,26 @@ public class PacketHandler {
             int packetId = 0;
             CHANNEL.registerMessage(
                     packetId++,
-                    SonicBoomPacket.class,
-                    SonicBoomPacket::encode,
-                    SonicBoomPacket::decode,
-                    SonicBoomPacket::handle,
+                    S2CSonicBoomPacket.class,
+                    S2CSonicBoomPacket::encode,
+                    S2CSonicBoomPacket::decode,
+                    S2CSonicBoomPacket::handle,
                     Optional.of(NetworkDirection.PLAY_TO_CLIENT)
             );
             CHANNEL.registerMessage(
                     packetId++,
-                    ElainaPacket.class,
-                    ElainaPacket::encode,
-                    ElainaPacket::decode,
-                    ElainaPacket::handle,
+                    S2CElainaPacket.class,
+                    S2CElainaPacket::encode,
+                    S2CElainaPacket::decode,
+                    S2CElainaPacket::handle,
                     Optional.of(NetworkDirection.PLAY_TO_CLIENT)
             );
             CHANNEL.registerMessage(
                     packetId++,
-                    ElainaCameraPacket.class,
-                    ElainaCameraPacket::encode,
-                    ElainaCameraPacket::decode,
-                    ElainaCameraPacket::handle,
+                    S2CElainaCameraPacket.class,
+                    S2CElainaCameraPacket::encode,
+                    S2CElainaCameraPacket::decode,
+                    S2CElainaCameraPacket::handle,
                     Optional.of(NetworkDirection.PLAY_TO_CLIENT)
             );
         });

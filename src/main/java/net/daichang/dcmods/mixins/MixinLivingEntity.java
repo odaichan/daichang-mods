@@ -5,7 +5,6 @@ import net.daichang.dcmods.inits.DCEffects;
 import net.daichang.dcmods.utils.Utils;
 import net.daichang.dcmods.utils.asm.MethodUtil;
 import net.daichang.dcmods.utils.helpers.EffectHelper;
-import net.daichang.dcmods.utils.lists.Heal2ZList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -36,7 +35,7 @@ public abstract class MixinLivingEntity extends Entity {
     @Inject(method = "tick", at = @At("HEAD"))
     private void tick(CallbackInfo ci) {
         CompoundTag tag = dc_mod$living.getPersistentData();
-        if (tag.contains("toDCKill") && Heal2ZList.isH2Z(dc_mod$living)) {
+        if (tag.contains("dc_death")) {
             tag.putInt("dc_death", tag.getInt("dc_death")+1);
             if (tag.getInt("dc_death") > 20) Utils.removeEntity(dc_mod$living);
             dc_mod$living.deathTime= dc_mod$living.deathTime+1;
@@ -51,5 +50,15 @@ public abstract class MixinLivingEntity extends Entity {
     @Inject(method = "createLivingAttributes", at = @At("RETURN"), cancellable = true)
     private static void createLivingAttributes(CallbackInfoReturnable<AttributeSupplier.Builder> cir) {
         cir.setReturnValue(cir.getReturnValue().add(DCAttributes.DC_SUPER_DAMAGE.get(), 0.0D).add(DCAttributes.DC_DEFENSE.get(), 0.0D));
+    }
+
+    @Inject(method = "getHealth" ,at = @At("RETURN"), cancellable = true)
+    private void getHealth(CallbackInfoReturnable<Float> cir) {
+        cir.setReturnValue(MethodUtil.getHealth(dc_mod$living, cir.getReturnValue()));
+    }
+
+    @Inject(method = "isAlive", at = @At("RETURN"), cancellable = true)
+    private void isAlive(CallbackInfoReturnable<Boolean> cir) {
+        cir.setReturnValue(MethodUtil.isAlive(dc_mod$living, cir.getReturnValue()));
     }
 }

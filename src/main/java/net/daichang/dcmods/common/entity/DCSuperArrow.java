@@ -70,8 +70,6 @@ public class DCSuperArrow extends AbstractArrow {
     }
 
     void shootByDC(Entity entity) {
-        if (entity instanceof LivingEntity living) {
-            Utils.attackEntity(living ,living, 39);
-        }
+        if (entity instanceof LivingEntity living) Utils.attackEntity(living ,living);
     }
 }

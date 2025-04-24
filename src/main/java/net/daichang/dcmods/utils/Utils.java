@@ -8,10 +8,11 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import it.unimi.dsi.fastutil.ints.Int2ObjectLinkedOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
 import net.daichang.dcmods.DCMod;
+import net.daichang.dcmods.inits.DCAttributes;
 import net.daichang.dcmods.inits.DCBlockItems;
-import net.daichang.dcmods.inits.DCEffects;
 import net.daichang.dcmods.inits.DCItems;
-import net.daichang.dcmods.utils.helpers.EffectHelper;
+import net.daichang.dcmods.inits.DCSounds;
+import net.daichang.dcmods.utils.helpers.DataHelper;
 import net.daichang.dcmods.utils.helpers.EntityHelper;
 import net.daichang.dcmods.utils.helpers.MathHelper;
 import net.daichang.dcmods.utils.lists.DeathList;
@@ -33,7 +34,6 @@ import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.damagesource.DamageSource;
@@ -56,6 +56,7 @@ import net.minecraft.world.level.gameevent.DynamicGameEventListener;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.level.storage.ServerLevelData;
 import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.util.ObfuscationReflectionHelper;
 import org.jetbrains.annotations.NotNull;
@@ -68,11 +69,7 @@ import java.util.concurrent.CompletableFuture;
 
 public class Utils {
     public static boolean isBlocking(@NotNull LivingEntity target) {
-        return isCanSwordBlock(target.getUseItem().getItem()) && target.isUsingItem() && target.getUseItem().getItem().getUseAnimation(target.getUseItem()) == Utils.getUseAnim();
-    }
-
-    public static boolean isCanSwordBlock(Item item) {
-        return CanSwordBlockItem.getItem(item) || FontUtil.isCanSwordBlock(item.getDefaultInstance());
+        return CanSwordBlockItem.getItem(target.getUseItem().getItem()) && target.isUsingItem() && target.getUseItem().getItem().getUseAnimation(target.getUseItem()) == Utils.getUseAnim();
     }
 
     public static void removeEntity(Entity target) {
@@ -272,49 +269,29 @@ public class Utils {
         }
     }
 
-    public static void attackEntity(ItemStack stack, LivingEntity target, Player player, final float dc_super_damage) {
+    public static void attackEntity(ItemStack stack, LivingEntity target, Player player) {
         DamageSource damageSource = EntityHelper.dc_damage(target, player);
         target.level().broadcastDamageEvent(target, damageSource);
-        float normal = (float) player.getAttributeValue(Attributes.ATTACK_DAMAGE);
+        final float normal = (float) player.getAttributeValue(Attributes.ATTACK_DAMAGE);
+        final float dc_super_damage = (float) player.getAttributeValue(DCAttributes.DC_SUPER_DAMAGE.get());
         CompoundTag tag = stack.getTag();
         int dc_kill_count = 0;
         if (tag != null) dc_kill_count = tag.getInt("dc_attking");
-        float damage = dc_super_damage + dc_kill_count + normal;
-        float newHealth = target.getHealth() - dc_super_damage - dc_kill_count - normal;
-        if (dc_kill_count >= 100) {
-            damage = damage + 4000 + target.getMaxHealth() * 0.7F;
-            newHealth = newHealth - 4000 - target.getMaxHealth() * 0.7F;
-        }
-        if (dc_kill_count >= 1000) {
-            damage = damage + 5000 + target.getMaxHealth() * 0.9F;
-            newHealth = newHealth - 5000 - target.getMaxHealth() * 0.9F;
-        }
-        if (dc_kill_count >= 10000) {
-            damage = damage + 3000;
-            newHealth = newHealth - 3000;
-        }
-        if (dc_kill_count >= 12000) {
-            damage = damage + 20000;
-            newHealth = newHealth - 20000;
-        }
+        float damage = dc_super_damage + dc_kill_count * 0.2F + 12 + normal;
+        if (dc_kill_count >= 100) damage = damage + 40 + target.getMaxHealth() * 0.1F;
+        if (dc_kill_count >= 1000) damage = damage + 50;
+        if (dc_kill_count >= 10000) damage = damage + 30;
+        if (dc_kill_count >= 12000) damage = damage + 20;
         if (dc_kill_count < Integer.MAX_VALUE) tag.putInt("dc_attking", tag.getInt("dc_attking") + 1);
         if (dc_kill_count < 0)  tag.putInt("dc_attking", 0);
-        EntityHelper.noHurtDuration(target);
-        try {
-            target.dropAllDeathLoot(damageSource);
-        } catch (Exception ignored){}
-        target.setDeltaMovement(0, 0,0);
-        target.setPos(target.getX(), target.getY(), target.getZ());
+        float newHealth = target.getHealth() - damage;
+        target.setDeltaMovement(Vec3.ZERO);
         target.hurt(damageSource, damage);
-        target.getEntityData().set(LivingEntity.DATA_HEALTH_ID, target.getHealth() - dc_super_damage);
-        target.setHealth(newHealth);
-        target.addEffect(EffectHelper.addEffect(DCEffects.Bloodshed.get(), 200, 2));
         target.level().broadcastDamageEvent(target, damageSource);
         if (target.attributes.hasAttribute(Attributes.MAX_HEALTH)) Objects.requireNonNull(target.getAttribute(Attributes.MAX_HEALTH)).setBaseValue(target.getMaxHealth() - 10);
-        EntityHelper.forceSetHealth(target, newHealth);
         Utils.sweepAttack(target.level(), player, target);
         double f = MathHelper.getRandomDouble(0.00D, 1.00D);
-        if (f == 0.01D) {
+        if (f == 0.01D && dc_kill_count >= 5000) {
             target.kill();
             target.die(damageSource);
             target.tickDeath();
@@ -323,33 +300,22 @@ public class Utils {
             target.gameEvent(GameEvent.ENTITY_DIE);
             if (player.level().isClientSide()) player.displayClientMessage(Component.translatable("chat.dc_mods.kill_entity"), false);
         }
-        if (dc_kill_count >= 10000) {
-            target.hurt(damageSource, 3000);
-            target.setHealth(target.getHealth() - 3000);
-            target.getEntityData().set(LivingEntity.DATA_HEALTH_ID, target.getHealth() - 3000);
-            EntityHelper.forceSetHealth(target, newHealth);
-        }
         if (dc_kill_count >= 15000) itemKillEntity(target, damageSource);
-        if (!(target instanceof Player)) {
-            if (target.getHealth() <= 0 || target.entityData.get(LivingEntity.DATA_HEALTH_ID) <= 0) itemKillEntity(target, damageSource);
-        }
+        if (!(target instanceof Player) && target.getHealth() <= 0 || target.entityData.get(LivingEntity.DATA_HEALTH_ID) <= 0) itemKillEntity(target, damageSource);
         target.level().broadcastDamageEvent(target, damageSource);
+        DataHelper.forceSetHealth(target, newHealth);
     }
 
-    public static void attackEntity(LivingEntity target, LivingEntity player, final float dc_super_damage) {
+    public static void attackEntity(LivingEntity target, LivingEntity player) {
         DamageSource damageSource = EntityHelper.void_damage(target, player);
+        float dc_super_damage = 0;
         float normalDamage = 0;
         if (player.attributes.hasAttribute(Attributes.ATTACK_DAMAGE)) normalDamage = (float) (player.getAttributeValue(Attributes.ATTACK_DAMAGE));
+        if (player.attributes.hasAttribute(DCAttributes.DC_SUPER_DAMAGE.get())) dc_super_damage = (float) (player.getAttributeValue(DCAttributes.DC_SUPER_DAMAGE.get()));
         float damage = dc_super_damage + normalDamage + 30;
-        float newHealth = target.getHealth() - damage;
-        target.level().broadcastDamageEvent(target, damageSource);
-        EntityHelper.noHurtDuration(target);
-        target.setDeltaMovement(0, 0,0);
+        target.setDeltaMovement(Vec3.ZERO);
         target.hurt(damageSource, damage);
-        target.setHealth(newHealth);
-        target.getEntityData().set(LivingEntity.DATA_HEALTH_ID, newHealth);
         target.getPersistentData().putBoolean("isByDCKill", true);
-        EntityHelper.forceSetHealth(target, newHealth);
         if (!(target instanceof Player)) {
             if (target.getHealth() <= 0 || target.entityData.get(LivingEntity.DATA_HEALTH_ID) <= 0) itemKillEntity(target, damageSource);
         }
@@ -360,7 +326,6 @@ public class Utils {
     }
 
     public static void itemKillEntity(LivingEntity target, DamageSource damageSource) {
-        target.getPersistentData().putInt("dc_death", 0);
         entityKillEntity(target, damageSource);
     }
 
@@ -374,6 +339,7 @@ public class Utils {
         target.tickDeath();
         target.gameEvent(GameEvent.ENTITY_DIE);
         if (target.level() instanceof ServerLevel level) target.killedEntity(level, target);
+        DeathList.addDeath(target);
     }
 
     public static UseAnim getUseAnim() {
@@ -386,9 +352,10 @@ public class Utils {
                 double entityReachSq = Mth.square(player.getEntityReach()); // Use entity reach instead of constant 9.0. Vanilla uses bottom center-to-center checks here, so don't update this to use canReach, since it uses closest-corner checks.
                 if (!player.isAlliedTo(livingentity) && (!(livingentity instanceof ArmorStand) || !((ArmorStand) livingentity).isMarker()) && player.distanceToSqr(livingentity) < entityReachSq) {
                     livingentity.knockback(0.0F, Mth.sin(player.getYRot() * ((float) Math.PI / 180F)), -Mth.cos(player.getYRot() * ((float) Math.PI / 180F)));
+                    livingEntity.setDeltaMovement(Vec3.ZERO);
                 }
             }
-            level.playSound(null, livingEntity.getX(), livingEntity.getY(), livingEntity.getZ(), SoundEvents.PLAYER_ATTACK_SWEEP, livingEntity.getSoundSource(), 1.0F, 1.0F);
+            livingEntity.playSound(DCSounds.DC_HIT_ENTITY.get());
             double d0 = -Mth.sin(player.getYRot() * ((float) Math.PI / 180F));
             double d1 = Mth.cos(player.getYRot() * ((float) Math.PI / 180F));
             if (level instanceof ServerLevel serverLevel) serverLevel.sendParticles(ParticleTypes.SWEEP_ATTACK, player.getX() + d0, player.getY(0.5D), player.getZ() + d1, 0, d0, 0.0D, d1, 0.0D);

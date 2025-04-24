@@ -1,1 +1,1 @@
-A Minecraft Mod By DaiChang
+git remote rm originA Minecraft Mod By DaiChang

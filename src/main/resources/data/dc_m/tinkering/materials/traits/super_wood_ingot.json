@@ -2,11 +2,23 @@
   "default": [
     {
       "name": "dc_m:super_wood_ingot",
-      "level": 1
+      "level": 5
     },
     {
-      "name" : "modifier.tconstruct.shiny",
+      "name" : "tconstruct:shiny",
       "level" : 1
+    },
+    {
+      "level": 2,
+      "name": "tconstruct:tasty"
+    },
+    {
+      "level": 4,
+      "name": "tconstruct:magnetic"
+    },
+    {
+      "level": 1,
+      "name": "tconstruct:enhanced"
     }
   ]
 }

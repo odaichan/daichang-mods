@@ -45,6 +45,8 @@ public class DCTabs {
                         //Bow
                         tabData.accept(DCItems.DC_BOW.get());
                         tabData.accept(DCItems.DC_ARROW.get());
+
+                        tabData.accept(DCItems.WOOD_TOTEM.get());
                     }).build());
 
     public static final RegistryObject<CreativeModeTab> DC_MOD_CREATIVE_TAB = tab.register("dc_mod_creative_tab",
@@ -61,6 +63,7 @@ public class DCTabs {
                         tabData.accept(DCItems.DC_ENTITY_REMOVE.get());
                         tabData.accept(DCItems.DC_WITHER_SPAWN.get());
                         tabData.accept(DCItems.HEAL.get());
+                        tabData.accept(DCItems.LoliPickaxe.get());
                     }).build());
 
 

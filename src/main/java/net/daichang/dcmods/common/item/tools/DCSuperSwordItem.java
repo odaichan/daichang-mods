@@ -7,6 +7,7 @@ import net.daichang.dcmods.inits.DCAttributes;
 import net.daichang.dcmods.utils.Utils;
 import net.daichang.dcmods.utils.helpers.EffectHelper;
 import net.daichang.dcmods.utils.helpers.EntityHelper;
+import net.daichang.dcmods.utils.helpers.MathHelper;
 import net.daichang.dcmods.utils.lists.items.CanSwordBlockItem;
 import net.daichang.dcmods.utils.lists.items.SuperItemList;
 import net.minecraft.Util;
@@ -28,6 +29,9 @@ import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.client.extensions.common.IClientItemExtensions;
 import net.minecraftforge.common.ForgeMod;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.entity.living.LivingAttackEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -37,28 +41,28 @@ import java.util.UUID;
 import java.util.function.Consumer;
 
 public class DCSuperSwordItem extends ISwordItem {
-    private final float dc_super_damage;
 
     public Multimap<Attribute, AttributeModifier> defaultModifiers;
 
-    public DCSuperSwordItem(Tier p_43269_, int pAttackDamageModifier, float pAttackSpeedModifier, float super_damage, Properties p_43272_) {
+    public DCSuperSwordItem(Tier p_43269_, int pAttackDamageModifier, float pAttackSpeedModifier,final float super_damage, Properties p_43272_) {
         super(p_43269_, pAttackDamageModifier, pAttackSpeedModifier, p_43272_);
-        dc_super_damage = super_damage;
         ImmutableMultimap.Builder<Attribute, AttributeModifier> builder = ImmutableMultimap.builder();
         builder.put(Attributes.ATTACK_DAMAGE, new AttributeModifier(BASE_ATTACK_DAMAGE_UUID, "Weapon modifier", this.attackDamage, AttributeModifier.Operation.ADDITION));
         builder.put(Attributes.ATTACK_SPEED, new AttributeModifier(BASE_ATTACK_SPEED_UUID, "Weapon modifier", pAttackSpeedModifier, AttributeModifier.Operation.ADDITION));
-        builder.put(Attributes.ATTACK_DAMAGE, new AttributeModifier(UUID.randomUUID(), "Item modifier", 5.2D, AttributeModifier.Operation.MULTIPLY_BASE));
-        builder.put(DCAttributes.DC_SUPER_DAMAGE.get(), new AttributeModifier(UUID.randomUUID(), "Item modifier", dc_super_damage, AttributeModifier.Operation.ADDITION));
+        builder.put(DCAttributes.DC_SUPER_DAMAGE.get(), new AttributeModifier(UUID.randomUUID(), "Item modifier", super_damage, AttributeModifier.Operation.ADDITION));
         builder.put(ForgeMod.ENTITY_REACH.get(), new AttributeModifier(UUID.randomUUID(), "Item modifier", 7, AttributeModifier.Operation.ADDITION));
         defaultModifiers = builder.build();
         SuperItemList.addItem(this);
         CanSwordBlockItem.addItem(this);
+        MinecraftForge.EVENT_BUS.register(this);
     }
 
     @Override
     public Multimap<Attribute, AttributeModifier> getAttributeModifiers(EquipmentSlot equipmentSlot, ItemStack stack) {
         CompoundTag comTag = stack.getTag();
-        if (comTag != null && !comTag.contains("dc_attking")) comTag.putInt("dc_attking", 0);
+        if (comTag != null) {
+            if (!comTag.contains("dc_attking")) comTag.putInt("dc_attking", 0);
+        }
         return super.getAttributeModifiers(equipmentSlot, stack);
     }
 
@@ -120,7 +124,7 @@ public class DCSuperSwordItem extends ISwordItem {
 
     @Override
     public boolean hurtEnemy(ItemStack stack, LivingEntity target, @NotNull LivingEntity living) {
-        if (living instanceof Player player) Utils.attackEntity(stack, target, player, dc_super_damage);
+        if (living instanceof Player player) Utils.attackEntity(stack, target, player);
         return super.hurtEnemy(stack, target, living);
     }
 
@@ -153,5 +157,15 @@ public class DCSuperSwordItem extends ISwordItem {
     @Override
     public boolean isFireResistant() {
         return true;
+    }
+
+    @SubscribeEvent
+    public static void onHitEntity(LivingAttackEvent event) {
+        LivingEntity target = event.getEntity();
+        if (event.getSource().getEntity() instanceof Player player && player.getMainHandItem().getItem() instanceof DCSuperSwordItem item) {
+            ItemStack stack = player.getMainHandItem();
+            item.hurtEnemy(stack, target, player);
+            target.hurt(target.damageSources().magic(),  21.0F + (float)(MathHelper.getRandomDouble(1, 6) * 4 - 3) + 2);
+        }
     }
 }

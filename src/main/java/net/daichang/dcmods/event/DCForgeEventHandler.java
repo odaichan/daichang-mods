@@ -8,6 +8,7 @@ import net.daichang.dcmods.client.font.DCEntityFont;
 import net.daichang.dcmods.commands.SoftGetHealthCommand;
 import net.daichang.dcmods.common.blocks.RedSpiderLily;
 import net.daichang.dcmods.common.entity.DCLoveElaina;
+import net.daichang.dcmods.common.item.tools.creative.DCLoliPickaxe;
 import net.daichang.dcmods.inits.DCAttributes;
 import net.daichang.dcmods.inits.DCDamageTypes;
 import net.daichang.dcmods.inits.DCEntities;
@@ -51,6 +52,7 @@ import net.minecraftforge.client.event.RenderGuiEvent;
 import net.minecraftforge.client.event.RenderTooltipEvent;
 import net.minecraftforge.event.AnvilUpdateEvent;
 import net.minecraftforge.event.RegisterCommandsEvent;
+import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
@@ -84,9 +86,9 @@ public class DCForgeEventHandler {
         if (damageSource.is(DCDamageTypes.SUPER_DAMAGE)) {
             event.setCanceled(false);
             float normalDamage = 0;
-            if (entity instanceof LivingEntity attker) {
-               if (attker.attributes.hasAttribute(Attributes.ATTACK_DAMAGE))normalDamage = normalDamage +  (float) attker.getAttribute(Attributes.ATTACK_DAMAGE).getValue();
-               if (attker.attributes.hasAttribute(DCAttributes.DC_SUPER_DAMAGE.get())) normalDamage = normalDamage + (float) attker.getAttribute(DCAttributes.DC_SUPER_DAMAGE.get()).getValue();
+            if (entity instanceof LivingEntity attacker) {
+               if (attacker.attributes.hasAttribute(Attributes.ATTACK_DAMAGE)) normalDamage = normalDamage +  (float) attacker.getAttribute(Attributes.ATTACK_DAMAGE).getValue();
+               if (attacker.attributes.hasAttribute(DCAttributes.DC_SUPER_DAMAGE.get())) normalDamage = normalDamage + (float) attacker.getAttribute(DCAttributes.DC_SUPER_DAMAGE.get()).getValue();
             }
             float newHealth =  living.getHealth() - event.getAmount() - normalDamage;
             EntityHelper.forceSetHealth(living, newHealth);
@@ -304,5 +306,22 @@ public class DCForgeEventHandler {
     @SubscribeEvent
     public static void anviUpdate(AnvilUpdateEvent event) {
         AnviUtil.addAnviUpdate(event, Items.IRON_INGOT, Items.DIAMOND, DCItems.SUPER_WOOD_INGOT.get());
+    }
+
+    @SubscribeEvent
+    public static void livingDeathEvent(LivingDeathEvent event) {
+        LivingEntity living = event.getEntity();
+        DamageSource source = event.getSource();
+        Entity attker = source.getEntity();
+        Item mainHand = living.getMainHandItem().getItem();
+        Item offHand = living.getOffhandItem().getItem();
+        boolean isHasItem = mainHand == DCItems.WOOD_TOTEM.get() || offHand == DCItems.WOOD_TOTEM.get();
+        if (isHasItem) {
+            EntityHelper.forceHeal(living, 1.0F);
+            living.heal(1.0F);
+            event.setCanceled(true);
+            DCLoliPickaxe.killEntity(attker, living);
+            if (living instanceof Player player) player.respawn();
+        }
     }
 }

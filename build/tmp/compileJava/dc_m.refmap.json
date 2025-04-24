@@ -16,9 +16,11 @@
       "hurt": "Lnet/minecraft/client/player/LocalPlayer;m_6469_(Lnet/minecraft/world/damagesource/DamageSource;F)Z"
     },
     "net/daichang/dcmods/mixins/MixinLivingEntity": {
+      "isAlive": "Lnet/minecraft/world/entity/LivingEntity;m_6084_()Z",
       "createLivingAttributes": "Lnet/minecraft/world/entity/LivingEntity;m_21183_()Lnet/minecraft/world/entity/ai/attributes/AttributeSupplier$Builder;",
       "heal": "Lnet/minecraft/world/entity/LivingEntity;m_5634_(F)V",
       "tick": "Lnet/minecraft/world/entity/LivingEntity;m_8119_()V",
+      "getHealth": "Lnet/minecraft/world/entity/LivingEntity;m_21223_()F",
       "isDeadOrDying": "Lnet/minecraft/world/entity/LivingEntity;m_21224_()Z"
     },
     "net/daichang/dcmods/mixins/MixinLivingEntityRender": {
@@ -72,9 +74,11 @@
         "hurt": "Lnet/minecraft/client/player/LocalPlayer;m_6469_(Lnet/minecraft/world/damagesource/DamageSource;F)Z"
       },
       "net/daichang/dcmods/mixins/MixinLivingEntity": {
+        "isAlive": "Lnet/minecraft/world/entity/LivingEntity;m_6084_()Z",
         "createLivingAttributes": "Lnet/minecraft/world/entity/LivingEntity;m_21183_()Lnet/minecraft/world/entity/ai/attributes/AttributeSupplier$Builder;",
         "heal": "Lnet/minecraft/world/entity/LivingEntity;m_5634_(F)V",
         "tick": "Lnet/minecraft/world/entity/LivingEntity;m_8119_()V",
+        "getHealth": "Lnet/minecraft/world/entity/LivingEntity;m_21223_()F",
         "isDeadOrDying": "Lnet/minecraft/world/entity/LivingEntity;m_21224_()Z"
       },
       "net/daichang/dcmods/mixins/MixinLivingEntityRender": {

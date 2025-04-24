@@ -12,11 +12,11 @@
   "tooltip.dc_mods.tips": "アイテムは使用するにつれて徐々にダメージが上がります",
   "attribute.dc_mods.super_damage": "雪のダメージ",
   "tooltip.dc_mods.tips_1": "使用回数が100を超えると",
-  "tooltip.dc_mods.tips_2": "ダメージは目標のHPの70%に200を加えた値になります",
+  "tooltip.dc_mods.tips_2": "ダメージは目標のHPの5%に20を加えた値になります",
   "tooltip.dc_mods.attacking_entity": "エンティティを攻撃すると、プレイヤーに減速効果を与えます",
   "tooltip.dc_mods.sword_boxing": "防御すると、特殊効果を得ます",
-  "tooltip.dc_mods.tip_3": "使用回数が1000を超えると",
-  "tooltip.dc_mods.kill_entity": "10%の確率でエンティティを即死させます",
+  "tooltip.dc_mods.tip_3": "使用回数が5000を超えると",
+  "tooltip.dc_mods.kill_entity": "1%の確率でエンティティを即死させます",
   "tooltip.dc_mods.strong": "使用回数が10000を超えると\nアイテムが覚醒します",
   "tooltip.dc_mods.is_strong": "覚醒しました！",
   "tooltip.dc_mods.minecraft": "ダイチョウの祝福により",
@@ -81,5 +81,8 @@
   "material.dc_m.super_wood_ingot": "超木質インゴット",
   "modifier.dc_m.super_wood_ingot": "虚空の断罪",
   "modifier.dc_m.super_wood_ingot.flavor": "瞬断必中",
-  "modifier.dc_m.super_wood_ingot.description": "エンティティを攻撃する際、エンティティにマークを付け、攻撃間隔を無視してエンティティに強制的にダメージを与える"
+  "modifier.dc_m.super_wood_ingot.description": "エンティティを攻撃する際、エンティティにマークを付け、攻撃間隔を無視してエンティティに強制的にダメージを与える",
+  "item.dc_m.loli_pickaxe": "氪金萝莉",
+  "tooltip.dc_m.loli_pickaxe": "ワールドの余分なエンティティをすばやくクリーンアップする",
+  "tconstruct.dc_m.tool_tip": "§l§4DaiChangに祝福されたアイテム"
 }

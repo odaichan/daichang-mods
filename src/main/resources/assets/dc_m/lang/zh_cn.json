@@ -12,11 +12,11 @@
   "tooltip.dc_mods.tips": "物品会随着你的使用逐渐提升伤害",
   "attribute.dc_mods.super_damage": "雪之伤害",
   "tooltip.dc_mods.tips_1": "当使用数大于100时",
-  "tooltip.dc_mods.tips_2": "伤害为目标生命值的70%加200",
+  "tooltip.dc_mods.tips_2": "伤害为目标生命值的5%加20",
   "tooltip.dc_mods.attacking_entity": "攻击实体时，对玩家造成减速效果",
   "tooltip.dc_mods.sword_boxing": "格挡时，获得特殊效果",
   "tooltip.dc_mods.tip_3": "当使用数大于1000时",
-  "tooltip.dc_mods.kill_entity": "10%的概率直接杀死实体",
+  "tooltip.dc_mods.kill_entity": "1%的概率直接杀死实体",
   "tooltip.dc_mods.strong": "使用次数大于10000时\n物品会觉醒",
   "tooltip.dc_mods.is_strong": "已觉醒！",
   "tooltip.dc_mods.minecraft": "因带长的祝福",
@@ -81,5 +81,8 @@
   "material.dc_m.super_wood_ingot": "超级木制锭",
   "modifier.dc_m.super_wood_ingot": "虚空断罪",
   "modifier.dc_m.super_wood_ingot.flavor": "瞬断・必中",
-  "modifier.dc_m.super_wood_ingot.description": "攻击实体时，对实体进行标记， 无视攻击间隔，强制伤害实体"
+  "modifier.dc_m.super_wood_ingot.description": "攻击实体时，对实体进行标记， 无视攻击间隔，强制伤害实体",
+  "item.dc_m.loli_pickaxe": "氪金萝莉",
+  "tooltip.dc_m.loli_pickaxe": "用于快速清理世界多余实体",
+  "tconstruct.dc_m.tool_tip": "§l§4被带长祝福的物品"
 }
