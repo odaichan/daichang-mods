@@ -13,7 +13,6 @@ import java.util.stream.Stream;
 
 @Mixin(value = UseAnim.class, priority = 0x7fffffff)
 public abstract class UseAnimMixin {
-
     @Shadow
     @Final
     @Mutable

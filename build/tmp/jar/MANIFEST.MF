@@ -3,11 +3,11 @@ Specification-Title: dc_m
 Specification-Vendor: DaiChang
 Specification-Version: 1
 Implementation-Title: daichangmod
-Implementation-Version: 1.1.4
+Implementation-Version: 1.1.5
 Can-Redefine-Classes: true
 Can-Retransform-Classes: true
 Implementation-Vendor: DaiChang
-Implementation-Timestamp: 2025-04-24T23:24:40+0800
+Implementation-Timestamp: 2025-04-26T00:45:59+0800
 Premain-Class: net.daichang.dcagent.DCAgent
 Agentmain-Class: net.daichang.dcagent.DCAgent
 Agent-Class: net.daichang.dcagent.DCAgent

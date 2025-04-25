@@ -10,7 +10,7 @@ public class BetterAnimation {
 
     public BetterAnimation(int maxTick) {
         this.maxTick = maxTick;
-        this.tick = 0;  // 初始化 tick 为 0
+        this.tick = 0;
         this.prevTick = 0;
     }
 
@@ -33,7 +33,6 @@ public class BetterAnimation {
         return dropAnimation((this.prevTick + (this.tick - this.prevTick) * Minecraft.getInstance().getFrameTime()) / maxTick);
     }
 
-    // 添加 reset 方法，用于重置动画状态
     public void reset() {
         this.tick = 0;
         this.prevTick = 0;

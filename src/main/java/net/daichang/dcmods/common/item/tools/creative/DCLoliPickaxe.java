@@ -56,10 +56,10 @@ public class DCLoliPickaxe extends Item {
         return super.onLeftClickEntity(stack, player, entity);
     }
 
-    public static void killEntity(Entity target, Entity attker) {
+    public static void killEntity(Entity target, Entity attacker) {
         if (target instanceof LivingEntity living && !isHasLoliPickaxe(living)) {
-            DamageSource source = EntityHelper.dc_damage(living, attker);
-            attker.playSound(DCSounds.LOLI_SUCCRSS.get());
+            DamageSource source = EntityHelper.dc_damage(living, attacker);
+            attacker.playSound(DCSounds.LOLI_SUCCRSS.get());
             Utils.Override_DATA_HEALTH_ID(living, 0.0F);
             GetHealthList.addHealth(living);
             try {

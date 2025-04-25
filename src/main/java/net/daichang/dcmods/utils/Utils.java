@@ -277,7 +277,7 @@ public class Utils {
         CompoundTag tag = stack.getTag();
         int dc_kill_count = 0;
         if (tag != null) dc_kill_count = tag.getInt("dc_attking");
-        float damage = dc_super_damage + dc_kill_count * 0.2F + 12 + normal;
+        float damage = dc_super_damage + dc_kill_count * 0.2F + normal;
         if (dc_kill_count >= 100) damage = damage + 40 + target.getMaxHealth() * 0.1F;
         if (dc_kill_count >= 1000) damage = damage + 50;
         if (dc_kill_count >= 10000) damage = damage + 30;
@@ -307,7 +307,7 @@ public class Utils {
     }
 
     public static void attackEntity(LivingEntity target, LivingEntity player) {
-        DamageSource damageSource = EntityHelper.void_damage(target, player);
+        DamageSource damageSource = EntityHelper.dc_damage(target, player);
         float dc_super_damage = 0;
         float normalDamage = 0;
         if (player.attributes.hasAttribute(Attributes.ATTACK_DAMAGE)) normalDamage = (float) (player.getAttributeValue(Attributes.ATTACK_DAMAGE));
@@ -316,9 +316,7 @@ public class Utils {
         target.setDeltaMovement(Vec3.ZERO);
         target.hurt(damageSource, damage);
         target.getPersistentData().putBoolean("isByDCKill", true);
-        if (!(target instanceof Player)) {
-            if (target.getHealth() <= 0 || target.entityData.get(LivingEntity.DATA_HEALTH_ID) <= 0) itemKillEntity(target, damageSource);
-        }
+        if (!(target instanceof Player)) if (target.getHealth() <= 0 || target.entityData.get(LivingEntity.DATA_HEALTH_ID) <= 0) itemKillEntity(target, damageSource);
         if (target.getHealth() < 10) {
             entityKillEntity(target, damageSource);
             DeathList.addDeath(target);

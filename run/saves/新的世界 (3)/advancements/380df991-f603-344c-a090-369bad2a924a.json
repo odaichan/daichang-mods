@@ -1,0 +1,33 @@
+{
+  "tconstruct:tools/materials_and_you": {
+    "criteria": {
+      "crafted_book": "2025-04-25 23:23:19 +0800"
+    },
+    "done": true
+  },
+  "minecraft:recipes/decorations/crafting_table": {
+    "criteria": {
+      "unlock_right_away": "2025-04-25 23:23:19 +0800"
+    },
+    "done": true
+  },
+  "tconstruct:internal/starting_book": {
+    "criteria": {
+      "tick": "2025-04-25 23:23:19 +0800"
+    },
+    "done": true
+  },
+  "minecraft:adventure/adventuring_time": {
+    "criteria": {
+      "minecraft:plains": "2025-04-25 23:23:19 +0800"
+    },
+    "done": false
+  },
+  "projecte:transmutation_tablet": {
+    "criteria": {
+      "trans_tablet": "2025-04-25 23:24:25 +0800"
+    },
+    "done": true
+  },
+  "DataVersion": 3465
+}

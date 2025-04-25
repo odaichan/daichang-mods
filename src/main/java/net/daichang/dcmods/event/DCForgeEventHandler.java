@@ -7,10 +7,9 @@ import net.daichang.dcmods.DCMod;
 import net.daichang.dcmods.client.font.DCEntityFont;
 import net.daichang.dcmods.commands.SoftGetHealthCommand;
 import net.daichang.dcmods.common.blocks.RedSpiderLily;
+import net.daichang.dcmods.common.damge_type.SuperDamageTypes;
 import net.daichang.dcmods.common.entity.DCLoveElaina;
-import net.daichang.dcmods.common.item.tools.creative.DCLoliPickaxe;
 import net.daichang.dcmods.inits.DCAttributes;
-import net.daichang.dcmods.inits.DCDamageTypes;
 import net.daichang.dcmods.inits.DCEntities;
 import net.daichang.dcmods.inits.DCItems;
 import net.daichang.dcmods.utils.AnviUtil;
@@ -33,6 +32,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -52,12 +52,14 @@ import net.minecraftforge.client.event.RenderGuiEvent;
 import net.minecraftforge.client.event.RenderTooltipEvent;
 import net.minecraftforge.event.AnvilUpdateEvent;
 import net.minecraftforge.event.RegisterCommandsEvent;
+import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
 import java.util.HashMap;
@@ -74,7 +76,7 @@ public class DCForgeEventHandler {
     private static Map<DCLoveElaina, Integer> prevBarWidthMap = new HashMap<>();
 
     @SubscribeEvent
-    public static void hurtEvent(LivingHurtEvent event) {
+    public static void hurtEvent(@NotNull LivingHurtEvent event) {
         LivingEntity living = event.getEntity();
         DamageSource damageSource = event.getSource();
         Entity entity = damageSource.getEntity();
@@ -83,18 +85,27 @@ public class DCForgeEventHandler {
             if (attker.attributes.hasAttribute(DCAttributes.DC_DEFENSE.get())) event.setAmount((float) (event.getAmount() - (((float) attker.getAttribute(DCAttributes.DC_DEFENSE.get()).getValue()) + 10 * 0.2F -0.3)));
         }
         if (Utils.isBlocking(living)) event.setCanceled(true);
-        if (damageSource.is(DCDamageTypes.SUPER_DAMAGE)) {
+    }
+
+    @SubscribeEvent
+    public static void leftClickEntity(@NotNull LivingAttackEvent event) {
+        LivingEntity living = event.getEntity();
+        DamageSource damageSource = event.getSource();
+        Entity entity = damageSource.getEntity();
+        if (damageSource.is(SuperDamageTypes.SUPER_DAMAGE)) {
             event.setCanceled(false);
             float normalDamage = 0;
             if (entity instanceof LivingEntity attacker) {
-               if (attacker.attributes.hasAttribute(Attributes.ATTACK_DAMAGE)) normalDamage = normalDamage +  (float) attacker.getAttribute(Attributes.ATTACK_DAMAGE).getValue();
-               if (attacker.attributes.hasAttribute(DCAttributes.DC_SUPER_DAMAGE.get())) normalDamage = normalDamage + (float) attacker.getAttribute(DCAttributes.DC_SUPER_DAMAGE.get()).getValue();
+                if (attacker.attributes.hasAttribute(Attributes.ATTACK_DAMAGE)) normalDamage = normalDamage +  (float) attacker.getAttribute(Attributes.ATTACK_DAMAGE).getValue();
+                if (attacker.attributes.hasAttribute(DCAttributes.DC_SUPER_DAMAGE.get())) normalDamage = normalDamage + (float) attacker.getAttribute(DCAttributes.DC_SUPER_DAMAGE.get()).getValue();
             }
             float newHealth =  living.getHealth() - event.getAmount() - normalDamage;
             EntityHelper.forceSetHealth(living, newHealth);
             EntityHelper.noHurtDuration(living);
+            living.getEntityData().set(LivingEntity.DATA_HEALTH_ID, newHealth);
             living.setHealth(newHealth);
             living.dropAllDeathLoot(EntityHelper.dc_damage(living, living));
+            living.playHurtSound(damageSource);
         }
     }
 
@@ -123,10 +134,9 @@ public class DCForgeEventHandler {
             if (player.getInventory().countItem(DCItems.SUPER_WOOD_INGOT.get()) > 9) {
                 if (level instanceof ServerLevel serverLevel) {
                     DCLoveElaina dcWitherBoss = new DCLoveElaina(DCEntities.DC_WITHER.get(), serverLevel);
+                    dcWitherBoss.setPos(pos.getX(), pos.getY(), pos.getZ());
+                    dcWitherBoss.setTarget(player);
                     serverLevel.addFreshEntity(dcWitherBoss);
-                }
-                if (level.isClientSide()) {
-                    player.displayClientMessage(Component.translatable("chat.dc_mods.spawn_entity"), true);
                 }
             }
         }
@@ -312,7 +322,6 @@ public class DCForgeEventHandler {
     public static void livingDeathEvent(LivingDeathEvent event) {
         LivingEntity living = event.getEntity();
         DamageSource source = event.getSource();
-        Entity attker = source.getEntity();
         Item mainHand = living.getMainHandItem().getItem();
         Item offHand = living.getOffhandItem().getItem();
         boolean isHasItem = mainHand == DCItems.WOOD_TOTEM.get() || offHand == DCItems.WOOD_TOTEM.get();
@@ -320,8 +329,11 @@ public class DCForgeEventHandler {
             EntityHelper.forceHeal(living, 1.0F);
             living.heal(1.0F);
             event.setCanceled(true);
-            DCLoliPickaxe.killEntity(attker, living);
-            if (living instanceof Player player) player.respawn();
+            living.playSound(SoundEvents.TOTEM_USE);
+            if (living instanceof Player player) {
+                player.respawn();
+                Minecraft.getInstance().gameRenderer.displayItemActivation(new ItemStack(DCItems.WOOD_TOTEM.get()));
+            }
         }
     }
 }

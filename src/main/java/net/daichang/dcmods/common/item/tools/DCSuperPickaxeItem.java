@@ -1,6 +1,6 @@
 package net.daichang.dcmods.common.item.tools;
 
-import net.daichang.dcmods.client.font.DCFont;
+import net.daichang.dcmods.client.font.DCItemFont;
 import net.daichang.dcmods.utils.helpers.EntityHelper;
 import net.daichang.dcmods.utils.lists.items.SuperItemList;
 import net.minecraft.client.gui.Font;
@@ -41,11 +41,16 @@ public class DCSuperPickaxeItem extends PickaxeItem {
     }
 
     @Override
+    public boolean isFoil(ItemStack pStack) {
+        return true;
+    }
+
+    @Override
     public void initializeClient(@NotNull Consumer<IClientItemExtensions> consumer) {
         consumer.accept(new IClientItemExtensions() {
             @Override
             public @NotNull Font getFont(ItemStack stack, FontContext context) {
-                return DCFont.getFont();
+                return DCItemFont.getFont();
             }
         });
         super.initializeClient(consumer);

@@ -2,6 +2,7 @@ package net.daichang.dcmods.utils.helpers;
 
 import net.daichang.dcmods.client.PacketHandler;
 import net.daichang.dcmods.client.network.S2CSyncSetFloatField;
+import net.daichang.dcmods.utils.ClassUtil;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.util.Mth;

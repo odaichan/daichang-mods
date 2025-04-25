@@ -10,6 +10,20 @@ import java.util.List;
 public class FileHelper implements DCBaseLib {
     static final String DEFAULT_FILE_PATH = path + "/dc_list.txt";
 
+    public static void creativeFile(String filePath) {
+        File file = new File(filePath);
+        try {
+            if (!file.exists()) file.createNewFile();
+        } catch (IOException e) {
+            System.err.println("无法创建文件: " + filePath);
+        }
+    }
+
+    public static void creativeDefaultFile() {
+        creativeFile(DEFAULT_FILE_PATH);
+    }
+
+
     public static List<String> getFileItems(String filePath) {
         List<String> fileItems = new ArrayList<>();
         try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {

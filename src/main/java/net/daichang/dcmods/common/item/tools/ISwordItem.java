@@ -20,6 +20,8 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Random;
+
 public class ISwordItem extends SwordItem {
     public ISwordItem(Tier pTier, int pAttackDamageModifier, float pAttackSpeedModifier, Properties pProperties) {
         super(pTier, pAttackDamageModifier, pAttackSpeedModifier, pProperties);
@@ -28,9 +30,9 @@ public class ISwordItem extends SwordItem {
 
     @Override
     public InteractionResultHolder<ItemStack> use(Level pLevel, Player pPlayer, InteractionHand pUsedHand) {
-        pPlayer.startUsingItem(pUsedHand);
         ItemStack stack = pPlayer.getItemInHand(pUsedHand);
-        stack.getOrCreateTag().putInt("onDCSwordBlock", stack.getOrCreateTag().getInt("onDCSwordBlock") + 1);
+        stack.getTag().putInt("onDCSwordBlock", new Random().nextInt());
+        pPlayer.startUsingItem(pUsedHand);
         return super.use(pLevel, pPlayer, pUsedHand);
     }
 
@@ -41,7 +43,7 @@ public class ISwordItem extends SwordItem {
 
     @Override
     public Multimap<Attribute, AttributeModifier> getAttributeModifiers(EquipmentSlot slot, ItemStack stack) {
-        if (!(stack.getOrCreateTag().contains("onDCSwordBlock"))) stack.getOrCreateTag().putInt("onDCSwordBlock", 0);
+        if (!(stack.getTag().contains("onDCSwordBlock"))) stack.getTag().putInt("onDCSwordBlock", 0);
         return super.getAttributeModifiers(slot, stack);
     }
 

@@ -1,6 +1,6 @@
 package net.daichang.dcmods.common.item.tools;
 
-import net.daichang.dcmods.client.font.DCFont;
+import net.daichang.dcmods.client.font.DCItemFont;
 import net.daichang.dcmods.utils.lists.items.SuperItemList;
 import net.minecraft.client.gui.Font;
 import net.minecraft.network.chat.Component;
@@ -41,9 +41,14 @@ public class DCShovelItem extends ShovelItem {
         consumer.accept(new IClientItemExtensions() {
             @Override
             public @NotNull Font getFont(ItemStack stack, FontContext context) {
-                return DCFont.getFont();
+                return DCItemFont.getFont();
             }
         });
         super.initializeClient(consumer);
+    }
+
+    @Override
+    public boolean isFoil(ItemStack pStack) {
+        return true;
     }
 }

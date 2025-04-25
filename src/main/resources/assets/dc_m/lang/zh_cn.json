@@ -15,7 +15,7 @@
   "tooltip.dc_mods.tips_2": "伤害为目标生命值的5%加20",
   "tooltip.dc_mods.attacking_entity": "攻击实体时，对玩家造成减速效果",
   "tooltip.dc_mods.sword_boxing": "格挡时，获得特殊效果",
-  "tooltip.dc_mods.tip_3": "当使用数大于1000时",
+  "tooltip.dc_mods.tip_3": "当使用数大于5000时",
   "tooltip.dc_mods.kill_entity": "1%的概率直接杀死实体",
   "tooltip.dc_mods.strong": "使用次数大于10000时\n物品会觉醒",
   "tooltip.dc_mods.is_strong": "已觉醒！",

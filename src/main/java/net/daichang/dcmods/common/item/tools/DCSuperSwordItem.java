@@ -2,7 +2,7 @@ package net.daichang.dcmods.common.item.tools;
 
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
-import net.daichang.dcmods.client.font.DCFont;
+import net.daichang.dcmods.client.font.DCItemFont;
 import net.daichang.dcmods.inits.DCAttributes;
 import net.daichang.dcmods.utils.Utils;
 import net.daichang.dcmods.utils.helpers.EffectHelper;
@@ -76,7 +76,7 @@ public class DCSuperSwordItem extends ISwordItem {
         consumer.accept(new IClientItemExtensions() {
             @Override
             public @NotNull Font getFont(ItemStack stack, FontContext context) {
-                return DCFont.getFont();
+                return DCItemFont.getFont();
             }
         });
         super.initializeClient(consumer);
@@ -151,7 +151,7 @@ public class DCSuperSwordItem extends ISwordItem {
 
     @Override
     public boolean isFoil(ItemStack pStack) {
-        return pStack.getTag().getInt("dc_attking") >= 10000;
+        return true;
     }
 
     @Override

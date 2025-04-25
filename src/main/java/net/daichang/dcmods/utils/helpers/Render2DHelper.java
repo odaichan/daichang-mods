@@ -6,7 +6,6 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
 import com.mojang.math.Axis;
 import net.daichang.dcmods.utils.GaussianFilter;
-import net.daichang.dcmods.utils.RenderUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -21,7 +20,7 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.HashMap;
 
-public class Render2DHelper extends RenderUtil {
+public class Render2DHelper extends RenderHelper {
     public static HashMap<Integer, Integer> shadowCache = new HashMap<>();
 
     //绘制阴影
@@ -304,24 +303,14 @@ public class Render2DHelper extends RenderUtil {
         // 然后在上面绘制渐变效果
         Color start = new Color(startColor);
         Color end = new Color(endColor);
-
-        draw2DGradientRect(
-                poseStack,
-                x,
-                y,
-                x + width,
-                y + height,
-                start,
-                end,
-                start,
-                end
-        );
+        draw2DGradientRect(poseStack, x, y, x + width, y + height, start, end, start, end);
     }
 
     public static void lightRays(PoseStack poseStack, float partialTicks, float x, float y, MultiBufferSource multiBufferSource) {
-        float v = ((float) Minecraft.getInstance().level.getGameTime() + partialTicks) / 500.0f;
+        float v = 0;
+        if (Minecraft.getInstance().level != null) v = ((float) Minecraft.getInstance().level.getGameTime() + partialTicks) / 500.0f;
         float v1 = Math.min(v > 0.8f ? (v - 0.8f) / 0.2f : 0.0f, 1.0f);
-        RandomSource randomSource = RandomSource.create((long)432L);
+        RandomSource randomSource = RandomSource.create(432L);
         VertexConsumer vertexConsumer = multiBufferSource.getBuffer(RenderType.eyes(new ResourceLocation("dc_m", "textures/entities/white.png")));
         poseStack.pushPose();
         poseStack.translate(x, y, 0.0f);
@@ -332,8 +321,8 @@ public class Render2DHelper extends RenderUtil {
             poseStack.mulPose(Axis.XP.rotationDegrees(randomSource.nextFloat() * 360.0f));
             poseStack.mulPose(Axis.YP.rotationDegrees(randomSource.nextFloat() * 360.0f));
             poseStack.mulPose(Axis.ZP.rotationDegrees(randomSource.nextFloat() * 360.0f + v * 90.0f));
-            float v2 = randomSource.nextFloat() * 100.0f + 5.0f + v1 * 1.0f;
-            float v3 = randomSource.nextFloat() * 100.0f + 1.0f + v1 * 1.0f;
+            float v2 = randomSource.nextFloat() * 100.0f + 5.0f + v1;
+            float v3 = randomSource.nextFloat() * 100.0f + 1.0f + v1;
             Matrix4f matrix4f = poseStack.last().pose();
             Matrix3f matrix3f = poseStack.last().normal();
             int i1 = 50;
@@ -363,6 +352,6 @@ public class Render2DHelper extends RenderUtil {
     }
 
     private static void vertex4(VertexConsumer p_254184_, Matrix4f p_254082_, Matrix3f matrix3f, float p_253649_, float p_253694_) {
-        p_254184_.vertex(p_254082_, 0.0f, p_253649_, 1.0f * p_253694_).color(0, 0, 0, 0).uv(0.0f, 0.0f).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(15).normal(matrix3f, 0.0f, 1.0f, 0.0f).endVertex();
+        p_254184_.vertex(p_254082_, 0.0f, p_253649_, p_253694_).color(0, 0, 0, 0).uv(0.0f, 0.0f).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(15).normal(matrix3f, 0.0f, 1.0f, 0.0f).endVertex();
     }
 }

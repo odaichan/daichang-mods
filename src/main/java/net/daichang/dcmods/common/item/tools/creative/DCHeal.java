@@ -1,6 +1,6 @@
 package net.daichang.dcmods.common.item.tools.creative;
 
-import net.daichang.dcmods.client.font.DCFont;
+import net.daichang.dcmods.client.font.DCItemFont;
 import net.daichang.dcmods.utils.helpers.EntityHelper;
 import net.daichang.dcmods.utils.lists.items.CreativeItemList;
 import net.minecraft.client.gui.Font;
@@ -51,7 +51,7 @@ public class DCHeal extends Item {
         consumer.accept(new IClientItemExtensions() {
             @Override
             public @NotNull Font getFont(ItemStack stack, FontContext context) {
-                return DCFont.getFont();
+                return DCItemFont.getFont();
             }
         });
         super.initializeClient(consumer);

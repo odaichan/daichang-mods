@@ -9669,6 +9669,13 @@ net/daichang/dcmods/mixins/MixinItemEntity net/daichang/dcmods/mixins/MixinItemE
 	dampensVibrations ()Z m_213854_
 net/daichang/dcmods/mixins/MixinLivingEntityRender net/daichang/dcmods/mixins/MixinLivingEntityRender
 	getFlipDegrees (Lnet/minecraft/world/entity/LivingEntity;)F m_6441_
+net/daichang/dcmods/mixins/renderer/GuiGraphicsMixin net/daichang/dcmods/mixins/renderer/GuiGraphicsMixin
+	bufferSource f_279627_
+	pose f_279612_
+	flushIfUnmanaged ()V m_286081_
+	guiHeight ()I m_280206_
+	guiWidth ()I m_280182_
+	pose ()Lcom/mojang/blaze3d/vertex/PoseStack; m_280168_
 net/daichang/dcmods/mixins/sword_block/HumanoidModelMixin net/daichang/dcmods/mixins/sword_block/HumanoidModelMixin
 	body f_102810_
 	crouching f_102817_

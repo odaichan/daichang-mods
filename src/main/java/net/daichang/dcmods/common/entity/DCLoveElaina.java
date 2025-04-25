@@ -1,7 +1,7 @@
 package net.daichang.dcmods.common.entity;
 
 import net.daichang.dcmods.client.PacketHandler;
-import net.daichang.dcmods.client.font.DCFont;
+import net.daichang.dcmods.client.font.DCItemFont;
 import net.daichang.dcmods.client.network.S2CElainaPacket;
 import net.daichang.dcmods.client.network.S2CSonicBoomPacket;
 import net.daichang.dcmods.event.DCForgeEventHandler;
@@ -55,6 +55,7 @@ public class DCLoveElaina extends Monster implements PowerableMob, RangedAttackM
     public static EntityDataAccessor<Integer> ATTACK_COUNT;
     public static EntityDataAccessor<Boolean> IS_RANGE_ATTACK;
     private int rangeAttackLife = 0;
+    private final Difficulty difficulty = level.getDifficulty();
 
     public final AnimationState idleAnimationState = new AnimationState();
     public final AnimationState attackAnimationState = new AnimationState();
@@ -110,7 +111,6 @@ public class DCLoveElaina extends Monster implements PowerableMob, RangedAttackM
         super.customServerAiStep();
         if (this.tickCount % 10 == 0) {
             float value = 0;
-            Difficulty difficulty = level.getDifficulty();
             switch (difficulty) {
                 case PEACEFUL, EASY -> value = 10;
                 case NORMAL -> value = 500;
@@ -128,11 +128,7 @@ public class DCLoveElaina extends Monster implements PowerableMob, RangedAttackM
         damage = (float) (damage - getAttributeValue(DCAttributes.DC_DEFENSE.get()));
         if (damage > 100) damage = 100;
         if (getHealth() <= 10 || isDeadOrDying() || isUnsafeDamage(damageSource)) return false;
-        int canJump = MathHelper.getRandomInt(1, 3);
-        if (canJump == 2) {
-            Vec3 jumpDirection = new Vec3(- this.getLookAngle().normalize().x, 0.2F, - this.getLookAngle().normalize().z);
-            this.setDeltaMovement(jumpDirection.scale(1.5F));
-        }
+        this.setDeltaMovement(Vec3.ZERO);
         Entity entity = damageSource.getEntity();
         double canTeleport = MathHelper.getRandomDouble(0.0D, 1.0D);
         if (canTeleport == 0.1) {
@@ -146,6 +142,7 @@ public class DCLoveElaina extends Monster implements PowerableMob, RangedAttackM
             }
         }
         if (canTeleport == 0.2 && entity != null) doHurtTarget(entity);
+        this.addAttackCount(1);
         return super.hurt(damageSource, damage);
     }
 
@@ -183,8 +180,7 @@ public class DCLoveElaina extends Monster implements PowerableMob, RangedAttackM
         addAttackCount(1);
         if (target instanceof LivingEntity living && !(target instanceof Player)) Utils.attackEntity(living, this);
         else if (target instanceof Player player){
-            player.hurt(EntityHelper.void_damage(player, this), 10);
-            player.setHealth(player.getHealth() - 5);
+            player.hurt(EntityHelper.dc_damage(player, this), 5);
             player.hurtTime = 0;
             player.hurtDuration = 0;
             player.setDeltaMovement(0, 0, 0);
@@ -200,9 +196,7 @@ public class DCLoveElaina extends Monster implements PowerableMob, RangedAttackM
             Vec3 jumpDirection = new Vec3(- this.getLookAngle().normalize().x, 0.2F, - this.getLookAngle().normalize().z);
             this.setDeltaMovement(jumpDirection.scale(1.5F));
         }
-        if (level.isClientSide()) {
-            this.swing(InteractionHand.MAIN_HAND);
-        }
+        if (level.isClientSide()) this.swing(InteractionHand.MAIN_HAND);
         return super.doHurtTarget(target);
     }
 
@@ -215,7 +209,7 @@ public class DCLoveElaina extends Monster implements PowerableMob, RangedAttackM
                 ItemEntity item = new ItemEntity(level, getX(), getY(), getZ(), superSword());
                 if (level instanceof ServerLevel serverLevel) {
                     for (ServerPlayer serverPlayer : serverLevel.players()) {
-                        serverPlayer.displayClientMessage(Component.literal(DCFont.getString("entities.dc_mods.dc_wither_name") + " left the game").withStyle(ChatFormatting.YELLOW), false);
+                        serverPlayer.displayClientMessage(Component.literal(DCItemFont.getString("entities.dc_mods.dc_wither_name") + " left the game").withStyle(ChatFormatting.YELLOW), false);
                     }
                 }
                 level.addFreshEntity(item);
@@ -276,17 +270,13 @@ public class DCLoveElaina extends Monster implements PowerableMob, RangedAttackM
     public void onAddedToWorld() {
         super.onAddedToWorld();
         if (level instanceof ServerLevel serverLevel) {
-            for (ServerPlayer serverPlayer : serverLevel.players()) serverPlayer.displayClientMessage(Component.literal(DCFont.getString("entities.dc_mods.dc_wither_name") + " join the game").withStyle(ChatFormatting.YELLOW), false);
+            for (ServerPlayer serverPlayer : serverLevel.players()) serverPlayer.displayClientMessage(Component.literal(DCItemFont.getString("entities.dc_mods.dc_wither_name") + " join the game").withStyle(ChatFormatting.YELLOW), false);
         }
     }
 
     @Override
     public Collection<ItemEntity> captureDrops(Collection<ItemEntity> value) {
         return super.captureDrops(value);
-    }
-
-    boolean isAttack() {
-        return attackAnimationState.isStarted() || attackAnimationState_1.isStarted() || attackAnimationState_2.isStarted();
     }
 
     private int currentAttackAnimation = 0;
@@ -442,8 +432,9 @@ public class DCLoveElaina extends Monster implements PowerableMob, RangedAttackM
                 .add(Attributes.MOVEMENT_SPEED, 0.3D)
                 .add(Attributes.ATTACK_DAMAGE, 19.2)
                 .add(Attributes.ARMOR_TOUGHNESS, 18.9D)
+                .add(Attributes.KNOCKBACK_RESISTANCE, 32.1D)
                 .add(ForgeMod.ENTITY_REACH.get(), 4.6D)
-                .add(DCAttributes.DC_SUPER_DAMAGE.get(), 45.2D)
+                .add(DCAttributes.DC_SUPER_DAMAGE.get(), 15.2D)
                 .add(DCAttributes.DC_DEFENSE.get(), 10.0D)
                 .add(Attributes.ARMOR, 27.3D)
                 .add(Attributes.FLYING_SPEED, 0.7D);

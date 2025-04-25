@@ -2,7 +2,7 @@ package net.daichang.dcmods.utils.helpers;
 
 import net.daichang.dcmods.common.entity.DCLoveElaina;
 import net.daichang.dcmods.event.DCForgeEventHandler;
-import net.daichang.dcmods.inits.DCDamageTypes;
+import net.daichang.dcmods.common.damge_type.SuperDamageTypes;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.Registries;
@@ -54,7 +54,7 @@ public class EntityHelper extends DataHelper {
     }
 
     public static DamageSource dc_damage(Entity target, Entity attack) {
-        return damageSource(target, attack, DCDamageTypes.SUPER_DAMAGE);
+        return damageSource(target, attack, SuperDamageTypes.SUPER_DAMAGE);
     }
 
     public static void spawnEntity(Level level, Entity entity, EntityType<?> spawn) {

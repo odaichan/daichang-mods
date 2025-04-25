@@ -3,7 +3,7 @@ package net.daichang.dcmods.mixins;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
-import net.daichang.dcmods.client.font.DCFont;
+import net.daichang.dcmods.client.font.DCItemFont;
 import net.daichang.dcmods.utils.Utils;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -91,7 +91,7 @@ public abstract class MixinItemEntityRenderer extends EntityRenderer<ItemEntity>
 
     @Override
     public @NotNull Font getFont() {
-        return DCFont.getFont();
+        return DCItemFont.getFont();
     }
 
     static {

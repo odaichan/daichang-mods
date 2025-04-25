@@ -2,6 +2,8 @@ net/daichang/dcmods/mixins/ItemRendererMixin minecraft f_265848_
 net/daichang/dcmods/mixins/MixinEntity deltaMovement f_19827_
 net/daichang/dcmods/mixins/MixinGameRenderer minecraft f_109059_
 net/daichang/dcmods/mixins/MixinGameRenderer postEffect f_109050_
+net/daichang/dcmods/mixins/renderer/GuiGraphicsMixin pose f_279612_
+net/daichang/dcmods/mixins/renderer/GuiGraphicsMixin bufferSource f_279627_
 net/daichang/dcmods/mixins/sword_block/HumanoidModelMixin rightArm f_102811_
 net/daichang/dcmods/mixins/sword_block/HumanoidModelMixin leftArm f_102812_
 net/daichang/dcmods/mixins/sword_block/HumanoidModelMixin head f_102808_
@@ -21,6 +23,10 @@ net/daichang/dcmods/mixins/MixinGameRenderer loadEffect (Lnet/minecraft/resource
 net/daichang/dcmods/mixins/MixinGameRenderer shutdownEffect ()V m_109086_
 net/daichang/dcmods/mixins/MixinItemEntity dampensVibrations ()Z m_213854_
 net/daichang/dcmods/mixins/MixinLivingEntityRender getFlipDegrees (Lnet/minecraft/world/entity/LivingEntity;)F m_6441_
+net/daichang/dcmods/mixins/renderer/GuiGraphicsMixin guiWidth ()I m_280182_
+net/daichang/dcmods/mixins/renderer/GuiGraphicsMixin guiHeight ()I m_280206_
+net/daichang/dcmods/mixins/renderer/GuiGraphicsMixin pose ()Lcom/mojang/blaze3d/vertex/PoseStack; m_280168_
+net/daichang/dcmods/mixins/renderer/GuiGraphicsMixin flushIfUnmanaged ()V m_286081_
 net/daichang/dcmods/mixins/sword_block/HumanoidModelMixin rotlerpRad (FFF)F m_102835_
 net/daichang/dcmods/mixins/sword_block/HumanoidModelMixin poseRightArm (Lnet/minecraft/world/entity/LivingEntity;)V m_102875_
 net/daichang/dcmods/mixins/sword_block/HumanoidModelMixin poseLeftArm (Lnet/minecraft/world/entity/LivingEntity;)V m_102878_

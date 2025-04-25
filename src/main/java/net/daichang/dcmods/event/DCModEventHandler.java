@@ -49,8 +49,6 @@ public class DCModEventHandler {
             }
         });
         ItemProperties.register(DCItems.DC_BOW.get(), new ResourceLocation("dc_m", "pulling"), (stack, level, entity, i) -> entity != null && entity.isUsingItem() && entity.getUseItem() == stack ? 1.0F : 0.0F);
-        ItemProperties.register(DCItems.SUPER_WOOD_SWORD.get(), new ResourceLocation("dc_m", "super_sword_wood"), (stack, level, entity, i) -> stack.hasTag() && stack.getOrCreateTag().getInt("dc_attking") >= 10000 && stack.getOrCreateTag().getInt("dc_attking") <= 15000   ? 1.0F : 0.0F);
-        ItemProperties.register(DCItems.SUPER_WOOD_SWORD.get(), new ResourceLocation("dc_m", "gold_sword"), (stack, level, entity, i) -> stack.hasTag() && stack.getOrCreateTag().getInt("dc_attking") >= 15000   ? 1.0F : 0.0F);
         PacketHandler.init();
         event.enqueueWork(PacketHandler::register);
     }

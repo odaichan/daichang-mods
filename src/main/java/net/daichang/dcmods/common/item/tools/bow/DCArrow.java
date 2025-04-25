@@ -1,6 +1,6 @@
 package net.daichang.dcmods.common.item.tools.bow;
 
-import net.daichang.dcmods.client.font.DCFont;
+import net.daichang.dcmods.client.font.DCItemFont;
 import net.daichang.dcmods.common.entity.DCSuperArrow;
 import net.daichang.dcmods.inits.DCEntities;
 import net.daichang.dcmods.utils.lists.items.SuperItemList;
@@ -31,7 +31,7 @@ public class DCArrow extends ArrowItem {
         consumer.accept(new IClientItemExtensions() {
             @Override
             public @NotNull Font getFont(ItemStack stack, FontContext context) {
-                return DCFont.getFont();
+                return DCItemFont.getFont();
             }
         });
         super.initializeClient(consumer);

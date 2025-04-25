@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "dc_m:item/tools/normal_wood_ingot"
+  }
+}
