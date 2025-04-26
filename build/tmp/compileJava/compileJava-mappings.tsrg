@@ -22,6 +22,7 @@ net/daichang/dcmods/mixins/MixinEntity setDeltaMovement (Lnet/minecraft/world/ph
 net/daichang/dcmods/mixins/MixinGameRenderer loadEffect (Lnet/minecraft/resources/ResourceLocation;)V m_109128_
 net/daichang/dcmods/mixins/MixinGameRenderer shutdownEffect ()V m_109086_
 net/daichang/dcmods/mixins/MixinItemEntity dampensVibrations ()Z m_213854_
+net/daichang/dcmods/mixins/MixinLivingEntity getMaxHealth ()F m_21233_
 net/daichang/dcmods/mixins/MixinLivingEntityRender getFlipDegrees (Lnet/minecraft/world/entity/LivingEntity;)F m_6441_
 net/daichang/dcmods/mixins/renderer/GuiGraphicsMixin guiWidth ()I m_280182_
 net/daichang/dcmods/mixins/renderer/GuiGraphicsMixin guiHeight ()I m_280206_

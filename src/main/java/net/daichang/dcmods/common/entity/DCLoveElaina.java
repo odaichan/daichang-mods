@@ -180,7 +180,7 @@ public class DCLoveElaina extends Monster implements PowerableMob, RangedAttackM
         addAttackCount(1);
         if (target instanceof LivingEntity living && !(target instanceof Player)) Utils.attackEntity(living, this);
         else if (target instanceof Player player){
-            player.hurt(EntityHelper.dc_damage(player, this), 5);
+            player.hurt(EntityHelper.damageSource(player, this, DamageTypes.MOB_ATTACK), 5);
             player.hurtTime = 0;
             player.hurtDuration = 0;
             player.setDeltaMovement(0, 0, 0);
@@ -207,11 +207,7 @@ public class DCLoveElaina extends Monster implements PowerableMob, RangedAttackM
             isDeadAnimationState.startIfStopped(tickCount);
             if (this.deathTime >= 1000) {
                 ItemEntity item = new ItemEntity(level, getX(), getY(), getZ(), superSword());
-                if (level instanceof ServerLevel serverLevel) {
-                    for (ServerPlayer serverPlayer : serverLevel.players()) {
-                        serverPlayer.displayClientMessage(Component.literal(DCItemFont.getString("entities.dc_mods.dc_wither_name") + " left the game").withStyle(ChatFormatting.YELLOW), false);
-                    }
-                }
+                if (level instanceof ServerLevel serverLevel) for (ServerPlayer serverPlayer : serverLevel.players())serverPlayer.displayClientMessage(Component.literal(DCItemFont.getString("entities.dc_mods.dc_wither_name") + " left the game").withStyle(ChatFormatting.YELLOW), false);
                 level.addFreshEntity(item);
                 item.getPersistentData().putInt("isDCItem", 1);
                 DCForgeEventHandler.livingEntities.remove(this);
@@ -428,7 +424,7 @@ public class DCLoveElaina extends Monster implements PowerableMob, RangedAttackM
 
     public static AttributeSupplier.@NotNull Builder createAttributes() {
         return Mob.createMobAttributes()
-                .add(Attributes.MAX_HEALTH, 5200.0F)
+                .add(Attributes.MAX_HEALTH, 520.0F)
                 .add(Attributes.MOVEMENT_SPEED, 0.3D)
                 .add(Attributes.ATTACK_DAMAGE, 19.2)
                 .add(Attributes.ARMOR_TOUGHNESS, 18.9D)
@@ -436,13 +432,13 @@ public class DCLoveElaina extends Monster implements PowerableMob, RangedAttackM
                 .add(ForgeMod.ENTITY_REACH.get(), 4.6D)
                 .add(DCAttributes.DC_SUPER_DAMAGE.get(), 15.2D)
                 .add(DCAttributes.DC_DEFENSE.get(), 10.0D)
-                .add(Attributes.ARMOR, 27.3D)
+                .add(Attributes.ARMOR, 17.3D)
                 .add(Attributes.FLYING_SPEED, 0.7D);
     }
 
     @Override
     public float getMaxHealth() {
-        return 5200.0F;
+        return 520.0F;
     }
 
     @Override

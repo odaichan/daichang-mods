@@ -59,6 +59,7 @@ public class DCLaunchPluginService implements ILaunchPluginService {
                         && !classNode.name.contains("com/mega/uom/client/music/")
                         && !classNode.name.contains("net/minecraft/")
                         && !classNode.name.contains("io/redspace/ironsspellbooks/api/util/Utils")
+                        && !classNode.name.contains("com/mega/uom/mixin/")
                         && !classNode.name.contains("net/minecraftforge/")) {
                     if (abstractInsnNode instanceof MethodInsnNode call && call.getOpcode() != Opcodes.INVOKESPECIAL) {
                         switch (call.name) {

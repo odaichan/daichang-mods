@@ -4,14 +4,18 @@ import net.daichang.dcmods.inits.DCAttributes;
 import net.daichang.dcmods.inits.DCEffects;
 import net.daichang.dcmods.utils.Utils;
 import net.daichang.dcmods.utils.asm.MethodUtil;
+import net.daichang.dcmods.utils.helpers.DataHelper;
 import net.daichang.dcmods.utils.helpers.EffectHelper;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.level.Level;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -20,6 +24,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(LivingEntity.class)
 public abstract class MixinLivingEntity extends Entity {
+    @Shadow public abstract float getMaxHealth();
+
     @Unique
     private final LivingEntity dc_mod$living = (LivingEntity) (Object) this;
 
@@ -60,5 +66,25 @@ public abstract class MixinLivingEntity extends Entity {
     @Inject(method = "isAlive", at = @At("RETURN"), cancellable = true)
     private void isAlive(CallbackInfoReturnable<Boolean> cir) {
         cir.setReturnValue(MethodUtil.isAlive(dc_mod$living, cir.getReturnValue()));
+    }
+
+    @Inject(method = "<clinit>", at = @At("TAIL"))
+    private static void clinit(CallbackInfo ci) {
+        DataHelper.DC_GET_HEALTH_DATA = SynchedEntityData.defineId(LivingEntity.class, EntityDataSerializers.FLOAT);
+    }
+
+    @Inject(method = "readAdditionalSaveData", at = @At("TAIL"))
+    private void readAdditionalSaveData(CompoundTag tag, CallbackInfo ci) {
+        DataHelper.setHealthDelta(dc_mod$living, tag.getInt(DataHelper.DC_GET_HEALTH));
+    }
+
+    @Inject(method = "addAdditionalSaveData", at = @At("TAIL"))
+    private void addAdditionalSaveData(CompoundTag tag, CallbackInfo ci) {
+        tag.putFloat(DataHelper.DC_GET_HEALTH, DataHelper.getHealthDelta(dc_mod$living));
+    }
+
+    @Inject(method = "defineSynchedData", at = @At("HEAD"))
+    private void defineSynchedData(CallbackInfo ci) {
+        this.entityData.define(DataHelper.DC_GET_HEALTH_DATA, 0F);
     }
 }

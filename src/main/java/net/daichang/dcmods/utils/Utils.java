@@ -277,7 +277,7 @@ public class Utils {
         CompoundTag tag = stack.getTag();
         int dc_kill_count = 0;
         if (tag != null) dc_kill_count = tag.getInt("dc_attking");
-        float damage = dc_super_damage + dc_kill_count * 0.2F + normal;
+        float damage = dc_super_damage + dc_kill_count * 0.2F + normal + target.getMaxHealth() * 0.01F;
         if (dc_kill_count >= 100) damage = damage + 40 + target.getMaxHealth() * 0.1F;
         if (dc_kill_count >= 1000) damage = damage + 50;
         if (dc_kill_count >= 10000) damage = damage + 30;

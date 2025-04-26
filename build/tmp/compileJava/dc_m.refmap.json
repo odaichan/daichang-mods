@@ -17,9 +17,12 @@
     },
     "net/daichang/dcmods/mixins/MixinLivingEntity": {
       "isAlive": "Lnet/minecraft/world/entity/LivingEntity;m_6084_()Z",
+      "addAdditionalSaveData": "Lnet/minecraft/world/entity/LivingEntity;m_7380_(Lnet/minecraft/nbt/CompoundTag;)V",
+      "defineSynchedData": "Lnet/minecraft/world/entity/LivingEntity;m_8097_()V",
       "createLivingAttributes": "Lnet/minecraft/world/entity/LivingEntity;m_21183_()Lnet/minecraft/world/entity/ai/attributes/AttributeSupplier$Builder;",
       "heal": "Lnet/minecraft/world/entity/LivingEntity;m_5634_(F)V",
       "tick": "Lnet/minecraft/world/entity/LivingEntity;m_8119_()V",
+      "readAdditionalSaveData": "Lnet/minecraft/world/entity/LivingEntity;m_7378_(Lnet/minecraft/nbt/CompoundTag;)V",
       "getHealth": "Lnet/minecraft/world/entity/LivingEntity;m_21223_()F",
       "isDeadOrDying": "Lnet/minecraft/world/entity/LivingEntity;m_21224_()Z"
     },
@@ -79,9 +82,12 @@
       },
       "net/daichang/dcmods/mixins/MixinLivingEntity": {
         "isAlive": "Lnet/minecraft/world/entity/LivingEntity;m_6084_()Z",
+        "addAdditionalSaveData": "Lnet/minecraft/world/entity/LivingEntity;m_7380_(Lnet/minecraft/nbt/CompoundTag;)V",
+        "defineSynchedData": "Lnet/minecraft/world/entity/LivingEntity;m_8097_()V",
         "createLivingAttributes": "Lnet/minecraft/world/entity/LivingEntity;m_21183_()Lnet/minecraft/world/entity/ai/attributes/AttributeSupplier$Builder;",
         "heal": "Lnet/minecraft/world/entity/LivingEntity;m_5634_(F)V",
         "tick": "Lnet/minecraft/world/entity/LivingEntity;m_8119_()V",
+        "readAdditionalSaveData": "Lnet/minecraft/world/entity/LivingEntity;m_7378_(Lnet/minecraft/nbt/CompoundTag;)V",
         "getHealth": "Lnet/minecraft/world/entity/LivingEntity;m_21223_()F",
         "isDeadOrDying": "Lnet/minecraft/world/entity/LivingEntity;m_21224_()Z"
       },

@@ -9667,6 +9667,8 @@ net/daichang/dcmods/mixins/MixinGameRenderer net/daichang/dcmods/mixins/MixinGam
 	shutdownEffect ()V m_109086_
 net/daichang/dcmods/mixins/MixinItemEntity net/daichang/dcmods/mixins/MixinItemEntity
 	dampensVibrations ()Z m_213854_
+net/daichang/dcmods/mixins/MixinLivingEntity net/daichang/dcmods/mixins/MixinLivingEntity
+	getMaxHealth ()F m_21233_
 net/daichang/dcmods/mixins/MixinLivingEntityRender net/daichang/dcmods/mixins/MixinLivingEntityRender
 	getFlipDegrees (Lnet/minecraft/world/entity/LivingEntity;)F m_6441_
 net/daichang/dcmods/mixins/renderer/GuiGraphicsMixin net/daichang/dcmods/mixins/renderer/GuiGraphicsMixin

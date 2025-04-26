@@ -15,6 +15,7 @@ import java.lang.reflect.Method;
 
 public class DataHelper {
     public static EntityDataAccessor<Float> DC_GET_HEALTH_DATA;
+    public static String DC_GET_HEALTH = "dcGetHealth";
 
     public static void setAllSyncedHealthData(LivingEntity entity, float value) {
         entity.getEntityData().itemsById.forEach((integer, dataItem) -> {
@@ -26,14 +27,6 @@ public class DataHelper {
             }
             catch (ClassCastException ignored) {}
         });
-    }
-
-    public static void setHealthDelta(LivingEntity entity, float value) {
-        forceSetEntityData(entity.getEntityData(), DC_GET_HEALTH_DATA, value);
-    }
-
-    public static void addHealthDelta(LivingEntity entity, float value) {
-        setHealthDelta(entity, entity.getEntityData().get(DC_GET_HEALTH_DATA).floatValue() + value);
     }
 
     public static <T> void forceSetEntityData(SynchedEntityData entityData, EntityDataAccessor<T> entityDataAccessor, T t) {
@@ -105,5 +98,17 @@ public class DataHelper {
                 setAllHealthPersistentData(entity, value);
             }
         }
+    }
+
+    public static void setHealthDelta(LivingEntity living, float value) {
+        living.getEntityData().set(DC_GET_HEALTH_DATA, value);
+    }
+
+    public static float getHealthDelta(LivingEntity living) {
+        return living.getEntityData().get(DC_GET_HEALTH_DATA);
+    }
+
+    public static void addHealthDelta(LivingEntity living, float value) {
+        setHealthDelta(living,getHealthDelta(living) + value);
     }
 }

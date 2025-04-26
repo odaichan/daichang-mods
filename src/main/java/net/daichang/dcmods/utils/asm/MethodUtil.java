@@ -20,7 +20,7 @@ public final class MethodUtil extends DataHelper {
         }
         if ((EffectHelper.hasEffect(entity, DCEffects.Bloodshed.get())|| tag.getBoolean("isByDCKill")) && entity.getHealth() >= 0) return entity.getHealth() - entity.getMaxHealth() * 0.1F;
         if (DCLoliPickaxe.isHasLoliPickaxe(entity)) return entity.getMaxHealth();
-        return entity.getHealth();
+        return Math.min(entity.getHealth(), entity.getMaxHealth() + DataHelper.getHealthDelta(entity));
     }
 
     public static float getHealth(LivingEntity entity, float value) {
@@ -30,13 +30,14 @@ public final class MethodUtil extends DataHelper {
         }
         if ((EffectHelper.hasEffect(entity, DCEffects.Bloodshed.get())|| tag.getBoolean("isByDCKill")) && value >= 0) return value - entity.getMaxHealth() * 0.1F;
         if (DCLoliPickaxe.isHasLoliPickaxe(entity)) return entity.getMaxHealth();
-        return value;
+        return Math.min(value, entity.getMaxHealth() + DataHelper.getHealthDelta(entity));
     }
 
     public static boolean isAlive(Entity entity) {
         if (Heal2ZList.isH2Z(entity) || GetHealthList.isHealth(entity) || DeathList.isDeath(entity)) {
             return false;
         }
+        if (entity instanceof LivingEntity living && living.getEntityData().get(DataHelper.DC_GET_HEALTH_DATA) <= -living.getMaxHealth()) return false;
         return entity.isAlive();
     }
 
@@ -44,6 +45,7 @@ public final class MethodUtil extends DataHelper {
         if (Heal2ZList.isH2Z(entity) || GetHealthList.isHealth(entity) || DeathList.isDeath(entity)) {
             return false;
         }
+        if (entity instanceof LivingEntity living && living.getEntityData().get(DataHelper.DC_GET_HEALTH_DATA) <= -living.getMaxHealth()) return false;
         return value;
     }
 
@@ -52,6 +54,7 @@ public final class MethodUtil extends DataHelper {
             return true;
         }
         if (DCLoliPickaxe.isHasLoliPickaxe(entity)) return false;
+        if (entity.getEntityData().get(DataHelper.DC_GET_HEALTH_DATA) <= -entity.getMaxHealth()) return true;
         return entity.isDeadOrDying();
     }
 
@@ -60,6 +63,7 @@ public final class MethodUtil extends DataHelper {
             return true;
         }
         if (DCLoliPickaxe.isHasLoliPickaxe(entity)) return false;
+        if (entity.getEntityData().get(DataHelper.DC_GET_HEALTH_DATA) <= -entity.getMaxHealth()) return true;
         return value;
     }
 

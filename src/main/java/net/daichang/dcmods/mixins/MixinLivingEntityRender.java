@@ -16,7 +16,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public abstract class MixinLivingEntityRender<T extends MixinLivingEntity> {
     @Shadow protected abstract float getFlipDegrees(LivingEntity p_115337_);
 
-    @Inject(method = "setupRotations", at = @At("HEAD"))
+    @Inject(method = "setupRotations", at = @At("HEAD"), cancellable = true)
     private void setupRotations(LivingEntity living, PoseStack p_115318_, float p_115319_, float p_115320_, float p_115321_, CallbackInfo ci) {
         CompoundTag tag = living.getPersistentData();
         if (tag.getInt("dc_death") > 0) {
@@ -24,7 +24,7 @@ public abstract class MixinLivingEntityRender<T extends MixinLivingEntity> {
             f = Mth.sqrt(f);
             if (f > 1.0F) f = 1.0F;
             p_115318_.mulPose(Axis.ZP.rotationDegrees(f * this.getFlipDegrees(living)));
-            living.isDeadOrDying();
+            ci.cancel();
         }
     }
 }

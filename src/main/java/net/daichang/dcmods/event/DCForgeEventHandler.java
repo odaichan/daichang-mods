@@ -16,6 +16,7 @@ import net.daichang.dcmods.utils.AnviUtil;
 import net.daichang.dcmods.utils.FontUtil;
 import net.daichang.dcmods.utils.ModUtil;
 import net.daichang.dcmods.utils.Utils;
+import net.daichang.dcmods.utils.helpers.DataHelper;
 import net.daichang.dcmods.utils.helpers.EntityHelper;
 import net.daichang.dcmods.utils.helpers.FileHelper;
 import net.daichang.dcmods.utils.helpers.Render2DHelper;
@@ -99,13 +100,15 @@ public class DCForgeEventHandler {
                 if (attacker.attributes.hasAttribute(Attributes.ATTACK_DAMAGE)) normalDamage = normalDamage +  (float) attacker.getAttribute(Attributes.ATTACK_DAMAGE).getValue();
                 if (attacker.attributes.hasAttribute(DCAttributes.DC_SUPER_DAMAGE.get())) normalDamage = normalDamage + (float) attacker.getAttribute(DCAttributes.DC_SUPER_DAMAGE.get()).getValue();
             }
-            float newHealth =  living.getHealth() - event.getAmount() - normalDamage;
+            float removedHealth = event.getAmount() + normalDamage;
+            float newHealth =  living.getHealth() - removedHealth;
             EntityHelper.forceSetHealth(living, newHealth);
             EntityHelper.noHurtDuration(living);
             living.getEntityData().set(LivingEntity.DATA_HEALTH_ID, newHealth);
             living.setHealth(newHealth);
             living.dropAllDeathLoot(EntityHelper.dc_damage(living, living));
             living.playHurtSound(damageSource);
+            DataHelper.addHealthDelta(living, -removedHealth);
         }
     }
 
