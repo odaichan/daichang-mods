@@ -3,10 +3,10 @@
   "category": "equipment",
   "key": {
     "#": {
-      "item": "minecraft:stick"
+      "item": "dc_m:super_wood_ingot"
     },
     "X": {
-      "item": "dc_m:super_wood_ingot"
+      "item": "minecraft:string"
     }
   },
   "pattern": [
