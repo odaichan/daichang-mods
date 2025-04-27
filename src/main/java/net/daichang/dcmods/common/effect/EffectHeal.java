@@ -7,7 +7,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class EffectHeal extends BaseEffect {
     public EffectHeal() {
-        super(MobEffectCategory.HARMFUL, 0xFF55FF);
+        super(MobEffectCategory.BENEFICIAL, 0xFF55FF);
     }
     @Override
     public boolean isDurationEffectTick(int duration, int amplifier) {
@@ -21,9 +21,8 @@ public class EffectHeal extends BaseEffect {
     }
 
     void heal(LivingEntity living, int level) {
-        float newHealth = living.getHealth() + level * 7;
-        living.setHealth(newHealth);
-        living.entityData.set(LivingEntity.DATA_HEALTH_ID, newHealth);
-        EntityHelper.forceSetHealth(living, newHealth);
+        float healValue = level * 7;
+        living.heal(healValue);
+        EntityHelper.forceHeal(living, healValue);
     }
 }

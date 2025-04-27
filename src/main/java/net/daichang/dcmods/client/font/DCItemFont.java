@@ -72,7 +72,8 @@ public class DCItemFont extends Font {
                 || s.contains(getString("item.dc_m.super_wood_hoe"))
                 || s.contains(getString("item.dc_m.dc_bow"))
                 || s.contains(getString("item.dc_m.dc_arrow"))
-                ;
+                || s.contains(getString("item.dc_m.wood_ring"))
+                || s.contains(getString("item.dc_m.super_wood_totem"));
     }
 
     public static boolean isCreativeItem(String s) {
@@ -104,7 +105,7 @@ public class DCItemFont extends Font {
         return renderFont(component.getString(), x, y, rgb, b, matrix4f, source, mode, i, i1, this.isBidirectional());
     }
 
-    public int renderFont(@NotNull String text, float x, float y, int rgb, boolean dropShadow, @NotNull Matrix4f matrix4f, @NotNull MultiBufferSource multiBufferSource, @NotNull DisplayMode mode, int i, int i1, boolean isText){
+    public int renderFont(@NotNull String text, float x, float y, int rgb, boolean dropShadow, @NotNull Matrix4f matrix4f, @NotNull MultiBufferSource bufferSource, @NotNull DisplayMode mode, int i, int i1, boolean isText){
         for (int index = 0; index < text.length(); index++) {
             String s = String.valueOf(text.charAt(index));
             int c;
@@ -114,15 +115,18 @@ public class DCItemFont extends Font {
             else if (isMinecraftName(text) || isCraftTip(s)) c = rgb & 0xFF004D40;
             else if (text.equals(getString("tooltip.dc_mods.is_strong")) || isWarnTip(text)) c = rgb & 0xFFFF0000;
             else if (text.equals(getString("tooltip.dc_mods.strong"))) c = rgb & 0xFFA9A9A9;
-            else if (text.contains(getString("attribute.dc_mods.super_damage"))) c = rgb & 0x01ADD8E6 ;
+            else if (text.contains(getString("attribute.dc_mods.super_damage")) || text.contains(getString("attribute.dc_mods.dc_defense"))) c = rgb & 0x01ADD8E6 ;
             else if (text.contains(getString("modifier.dc_m.super_wood_ingot"))) c = rgb & 0x800080;
-            else if (text.contains(getString("tooltip.dc_mods.hurts"))) c =rgb & 0xFFD8BFD8;
+            else if (text.contains(getString("tooltip.dc_mods.hurts")) || text.contains(getString("tool_tip.dc_mods.wood_ring"))) c = rgb & 0xFFD8BFD8;
             else if (isDCEnchFont(text)) c = rgb & 0xFFF0F0F0;
             else if (isTabFont(text)) c = rgb & 0xFFFFD700;
             else if (isDaiChangTip(text)) c = rgb & 0xFFD700;
+            else if (text.contains(getString("curios.slot"))) c = rgb & 0xFFADD8E6;
             else  c = rgb;
-            super.drawInBatch(s, x, y, c, dropShadow, matrix4f, multiBufferSource, mode, i, i1);
-            super.drawInBatch(s, x + 0.55F, y + 0.55F, c, dropShadow, matrix4f, multiBufferSource, mode, i, i1);
+            int darkerC = (c & 0x00FFFFFF) | (0x80000000 & c) >> 1;
+            super.drawInBatch(s, x, y, c, dropShadow, matrix4f, bufferSource, mode, i, i1);//前景色
+            super.drawInBatch(s, x + 0.55F, y + 0.55F, darkerC, dropShadow, matrix4f, bufferSource, mode, i, i1);
+            super.drawInBatch(s, x - 0.55F, y - 0.55F, darkerC, dropShadow, matrix4f, bufferSource, mode, i, i1);//背景色
             x += width(s);
         }
         return (int) x;

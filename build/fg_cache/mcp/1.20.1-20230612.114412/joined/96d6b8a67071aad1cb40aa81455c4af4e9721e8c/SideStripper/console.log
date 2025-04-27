@@ -7,4 +7,3 @@ Main Class:  net.minecraftforge.mergetool.ConsoleMerger
 Input:  D:\JavaWorkspace\DaiChangMod\build\fg_cache\mcp\1.20.1-20230612.114412\joined\96d6b8a67071aad1cb40aa81455c4af4e9721e8c\AccessTransformer\output.jar
 Output: D:\JavaWorkspace\DaiChangMod\build\fg_cache\mcp\1.20.1-20230612.114412\joined\96d6b8a67071aad1cb40aa81455c4af4e9721e8c\SideStripper\output.jar
 Data:   D:\JavaWorkspace\DaiChangMod\build\fg_cache\mcp\1.20.1-20230612.114412\joined\96d6b8a67071aad1cb40aa81455c4af4e9721e8c\SideStripper\string_data.sas
-Could not delete output file: D:\JavaWorkspace\DaiChangMod\build\fg_cache\mcp\1.20.1-20230612.114412\joined\96d6b8a67071aad1cb40aa81455c4af4e9721e8c\SideStripper\output.jar

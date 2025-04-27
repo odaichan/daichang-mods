@@ -97,6 +97,8 @@ public class Render2DHelper extends RenderHelper {
         renderRoundedQuad2(ms, darker, darker1, darker2, darker3, v, v1, v + i, v1 + i1, v2);
     }
 
+
+
     //绘制2d圆角矩形
     public static void renderRoundedQuad2(PoseStack matrices, Color c, Color c2, Color c3, Color c4, double fromX, double fromY, double toX, double toY, double radius) {
         RenderSystem.enableBlend();

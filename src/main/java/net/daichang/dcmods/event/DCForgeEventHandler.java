@@ -2,14 +2,13 @@ package net.daichang.dcmods.event;
 
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
 import net.daichang.dcmods.DCMod;
 import net.daichang.dcmods.client.font.DCEntityFont;
 import net.daichang.dcmods.commands.SoftGetHealthCommand;
 import net.daichang.dcmods.common.blocks.RedSpiderLily;
-import net.daichang.dcmods.common.damge_type.SuperDamageTypes;
 import net.daichang.dcmods.common.entity.DCLoveElaina;
 import net.daichang.dcmods.inits.DCAttributes;
+import net.daichang.dcmods.inits.DCDamageType;
 import net.daichang.dcmods.inits.DCEntities;
 import net.daichang.dcmods.inits.DCItems;
 import net.daichang.dcmods.utils.AnviUtil;
@@ -19,7 +18,6 @@ import net.daichang.dcmods.utils.Utils;
 import net.daichang.dcmods.utils.helpers.DataHelper;
 import net.daichang.dcmods.utils.helpers.EntityHelper;
 import net.daichang.dcmods.utils.helpers.FileHelper;
-import net.daichang.dcmods.utils.helpers.Render2DHelper;
 import net.minecraft.ChatFormatting;
 import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
@@ -72,19 +70,15 @@ import java.util.concurrent.CopyOnWriteArrayList;
 @Mod.EventBusSubscriber(modid = DCMod.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class DCForgeEventHandler {
 
-    public static CopyOnWriteArrayList<LivingEntity> livingEntities = new CopyOnWriteArrayList();
+    public static CopyOnWriteArrayList<LivingEntity> livingEntities = new CopyOnWriteArrayList<>();
 
-    private static Map<DCLoveElaina, Integer> prevBarWidthMap = new HashMap<>();
+    private static final Map<DCLoveElaina, Integer> prevBarWidthMap = new HashMap<>();
 
     @SubscribeEvent
     public static void hurtEvent(@NotNull LivingHurtEvent event) {
         LivingEntity living = event.getEntity();
         DamageSource damageSource = event.getSource();
         Entity entity = damageSource.getEntity();
-        if (entity instanceof LivingEntity attker) {
-            if (attker.attributes.hasAttribute(DCAttributes.DC_SUPER_DAMAGE.get())) event.setAmount(event.getAmount() + ((float) attker.getAttribute(DCAttributes.DC_SUPER_DAMAGE.get()).getValue()));
-            if (attker.attributes.hasAttribute(DCAttributes.DC_DEFENSE.get())) event.setAmount((float) (event.getAmount() - (((float) attker.getAttribute(DCAttributes.DC_DEFENSE.get()).getValue()) + 10 * 0.2F -0.3)));
-        }
         if (Utils.isBlocking(living)) event.setCanceled(true);
     }
 
@@ -93,7 +87,7 @@ public class DCForgeEventHandler {
         LivingEntity living = event.getEntity();
         DamageSource damageSource = event.getSource();
         Entity entity = damageSource.getEntity();
-        if (damageSource.is(SuperDamageTypes.SUPER_DAMAGE)) {
+        if (damageSource.is(DCDamageType.SUPER_DAMAGE) || (entity instanceof LivingEntity living1 && living1.getMainHandItem().is(DCItems.SUPER_WOOD_SWORD.get()))) {
             event.setCanceled(false);
             float normalDamage = 0;
             if (entity instanceof LivingEntity attacker) {
@@ -106,10 +100,13 @@ public class DCForgeEventHandler {
             EntityHelper.noHurtDuration(living);
             living.getEntityData().set(LivingEntity.DATA_HEALTH_ID, newHealth);
             living.setHealth(newHealth);
-            living.dropAllDeathLoot(EntityHelper.dc_damage(living, living));
+            try {
+                living.dropAllDeathLoot(damageSource);
+            } catch (Exception ignored){}
             living.playHurtSound(damageSource);
             DataHelper.addHealthDelta(living, -removedHealth);
         }
+        if (Utils.isBlocking(living)) event.setCanceled(true);
     }
 
     @SubscribeEvent
@@ -121,7 +118,6 @@ public class DCForgeEventHandler {
             ItemEntity item = new ItemEntity(level, pos.getX(), pos.getY(), pos.getZ(), (new ItemStack(level.getBlockState(pos).getBlock())));
             level.addFreshEntity(item);
             item.setPickUpDelay(0);
-            level.destroyBlock(pos, false, player);
             level.setBlock(pos, Blocks.AIR.defaultBlockState(), 0);
         }
     }
@@ -140,6 +136,7 @@ public class DCForgeEventHandler {
                     dcWitherBoss.setPos(pos.getX(), pos.getY(), pos.getZ());
                     dcWitherBoss.setTarget(player);
                     serverLevel.addFreshEntity(dcWitherBoss);
+                    level.destroyBlock(pos, false);
                 }
             }
         }
@@ -149,7 +146,6 @@ public class DCForgeEventHandler {
     @SubscribeEvent
     public static void onRenderGUI(RenderGuiEvent.Pre event) {
         GuiGraphics graphics = event.getGuiGraphics();
-        PoseStack poseStack = graphics.pose();
         MultiBufferSource source = graphics.bufferSource();
         if (Minecraft.getInstance().player == null) {
             return;
@@ -170,9 +166,7 @@ public class DCForgeEventHandler {
             while (iterator.hasNext()) {
                 synchronized (iterator) {
                     LivingEntity entity = iterator.next();
-                    if (entity == null) {
-                        continue;
-                    }
+                    if (entity == null) continue;
                     if (entity instanceof DCLoveElaina elaina) {
                         float maxHealth = elaina.getMaxHealth();
                         float health = elaina.getHealth();
@@ -205,32 +199,33 @@ public class DCForgeEventHandler {
             RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
         }
     }
+//
+//    @OnlyIn(Dist.CLIENT)
+//    @SubscribeEvent
+//    public static void renderTooltipEventPre(RenderTooltipEvent.Pre event) {
+//        Random random = new Random(Util.getMillis());
+//        ItemStack stack = event.getItemStack();
+//        Item item = stack.getItem();
+//        GuiGraphics graphics = event.getGraphics();
+//        PoseStack poseStack = graphics.pose();
+//        Color rgb = new Color(random.nextInt(0, 255), random.nextInt(0,255), random.nextInt(0, 255));
+//        int x = event.getX();
+//        int y = event.getY();
+//        if (Utils.isNormalTool(item)) {
+//            Render2DHelper.drawRound(poseStack,x, y, 100, 100, 9, Color.WHITE);
+//        }
+//        else if (Utils.isSuperTool(item)){
+//            Render2DHelper.drawRound(poseStack,x, y, 100, 100, 9, rgb);
+//        }
+//        else if (Utils.isCreativeItem(item)) {
+//            Render2DHelper.drawBlurredShadow(poseStack, x, y, 100, 100, 15, rgb);
+//        }
+//        else if (item.equals(DCItems.DC_ENTITY_REMOVE.get())) {
+//            Render2DHelper.drawGradientRound(poseStack, x, y, 100, 100, 15, Color.RED, Color.BLUE, Color.GREEN, Color.YELLOW);
+//        }
+//    }
 
     @OnlyIn(Dist.CLIENT)
-    @SubscribeEvent
-    public static void renderTooltipEventPre(RenderTooltipEvent.Pre event) {
-        Random random = new Random(Util.getMillis());
-        ItemStack stack = event.getItemStack();
-        Item item = stack.getItem();
-        GuiGraphics graphics = event.getGraphics();
-        PoseStack poseStack = graphics.pose();
-        Color rgb = new Color(random.nextInt(0, 255), random.nextInt(0,255), random.nextInt(0, 255));
-        int x = event.getX();
-        int y = event.getY();
-        if (Utils.isNormalTool(item)) {
-            Render2DHelper.drawRound(poseStack,x, y, 100, 100, 9, Color.WHITE);
-        }
-        else if (Utils.isSuperTool(item)){
-            Render2DHelper.drawRound(poseStack,x, y, 100, 100, 9, rgb);
-        }
-        else if (Utils.isCreativeItem(item)) {
-            Render2DHelper.drawBlurredShadow(poseStack, x, y, 100, 100, 15, rgb);
-        }
-        else if (item.equals(DCItems.DC_ENTITY_REMOVE.get())) {
-            Render2DHelper.drawGradientRound(poseStack, x, y, 100, 100, 15, Color.RED, Color.BLUE, Color.GREEN, Color.YELLOW);
-        }
-    }
-
     @SubscribeEvent
     public static void renderTooltipEvent(RenderTooltipEvent.Color event) {
         ItemStack stack = event.getItemStack();

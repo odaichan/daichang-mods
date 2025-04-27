@@ -1,5 +1,7 @@
 package net.daichang.dcmods.inits;
 
+import net.daichang.dcmods.addons.curios.CuriosItems;
+import net.daichang.dcmods.utils.ModUtil;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -47,6 +49,9 @@ public class DCTabs {
                         tabData.accept(DCItems.DC_ARROW.get());
 
                         tabData.accept(DCItems.WOOD_TOTEM.get());
+                        if (ModUtil.isCuriosLoad()) {
+                            tabData.accept(CuriosItems.WOOD_RING.get());
+                        }
                     }).build());
 
     public static final RegistryObject<CreativeModeTab> DC_MOD_CREATIVE_TAB = tab.register("dc_mod_creative_tab",

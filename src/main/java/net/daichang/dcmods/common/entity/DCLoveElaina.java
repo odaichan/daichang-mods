@@ -3,6 +3,7 @@ package net.daichang.dcmods.common.entity;
 import net.daichang.dcmods.client.PacketHandler;
 import net.daichang.dcmods.client.font.DCItemFont;
 import net.daichang.dcmods.client.network.S2CElainaPacket;
+import net.daichang.dcmods.client.network.S2CLastKillPlayer;
 import net.daichang.dcmods.client.network.S2CSonicBoomPacket;
 import net.daichang.dcmods.event.DCForgeEventHandler;
 import net.daichang.dcmods.inits.*;
@@ -180,7 +181,7 @@ public class DCLoveElaina extends Monster implements PowerableMob, RangedAttackM
         addAttackCount(1);
         if (target instanceof LivingEntity living && !(target instanceof Player)) Utils.attackEntity(living, this);
         else if (target instanceof Player player){
-            player.hurt(EntityHelper.damageSource(player, this, DamageTypes.MOB_ATTACK), 5);
+            player.hurt(EntityHelper.damageSource(this, DamageTypes.MOB_ATTACK), 5);
             player.hurtTime = 0;
             player.hurtDuration = 0;
             player.setDeltaMovement(0, 0, 0);
@@ -386,14 +387,14 @@ public class DCLoveElaina extends Monster implements PowerableMob, RangedAttackM
             Utils.attackEntity(target, target);
         }
         else if (entity instanceof ServerPlayer player && player.gameMode.isSurvival()) {
-            player.hurt(EntityHelper.void_damage(player, this), 10);
+            player.hurt(EntityHelper.void_damage(this), 10);
             player.setHealth(player.getHealth() - 5);
             player.hurtTime = 0;
             player.hurtDuration = 0;
             player.setDeltaMovement(0, 0, 0);
             player.setInvulnerable(false);
             player.invulnerableTime = 0;
-            player.hurt(EntityHelper.void_damage(player, this), 10);
+            PacketHandler.sendToClient(new S2CLastKillPlayer(player.getId()));
         }
     }
 

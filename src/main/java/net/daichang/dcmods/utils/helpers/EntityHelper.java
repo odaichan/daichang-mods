@@ -1,8 +1,9 @@
 package net.daichang.dcmods.utils.helpers;
 
+import net.daichang.dcmods.common.damage_source.DCDamageSource;
 import net.daichang.dcmods.common.entity.DCLoveElaina;
 import net.daichang.dcmods.event.DCForgeEventHandler;
-import net.daichang.dcmods.common.damge_type.SuperDamageTypes;
+import net.daichang.dcmods.inits.DCDamageType;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.Registries;
@@ -37,24 +38,24 @@ public class EntityHelper extends DataHelper {
         return new ArrayList<>(level.getEntitiesOfClass(Entity.class, aabb));
     }
 
-    public static DamageSource damageSource(Entity target,Entity attacked ,ResourceKey<DamageType> damageType) {
-        return new DamageSource(target.level().registryAccess().registryOrThrow(Registries.DAMAGE_TYPE).getHolderOrThrow(damageType), attacked);
+    public static DamageSource damageSource(Entity attacked ,ResourceKey<DamageType> damageType) {
+        return new DamageSource(attacked.level().registryAccess().registryOrThrow(Registries.DAMAGE_TYPE).getHolderOrThrow(damageType), attacked);
     }
 
-    public static DamageSource void_damage(Entity target, Entity attacked) {
-        return damageSource(target, attacked, DamageTypes.FELL_OUT_OF_WORLD);
+    public static DamageSource void_damage(Entity attacked) {
+        return damageSource(attacked, DamageTypes.FELL_OUT_OF_WORLD);
     }
 
-    public static DamageSource generic_damage(Entity target, Entity attack) {
-        return damageSource(target, attack, DamageTypes.GENERIC);
+    public static DamageSource generic_damage(Entity attack) {
+        return damageSource(attack,DamageTypes.GENERIC);
     }
 
-    public static DamageSource generic_kill_damage(Entity target, Entity attack) {
-        return damageSource(target, attack, DamageTypes.GENERIC_KILL);
+    public static DamageSource generic_kill_damage(Entity attack) {
+        return damageSource(attack, DamageTypes.GENERIC_KILL);
     }
 
-    public static DamageSource dc_damage(Entity target, Entity attack) {
-        return damageSource(target, attack, SuperDamageTypes.SUPER_DAMAGE);
+    public static DamageSource dc_damage(Entity attack) {
+        return new DCDamageSource(attack.level().registryAccess().registryOrThrow(Registries.DAMAGE_TYPE).getHolderOrThrow(DCDamageType.SUPER_DAMAGE), attack);
     }
 
     public static void spawnEntity(Level level, Entity entity, EntityType<?> spawn) {
@@ -97,9 +98,7 @@ public class EntityHelper extends DataHelper {
     }
 
     public static boolean hasElaina(Level level) {
-        if (level == null) {
-            return false;
-        }
+        if (level == null) return false;
         boolean found = false;
         if (level instanceof ClientLevel clientLevel) {
             for (Entity entity : clientLevel.getEntities().getAll()) {
@@ -122,15 +121,14 @@ public class EntityHelper extends DataHelper {
         return found;
     }
 
-    public static void forceKnockBack(LivingEntity target, LivingEntity attacker, float value) {
+    public static void forceKnockBack(LivingEntity target, LivingEntity attacker, float XYValue, float ZValue) {
         Vec3 direction = target.position().subtract(attacker.position()).normalize();
-        Vec3 knockbackVec = direction.scale(value);
-        target.setDeltaMovement(target.getDeltaMovement().add(knockbackVec));
+        Vec3 knockbackVec = direction.scale(XYValue);
+        target.setDeltaMovement(target.getDeltaMovement().add(knockbackVec.x, knockbackVec.y + ZValue, knockbackVec.z));
     }
 
     public static void forceHeal(LivingEntity living, float value) {
-        if (value >= 0 && living.getHealth() < living.getMaxHealth()) {
-            forceSetHealth(living, living.getHealth() + value);
-        }
+        if (value >= 0 && living.getHealth() < living.getMaxHealth()) forceSetHealth(living, living.getHealth() + value);
+        if (living.getHealth() > living.getMaxHealth()) forceSetHealth(living, living.getMaxHealth());
     }
 }

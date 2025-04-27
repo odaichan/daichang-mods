@@ -36,7 +36,7 @@ public class DCSuperPickaxeItem extends PickaxeItem {
     public boolean hurtEnemy(ItemStack p_40994_, LivingEntity target, LivingEntity player) {
         float value = 3.0F;
         target.knockback(value,  Mth.sin(player.getYRot() * ((float) Math.PI / 180F)), -Mth.cos(player.getYRot() * ((float) Math.PI / 180F)));
-        EntityHelper.forceKnockBack(target, player, value);
+        EntityHelper.forceKnockBack(target, player, value, 0.12F);
         return super.hurtEnemy(p_40994_, target, player);
     }
 

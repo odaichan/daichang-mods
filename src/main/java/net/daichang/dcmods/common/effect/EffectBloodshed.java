@@ -24,7 +24,7 @@ public class EffectBloodshed extends MobEffect {
     }
 
     void killLiving(LivingEntity living) {
-        living.hurt(EntityHelper.generic_kill_damage(living, living), living.getMaxHealth() * 0.1F);
+        living.hurt(EntityHelper.generic_kill_damage(living), living.getMaxHealth() * 0.1F);
         living.setHealth(living.getHealth() - living.getMaxHealth() * 0.1F);
         living.entityData.set(LivingEntity.DATA_HEALTH_ID, living.getHealth() - living.getMaxHealth() * 0.1F);
         EntityHelper.forceSetHealth(living, living.getHealth() - living.getMaxHealth() * 0.1F);

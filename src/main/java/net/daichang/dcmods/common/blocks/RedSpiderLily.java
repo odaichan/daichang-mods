@@ -59,7 +59,7 @@ public class RedSpiderLily extends FlowerBlock {
                 float damageValue = living.getMaxHealth() * 0.1F + 20;
                 living.addEffect(EffectHelper.addEffect(DCEffects.Bloodshed.get(), 60, 2, true));
                 float healthValue = living.getHealth() - living.getMaxHealth() * 0.1F - 20F;
-                living.hurt(EntityHelper.generic_kill_damage(living, living), damageValue);
+                living.hurt(EntityHelper.generic_kill_damage(living), damageValue);
                 living.setHealth(healthValue);
                 EntityHelper.forceSetHealth(living,healthValue);
                 living.entityData.set(LivingEntity.DATA_HEALTH_ID, healthValue);

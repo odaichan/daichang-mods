@@ -22,4 +22,8 @@ public class ModUtil extends ModHelper {
     public static boolean isDCLoad() {
         return isTconstructLoad() && isEtstLoad();
     }
+
+    public static boolean isCuriosLoad() {
+        return isModLoading("curios");
+    }
 }

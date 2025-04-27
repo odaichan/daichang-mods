@@ -60,7 +60,7 @@
   "tooltip.dc_mods.mu_da" : "MudaMuda!",
   "tooltip.dc_mods.dc_warn" : "Warning from DaiChang:",
   "tooltip.dc_mods.remove_warn" : "Be cautious when using, it may cause the game to crash!",
-  "tooltip.dc_mods.bow_1" : "When attacking entities, causing huge damage; When hitting a block, it causes an explosion and inflicts significant damage within a five grid range",
+  "tooltip.dc_mods.bow_1" : "When attacking entities, causing huge damage.",
   "tooltip.dc_mods.bow_shout" : "Launch 2 arrows at once",
   "entities.dc_mods.dc_wither_name" : "World Administrator",
   "entities.dc_mods.dc_wither_name_tow" : "World Administrator [Angry]",
@@ -84,5 +84,8 @@
   "modifier.dc_m.super_wood_ingot.flavor" : "RapidForce",
   "modifier.dc_m.super_wood_ingot.description" : "When attacking entities, mark the entities, ignore the attack interval, and force damage to the entities",
   "tooltip.dc_m.loli_pickaxe" : "Used for quickly cleaning up excess entities in the world",
-  "tconstruct.dc_m.tool_tip" : "§l§4Items blessed by DaiChang"
+  "tconstruct.dc_m.tool_tip" : "§l§4Items blessed by DaiChang",
+  "item.dc_m.wood_ring" : "Wood Ring",
+  "tool_tip.dc_mods.wood_ring": "A ring made of wooden alloy",
+  "item.dc_m.super_wood_totem" : "Super Wood Totem"
 }

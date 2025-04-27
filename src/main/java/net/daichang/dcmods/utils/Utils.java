@@ -270,7 +270,7 @@ public class Utils {
     }
 
     public static void attackEntity(ItemStack stack, LivingEntity target, Player player) {
-        DamageSource damageSource = EntityHelper.dc_damage(target, player);
+        DamageSource damageSource = EntityHelper.dc_damage(player);
         target.level().broadcastDamageEvent(target, damageSource);
         final float normal = (float) player.getAttributeValue(Attributes.ATTACK_DAMAGE);
         final float dc_super_damage = (float) player.getAttributeValue(DCAttributes.DC_SUPER_DAMAGE.get());
@@ -304,10 +304,11 @@ public class Utils {
         if (!(target instanceof Player) && target.getHealth() <= 0 || target.entityData.get(LivingEntity.DATA_HEALTH_ID) <= 0) itemKillEntity(target, damageSource);
         target.level().broadcastDamageEvent(target, damageSource);
         DataHelper.forceSetHealth(target, newHealth);
+        DataHelper.addHealthDelta(target, -damage);
     }
 
     public static void attackEntity(LivingEntity target, LivingEntity player) {
-        DamageSource damageSource = EntityHelper.dc_damage(target, player);
+        DamageSource damageSource = EntityHelper.dc_damage(player);
         float dc_super_damage = 0;
         float normalDamage = 0;
         if (player.attributes.hasAttribute(Attributes.ATTACK_DAMAGE)) normalDamage = (float) (player.getAttributeValue(Attributes.ATTACK_DAMAGE));

@@ -40,7 +40,7 @@ public class DCWitherSkull extends WitherSkull {
     void killEntity(Entity entity) {
         if (entity instanceof LivingEntity living && !(living instanceof DCLoveElaina) && isSuPlayer(living)) {
             float damage = living.getMaxHealth() * 0.1F + 47;
-            living.hurt(EntityHelper.dc_damage(living, this), damage);
+            living.hurt(EntityHelper.dc_damage(this), damage);
         }
     }
 

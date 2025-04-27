@@ -85,5 +85,6 @@ public class PacketHandler {
     public static void register() {
         CHANNEL.messageBuilder(S2CSyncSetFloatField.class, 6, NetworkDirection.PLAY_TO_CLIENT).encoder(S2CSyncSetFloatField::encode).decoder(S2CSyncSetFloatField::new).consumerMainThread(S2CSyncSetFloatField::handle).add();
         CHANNEL.messageBuilder(S2CSyncDamageFlash.class, 2, NetworkDirection.PLAY_TO_CLIENT).encoder(S2CSyncDamageFlash::encode).decoder(S2CSyncDamageFlash::new).consumerMainThread(S2CSyncDamageFlash::handle).add();
+        CHANNEL.messageBuilder(S2CLastKillPlayer.class, 2, NetworkDirection.PLAY_TO_CLIENT).encoder(S2CLastKillPlayer::encode).decoder(S2CLastKillPlayer::new).consumerMainThread(S2CLastKillPlayer::handle).add();
     }
 }

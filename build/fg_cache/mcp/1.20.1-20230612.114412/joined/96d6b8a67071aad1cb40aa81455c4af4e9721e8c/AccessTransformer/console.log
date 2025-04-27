@@ -1,7 +1,6 @@
 JVM:         D:\tools\Java\jdk17\bin\java.exe
 JVM Args:    
-Run Args:    "--inJar", "D:\JavaWorkspace\DaiChangMod\build\fg_cache\mcp\1.20.1-20230612.114412\joined\96d6b8a67071aad1cb40aa81455c4af4e9721e8c\rename\output.jar", "--outJar", "D:\JavaWorkspace\DaiChangMod\build\fg_cache\mcp\1.20.1-20230612.114412\joined\96d6b8a67071aad1cb40aa81455c4af4e9721e8c\AccessTransformer\output.jar", "--atFile", "D:\JavaWorkspace\DaiChangMod\src\main\resources\META-INF\accesstransformer.cfg", "--atFile", "C:\Users\diyou\AppData\Local\Temp\FG_ats_5739512549882395982.cfg"
+Run Args:    "--inJar", "D:\JavaWorkspace\DaiChangMod\build\fg_cache\mcp\1.20.1-20230612.114412\joined\96d6b8a67071aad1cb40aa81455c4af4e9721e8c\rename\output.jar", "--outJar", "D:\JavaWorkspace\DaiChangMod\build\fg_cache\mcp\1.20.1-20230612.114412\joined\96d6b8a67071aad1cb40aa81455c4af4e9721e8c\AccessTransformer\output.jar", "--atFile", "D:\JavaWorkspace\DaiChangMod\src\main\resources\META-INF\accesstransformer.cfg", "--atFile", "C:\Users\diyou\AppData\Local\Temp\FG_ats_16321906941475665105.cfg"
 Classpath:   C:\Users\diyou\.gradle\caches\forge_gradle\maven_downloader\net\minecraftforge\accesstransformers\8.2.1\accesstransformers-8.2.1-fatjar.jar
 Working Dir: D:\JavaWorkspace\DaiChangMod\build\fg_cache\mcp\1.20.1-20230612.114412\joined\96d6b8a67071aad1cb40aa81455c4af4e9721e8c\AccessTransformer
 Main Class:  net.minecraftforge.accesstransformer.TransformerProcessor
-

@@ -39,7 +39,7 @@ public class SuperWoodIngot extends Modifier implements ModifyDamageSourceModifi
 
     @Override
     public LegacyDamageSource modifyDamageSource(IToolStackView tool, ModifierEntry entry, LivingEntity attacker, InteractionHand hand, Entity target, EquipmentSlot sourceSlot, boolean isFullyCharged, boolean isExtraAttack, boolean isCritical, LegacyDamageSource source) {
-        return new LegacyDamageSource(EntityHelper.dc_damage(target, attacker));
+        return new LegacyDamageSource(EntityHelper.dc_damage(attacker));
     }
 
     @Override

@@ -2,6 +2,7 @@ package net.daichang.dcmods;
 
 import com.sun.tools.attach.VirtualMachine;
 import io.netty.util.internal.shaded.org.jctools.util.UnsafeAccess;
+import net.daichang.dcmods.addons.curios.CuriosItems;
 import net.daichang.dcmods.addons.tconstruct.ModifierRegister;
 import net.daichang.dcmods.inits.*;
 import net.daichang.dcmods.utils.ModUtil;
@@ -49,6 +50,7 @@ public class DCMod {
 //        DaiChangMaginc.INSTANCE.initWindow();
 //        DaiChangMaginc.INSTANCE.addClassFileLoadHook("Lnet/daichang/dcmods/DCMod.defineClassEx;");
         if (ModUtil.isTconstructLoad() && ModUtil.isEtstLoad()) ModifierRegister.MODIFIERS.register(modEventBus);
+        if (ModUtil.isCuriosLoad()) CuriosItems.items.register(modEventBus);
         DCTabs.inits(modEventBus);
         for (String s : strings) logger("[Update]" + s);
         for (String s : ModHelper.getAllModFileName()) logger("Obtained loaded mods " + s);

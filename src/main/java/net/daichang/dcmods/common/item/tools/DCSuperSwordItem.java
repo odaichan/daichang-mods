@@ -42,16 +42,23 @@ import java.util.function.Consumer;
 
 public class DCSuperSwordItem extends ISwordItem {
 
-    public Multimap<Attribute, AttributeModifier> defaultModifiers;
+    public Multimap<Attribute, AttributeModifier> mainHandModifiers;
+    public Multimap<Attribute, AttributeModifier> offHandModifiers;
 
     public DCSuperSwordItem(Tier p_43269_, int pAttackDamageModifier, float pAttackSpeedModifier,final float super_damage, Properties p_43272_) {
         super(p_43269_, pAttackDamageModifier, pAttackSpeedModifier, p_43272_);
-        ImmutableMultimap.Builder<Attribute, AttributeModifier> builder = ImmutableMultimap.builder();
-        builder.put(Attributes.ATTACK_DAMAGE, new AttributeModifier(BASE_ATTACK_DAMAGE_UUID, "Weapon modifier", this.attackDamage, AttributeModifier.Operation.ADDITION));
-        builder.put(Attributes.ATTACK_SPEED, new AttributeModifier(BASE_ATTACK_SPEED_UUID, "Weapon modifier", pAttackSpeedModifier, AttributeModifier.Operation.ADDITION));
-        builder.put(DCAttributes.DC_SUPER_DAMAGE.get(), new AttributeModifier(UUID.randomUUID(), "Item modifier", super_damage, AttributeModifier.Operation.ADDITION));
-        builder.put(ForgeMod.ENTITY_REACH.get(), new AttributeModifier(UUID.randomUUID(), "Item modifier", 7, AttributeModifier.Operation.ADDITION));
-        defaultModifiers = builder.build();
+        ImmutableMultimap.Builder<Attribute, AttributeModifier> mainHand = ImmutableMultimap.builder();
+        ImmutableMultimap.Builder<Attribute, AttributeModifier> offHand = ImmutableMultimap.builder();
+        mainHand.put(Attributes.ATTACK_DAMAGE, new AttributeModifier(BASE_ATTACK_DAMAGE_UUID, "Weapon modifier", this.attackDamage, AttributeModifier.Operation.ADDITION));
+        mainHand.put(Attributes.ATTACK_SPEED, new AttributeModifier(BASE_ATTACK_SPEED_UUID, "Weapon modifier", pAttackSpeedModifier, AttributeModifier.Operation.ADDITION));
+        mainHand.put(DCAttributes.DC_SUPER_DAMAGE.get(), new AttributeModifier(UUID.randomUUID(), "Item modifier", super_damage, AttributeModifier.Operation.ADDITION));
+        mainHand.put(DCAttributes.DC_SUPER_DAMAGE.get(), new AttributeModifier(UUID.randomUUID(), "Item modifier", 0.52D, AttributeModifier.Operation.MULTIPLY_TOTAL));
+        mainHand.put(ForgeMod.ENTITY_REACH.get(), new AttributeModifier(UUID.randomUUID(), "Item modifier", 7, AttributeModifier.Operation.ADDITION));
+        mainHandModifiers = mainHand.build();
+        offHand.put(DCAttributes.DC_SUPER_DAMAGE.get(), new AttributeModifier(UUID.randomUUID(), "Item modifier", 8.7D, AttributeModifier.Operation.ADDITION));
+        offHand.put(DCAttributes.DC_DEFENSE.get(), new AttributeModifier(UUID.randomUUID(), "Item modifier", 3.2D, AttributeModifier.Operation.ADDITION));
+        mainHand.put(Attributes.ATTACK_SPEED, new AttributeModifier(UUID.randomUUID(), "Weapon modifier", 0.5, AttributeModifier.Operation.ADDITION));
+        offHandModifiers = offHand.build();
         SuperItemList.addItem(this);
         CanSwordBlockItem.addItem(this);
         MinecraftForge.EVENT_BUS.register(this);
@@ -68,7 +75,9 @@ public class DCSuperSwordItem extends ISwordItem {
 
     @Override
     public @NotNull Multimap<Attribute, AttributeModifier> getDefaultAttributeModifiers(EquipmentSlot pEquipmentSlot) {
-        return pEquipmentSlot == EquipmentSlot.MAINHAND ? this.defaultModifiers : super.getDefaultAttributeModifiers(pEquipmentSlot);
+        if (pEquipmentSlot == EquipmentSlot.MAINHAND) return this.mainHandModifiers;
+        if (pEquipmentSlot == EquipmentSlot.OFFHAND) return this.offHandModifiers;
+        return super.getDefaultAttributeModifiers(pEquipmentSlot);
     }
 
     @Override

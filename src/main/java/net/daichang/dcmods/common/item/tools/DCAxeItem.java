@@ -1,6 +1,7 @@
 package net.daichang.dcmods.common.item.tools;
 
 import net.daichang.dcmods.client.font.DCItemFont;
+import net.daichang.dcmods.utils.helpers.EntityHelper;
 import net.daichang.dcmods.utils.lists.items.SuperItemList;
 import net.minecraft.client.gui.Font;
 import net.minecraft.network.chat.Component;
@@ -31,10 +32,10 @@ public class DCAxeItem extends AxeItem {
     }
 
     @Override
-    public boolean hurtEnemy(ItemStack p_40994_, LivingEntity target, LivingEntity p_40996_) {
+    public boolean hurtEnemy(@NotNull ItemStack p_40994_, LivingEntity target, @NotNull LivingEntity p_40996_) {
         target.wasOnFire = true;
         target.setRemainingFireTicks(300);
-        target.setHealth(target.getHealth() - 30);
+        target.hurt(EntityHelper.dc_damage(p_40996_), 30);
         return super.hurtEnemy(p_40994_, target, p_40996_);
     }
 

@@ -56,7 +56,7 @@
   "item.dc_m.dc_super_remove": "スーパーエンティティの削除",
   "item.dc_m.dc_bow": "蒼天は雲弓を喰らう",
   "item.dc_m.dc_arrow": "Arrow of the Vault that Splits the Stars",
-  "tooltip.dc_mods.bow_1": "実体を攻撃した場合、巨額のダメージを与える。ブロックに当たった時、爆発を起こし、5マスの範囲内に巨額のダメージを与える",
+  "tooltip.dc_mods.bow_1": "実体を攻撃した場合、巨額のダメージを与える。",
   "tooltip.dc_mods.bow_shout": "Launch 2 arrows at once",
   "entities.dc_mods.dc_wither_name": "世界の管理者",
   "entities.dc_mods.dc_wither_name_tow": "世界の管理者 [怒り]",
@@ -84,5 +84,8 @@
   "modifier.dc_m.super_wood_ingot.description": "エンティティを攻撃する際、エンティティにマークを付け、攻撃間隔を無視してエンティティに強制的にダメージを与える",
   "item.dc_m.loli_pickaxe": "氪金萝莉",
   "tooltip.dc_m.loli_pickaxe": "ワールドの余分なエンティティをすばやくクリーンアップする",
-  "tconstruct.dc_m.tool_tip": "§l§4DaiChangに祝福されたアイテム"
+  "tconstruct.dc_m.tool_tip": "§l§4DaiChangに祝福されたアイテム",
+  "item.dc_m.wood_ring": "Wood Ring",
+  "tool_tip.dc_mods.wood_ring": "A ring made of wooden alloy",
+  "item.dc_m.super_wood_totem": "Super Wood Totem"
 }
