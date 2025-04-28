@@ -12,6 +12,7 @@ import net.daichang.dcmods.utils.lists.items.CanSwordBlockItem;
 import net.daichang.dcmods.utils.lists.items.SuperItemList;
 import net.minecraft.Util;
 import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
@@ -41,7 +42,6 @@ import java.util.UUID;
 import java.util.function.Consumer;
 
 public class DCSuperSwordItem extends ISwordItem {
-
     public Multimap<Attribute, AttributeModifier> mainHandModifiers;
     public Multimap<Attribute, AttributeModifier> offHandModifiers;
 
@@ -104,25 +104,32 @@ public class DCSuperSwordItem extends ISwordItem {
     @Override
     public void appendHoverText(ItemStack stack, @Nullable Level p_41422_, List<Component> list, TooltipFlag p_41424_) {
         CompoundTag comTag = stack.getTag();
-        list.add(Component.literal(Component.translatable("tooltip.dc_mods.hurts").getString() + comTag.getInt("dc_attking")));
-        list.add(Component.translatable("tooltip.dc_mods.tips"));
-        list.add(Component.translatable("tooltip.dc_mods.tips_1"));
-        list.add(Component.translatable("tooltip.dc_mods.tips_2"));
-        list.add(Component.translatable("tooltip.dc_mods.attacking_entity"));
-        list.add(Component.translatable("tooltip.dc_mods.sword_boxing"));
-        list.add(Component.translatable("tooltip.dc_mods.tip_3"));
-        list.add(Component.translatable("tooltip.dc_mods.kill_entity"));
-        list.add(Component.translatable("tooltip.dc_mods.minecraft"));
-        list.add(Component.translatable("tooltip.dc_mods.drop_loot"));
-        list.add(Component.translatable("tooltip.dc_mods.health_get"));
-        list.add(Component.translatable("tooltip.dc_mods.kill"));
-        list.add(Component.translatable("tooltip.dc_mods.attacking_entity_cooldown"));
-        list.add(Component.translatable("tooltip.dc_mods.bleed"));
-        list.add(Component.translatable("tooltip.dc_mods.render_death_1"));
-        list.add(Component.translatable("tooltip.dc_mods.render_death_2"));
-        list.add(Component.translatable("tooltip.dc_mods.setting_max_health"));
-        if (comTag.getInt("dc_attking") >= 10000) list.add(Component.translatable("tooltip.dc_mods.is_strong"));
-        else list.add(Component.translatable("tooltip.dc_mods.strong"));
+        if (Screen.hasShiftDown()) {
+            list.add(Component.literal(Component.translatable("tooltip.dc_mods.hurts").getString() + comTag.getInt("dc_attking")));
+            list.add(Component.translatable("tooltip.dc_mods.tips"));
+            list.add(Component.translatable("tooltip.dc_mods.tips_1"));
+            list.add(Component.translatable("tooltip.dc_mods.tips_2"));
+            list.add(Component.translatable("tooltip.dc_mods.attacking_entity"));
+            list.add(Component.translatable("tooltip.dc_mods.sword_boxing"));
+            list.add(Component.translatable("tooltip.dc_mods.tip_3"));
+            list.add(Component.translatable("tooltip.dc_mods.kill_entity"));
+            list.add(Component.translatable("tooltip.dc_mods.minecraft"));
+            list.add(Component.translatable("tooltip.dc_mods.drop_loot"));
+            list.add(Component.translatable("tooltip.dc_mods.health_get"));
+            list.add(Component.translatable("tooltip.dc_mods.kill"));
+            list.add(Component.translatable("tooltip.dc_mods.attacking_entity_cooldown"));
+            list.add(Component.translatable("tooltip.dc_mods.bleed"));
+            list.add(Component.translatable("tooltip.dc_mods.render_death_1"));
+            list.add(Component.translatable("tooltip.dc_mods.render_death_2"));
+            list.add(Component.translatable("tooltip.dc_mods.setting_max_health"));
+            if (comTag.getInt("dc_attking") >= 10000) list.add(Component.translatable("tooltip.dc_mods.is_strong"));
+            else list.add(Component.translatable("tooltip.dc_mods.strong"));
+        }
+        else {
+            list.add(Component.translatable("tool_tip.dc_mods.7meter"));
+            list.add(Component.literal("< Press Shift to more >"));
+        }
+        if (Screen.hasControlDown()) list.add(Component.literal("Subscribe to DaiChang on Bilibili"));
         super.appendHoverText(stack, p_41422_, list, p_41424_);
     }
 

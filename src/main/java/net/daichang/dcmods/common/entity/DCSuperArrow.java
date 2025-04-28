@@ -62,7 +62,7 @@ public class DCSuperArrow extends AbstractArrow {
     }
 
     void killEntity(Entity entity) {
-        if (entity instanceof LivingEntity living && !(this.getPersistentData().contains("shootByDC"))) living.hurt(living.damageSources().magic(), 3094);
+        if (entity instanceof LivingEntity living && !(this.getPersistentData().contains("shootByDC"))) living.hurt(EntityHelper.dc_damage(this), 3094);
     }
 
     void shootByDC(Entity entity) {

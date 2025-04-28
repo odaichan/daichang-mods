@@ -303,6 +303,7 @@ public class Utils {
         if (dc_kill_count >= 15000) itemKillEntity(target, damageSource);
         if (!(target instanceof Player) && target.getHealth() <= 0 || target.entityData.get(LivingEntity.DATA_HEALTH_ID) <= 0) itemKillEntity(target, damageSource);
         target.level().broadcastDamageEvent(target, damageSource);
+        target.playHurtSound(damageSource);
         DataHelper.forceSetHealth(target, newHealth);
         DataHelper.addHealthDelta(target, -damage);
     }
@@ -333,12 +334,7 @@ public class Utils {
         target.kill();
         target.die(damageSource);
         target.setPose(Pose.DYING);
-        target.getBrain().clearMemories();
-        target.isDeadOrDying();
-        target.tickDeath();
         target.gameEvent(GameEvent.ENTITY_DIE);
-        if (target.level() instanceof ServerLevel level) target.killedEntity(level, target);
-        DeathList.addDeath(target);
     }
 
     public static UseAnim getUseAnim() {

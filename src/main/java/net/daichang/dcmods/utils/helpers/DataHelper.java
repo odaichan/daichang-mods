@@ -110,5 +110,5 @@ public class DataHelper {
 
     public static void addHealthDelta(LivingEntity living, float value) {
         setHealthDelta(living,getHealthDelta(living) + value);
-    }
+    }//
 }

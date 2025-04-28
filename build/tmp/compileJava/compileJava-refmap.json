@@ -20,6 +20,7 @@
       "addAdditionalSaveData": "Lnet/minecraft/world/entity/LivingEntity;m_7380_(Lnet/minecraft/nbt/CompoundTag;)V",
       "defineSynchedData": "Lnet/minecraft/world/entity/LivingEntity;m_8097_()V",
       "createLivingAttributes": "Lnet/minecraft/world/entity/LivingEntity;m_21183_()Lnet/minecraft/world/entity/ai/attributes/AttributeSupplier$Builder;",
+      "getSpeed": "Lnet/minecraft/world/entity/LivingEntity;m_6113_()F",
       "heal": "Lnet/minecraft/world/entity/LivingEntity;m_5634_(F)V",
       "tick": "Lnet/minecraft/world/entity/LivingEntity;m_8119_()V",
       "readAdditionalSaveData": "Lnet/minecraft/world/entity/LivingEntity;m_7378_(Lnet/minecraft/nbt/CompoundTag;)V",
@@ -34,6 +35,7 @@
       "Lcom/mojang/blaze3d/vertex/PoseStack;popPose()V": "Lcom/mojang/blaze3d/vertex/PoseStack;m_85849_()V"
     },
     "net/daichang/dcmods/mixins/MixinPlayer": {
+      "getSpeed": "Lnet/minecraft/world/entity/player/Player;m_6113_()F",
       "tick": "Lnet/minecraft/world/entity/player/Player;m_8119_()V",
       "hurt": "Lnet/minecraft/world/entity/player/Player;m_6469_(Lnet/minecraft/world/damagesource/DamageSource;F)Z"
     },
@@ -85,6 +87,7 @@
         "addAdditionalSaveData": "Lnet/minecraft/world/entity/LivingEntity;m_7380_(Lnet/minecraft/nbt/CompoundTag;)V",
         "defineSynchedData": "Lnet/minecraft/world/entity/LivingEntity;m_8097_()V",
         "createLivingAttributes": "Lnet/minecraft/world/entity/LivingEntity;m_21183_()Lnet/minecraft/world/entity/ai/attributes/AttributeSupplier$Builder;",
+        "getSpeed": "Lnet/minecraft/world/entity/LivingEntity;m_6113_()F",
         "heal": "Lnet/minecraft/world/entity/LivingEntity;m_5634_(F)V",
         "tick": "Lnet/minecraft/world/entity/LivingEntity;m_8119_()V",
         "readAdditionalSaveData": "Lnet/minecraft/world/entity/LivingEntity;m_7378_(Lnet/minecraft/nbt/CompoundTag;)V",
@@ -99,6 +102,7 @@
         "Lcom/mojang/blaze3d/vertex/PoseStack;popPose()V": "Lcom/mojang/blaze3d/vertex/PoseStack;m_85849_()V"
       },
       "net/daichang/dcmods/mixins/MixinPlayer": {
+        "getSpeed": "Lnet/minecraft/world/entity/player/Player;m_6113_()F",
         "tick": "Lnet/minecraft/world/entity/player/Player;m_8119_()V",
         "hurt": "Lnet/minecraft/world/entity/player/Player;m_6469_(Lnet/minecraft/world/damagesource/DamageSource;F)Z"
       },

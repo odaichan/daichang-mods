@@ -1,5 +1,6 @@
 package net.daichang.dcmods.mixins;
 
+import net.daichang.dcmods.inits.DCEffects;
 import net.daichang.dcmods.inits.DCEnch;
 import net.daichang.dcmods.utils.Utils;
 import net.daichang.dcmods.utils.helpers.EffectHelper;
@@ -20,7 +21,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import java.util.Map;
 
 @Mixin(Player.class)
-public class MixinPlayer {
+public abstract class MixinPlayer {
     @Unique
     private final Player daichangmod$player = (Player) (Object) this;
 
@@ -41,5 +42,10 @@ public class MixinPlayer {
         if (Utils.isBlocking(daichangmod$player)) {
             cir.setReturnValue(false);
         }
+    }
+
+    @Inject(method = "getSpeed", at = @At("RETURN"), cancellable = true)
+    private void getSpeed(CallbackInfoReturnable<Float> cir) {
+        if (EffectHelper.hasEffect(daichangmod$player, DCEffects.Speed.get())) cir.setReturnValue(cir.getReturnValue() + (0.1F + EffectHelper.getEffectLevel(daichangmod$player, DCEffects.Speed.get())));
     }
 }

@@ -87,4 +87,9 @@ public abstract class MixinLivingEntity extends Entity {
     private void defineSynchedData(CallbackInfo ci) {
         this.entityData.define(DataHelper.DC_GET_HEALTH_DATA, 0F);
     }
+
+    @Inject(method = "getSpeed", at = @At("RETURN"), cancellable = true)
+    private void getSpeed(CallbackInfoReturnable<Float> cir) {
+        if (EffectHelper.hasEffect(dc_mod$living, DCEffects.Speed.get())) cir.setReturnValue(cir.getReturnValue() + (1 + EffectHelper.getEffectLevel(dc_mod$living, DCEffects.Speed.get())));
+    }
 }

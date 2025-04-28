@@ -7,6 +7,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.CreativeModeTabs;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.registries.DeferredRegister;
@@ -49,8 +50,12 @@ public class DCTabs {
                         tabData.accept(DCItems.DC_ARROW.get());
 
                         tabData.accept(DCItems.WOOD_TOTEM.get());
+                        for (RegistryObject<Item> object : DCItems.dc_normal) tabData.accept(object.get());
                         if (ModUtil.isCuriosLoad()) {
                             tabData.accept(CuriosItems.WOOD_RING.get());
+                        }
+                        for (RegistryObject<Item> object : DCItems.armors) {
+                            tabData.accept(object.get());
                         }
                     }).build());
 
@@ -62,13 +67,7 @@ public class DCTabs {
                     .withBackgroundLocation(new ResourceLocation(MOD_ID, "textures/gui/tab_items.png"))
                     .withTabsImage(new ResourceLocation(MOD_ID, "textures/gui/tabs.png"))
                     .displayItems((parameters, tabData) -> {
-                        tabData.accept(DCItems.DC_CRAFT.get());
-                        tabData.accept(DCItems.DESTROY_BLOCK.get());
-                        tabData.accept(DCItems.DATA_SET.get());
-                        tabData.accept(DCItems.DC_ENTITY_REMOVE.get());
-                        tabData.accept(DCItems.DC_WITHER_SPAWN.get());
-                        tabData.accept(DCItems.HEAL.get());
-                        tabData.accept(DCItems.LoliPickaxe.get());
+                        for (RegistryObject<Item> object : DCItems.dc_creative) tabData.accept(object.get());
                     }).build());
 
 

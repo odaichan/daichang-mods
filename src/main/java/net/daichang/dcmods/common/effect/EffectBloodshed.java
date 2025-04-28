@@ -11,6 +11,7 @@ public class EffectBloodshed extends MobEffect {
     public EffectBloodshed() {
         super(MobEffectCategory.HARMFUL, 0xFF55FF);
     }
+
     @Override
     public boolean isDurationEffectTick(int duration, int amplifier) {
         return duration % 20 == 0;

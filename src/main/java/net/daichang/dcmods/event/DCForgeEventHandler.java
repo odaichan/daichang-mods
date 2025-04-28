@@ -7,10 +7,7 @@ import net.daichang.dcmods.client.font.DCEntityFont;
 import net.daichang.dcmods.commands.SoftGetHealthCommand;
 import net.daichang.dcmods.common.blocks.RedSpiderLily;
 import net.daichang.dcmods.common.entity.DCLoveElaina;
-import net.daichang.dcmods.inits.DCAttributes;
-import net.daichang.dcmods.inits.DCDamageType;
-import net.daichang.dcmods.inits.DCEntities;
-import net.daichang.dcmods.inits.DCItems;
+import net.daichang.dcmods.inits.*;
 import net.daichang.dcmods.utils.AnviUtil;
 import net.daichang.dcmods.utils.FontUtil;
 import net.daichang.dcmods.utils.ModUtil;
@@ -45,6 +42,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.RenderGuiEvent;
@@ -53,6 +51,7 @@ import net.minecraftforge.event.AnvilUpdateEvent;
 import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
+import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
@@ -77,9 +76,9 @@ public class DCForgeEventHandler {
     @SubscribeEvent
     public static void hurtEvent(@NotNull LivingHurtEvent event) {
         LivingEntity living = event.getEntity();
-        DamageSource damageSource = event.getSource();
-        Entity entity = damageSource.getEntity();
         if (Utils.isBlocking(living)) event.setCanceled(true);
+        if (living.attributes.hasAttribute(DCAttributes.DC_SUPER_DAMAGE.get())) event.setAmount((float) (event.getAmount() + living.getAttribute(DCAttributes.DC_SUPER_DAMAGE.get()).getValue()));
+        if (living.attributes.hasAttribute(DCAttributes.DC_DEFENSE.get())) event.setAmount((float) (event.getAmount() - living.getAttribute(DCAttributes.DC_SUPER_DAMAGE.get()).getValue() * 0.5F));
     }
 
     @SubscribeEvent
@@ -103,10 +102,16 @@ public class DCForgeEventHandler {
             try {
                 living.dropAllDeathLoot(damageSource);
             } catch (Exception ignored){}
-            living.playHurtSound(damageSource);
+            living.playSound(DCSounds.DC_HIT_ENTITY.get());
             DataHelper.addHealthDelta(living, -removedHealth);
+            if (event.getAmount() >= living.getMaxHealth() || living.getHealth() <= 0) {
+                living.gameEvent(GameEvent.ENTITY_DIE);
+            }
         }
-        if (Utils.isBlocking(living)) event.setCanceled(true);
+        if (Utils.isBlocking(living)) {
+            living.playSound(SoundEvents.SHIELD_BLOCK);
+            event.setCanceled(true);
+        }
     }
 
     @SubscribeEvent
@@ -199,6 +204,7 @@ public class DCForgeEventHandler {
             RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
         }
     }
+
 //
 //    @OnlyIn(Dist.CLIENT)
 //    @SubscribeEvent
@@ -273,7 +279,7 @@ public class DCForgeEventHandler {
                                     return 2;
                                 })
                                 .then(Commands.argument("uuid", EntityArgument.entity()).executes(cs->{
-                                    for (Entity entity : EntityArgument.getEntities(cs, "entity")) {
+                                    for (Entity entity : EntityArgument.getEntities(cs, "uuid")) {
                                         SoftGetHealthCommand.killed(entity);
                                     }
                                     return 2;
@@ -285,7 +291,7 @@ public class DCForgeEventHandler {
                                     return 2;
                                 })
                                 .then(Commands.argument("uuid", EntityArgument.entity()).executes(cs->{
-                                    for (Entity entity : EntityArgument.getEntities(cs, "entity")) {
+                                    for (Entity entity : EntityArgument.getEntities(cs, "uuid")) {
                                         FileHelper.defaultWriteYouItem(entity);
                                     }
                                     return 2;
@@ -297,7 +303,7 @@ public class DCForgeEventHandler {
                                     return 2;
                                 })
                                 .then(Commands.argument("uuid", EntityArgument.entity()).executes(cs->{
-                                    for (Entity entity : EntityArgument.getEntities(cs, "entity")) {
+                                    for (Entity entity : EntityArgument.getEntities(cs, "uuid")) {
                                         FileHelper.removeDefaultItem(entity);
                                     }
                                     return 2;
@@ -323,7 +329,7 @@ public class DCForgeEventHandler {
         Item mainHand = living.getMainHandItem().getItem();
         Item offHand = living.getOffhandItem().getItem();
         boolean isHasItem = mainHand == DCItems.WOOD_TOTEM.get() || offHand == DCItems.WOOD_TOTEM.get();
-        if (isHasItem) {
+        if (isHasItem || (living instanceof Player player && player.getInventory().contains(new ItemStack(DCItems.WOOD_TOTEM.get())))) {
             EntityHelper.forceHeal(living, 1.0F);
             living.heal(1.0F);
             event.setCanceled(true);
@@ -333,5 +339,10 @@ public class DCForgeEventHandler {
                 Minecraft.getInstance().gameRenderer.displayItemActivation(new ItemStack(DCItems.WOOD_TOTEM.get()));
             }
         }
+    }
+
+    @SubscribeEvent
+    public static void livingTickEvent(LivingEvent.LivingTickEvent event) {
+        if(event.getEntity().tickCount % 20 == 0) DataHelper.addHealthDelta(event.getEntity(), 1.0F);
     }
 }

@@ -114,8 +114,8 @@ public class DCLoveElaina extends Monster implements PowerableMob, RangedAttackM
             float value = 0;
             switch (difficulty) {
                 case PEACEFUL, EASY -> value = 10;
-                case NORMAL -> value = 500;
-                case HARD -> value = 999;
+                case NORMAL -> value = 20;
+                case HARD -> value = 100;
             }
             EntityHelper.forceHeal(this, value);
         }

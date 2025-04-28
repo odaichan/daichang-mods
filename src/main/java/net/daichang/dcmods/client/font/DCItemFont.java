@@ -77,15 +77,38 @@ public class DCItemFont extends Font {
     }
 
     public static boolean isCreativeItem(String s) {
-        return s.contains(getString("item.dc_m.dc_craft")) || s.contains(getString("item.dc_m.data_set")) || s.contains(getString("item.dc_m.destroy_block")) || s.contains(getString("item.dc_m.time_clock"));
+        return s.contains(getString("item.dc_m.dc_craft"))
+                || s.contains(getString("item.dc_m.data_set"))
+                || s.contains(getString("item.dc_m.destroy_block"))
+                || s.contains(getString("item.dc_m.time_clock"));
     }
 
     public static boolean isCraftTip(String s) {
-        return s.contains(getString("tooltip.dc_mods.dc_craft"));
+        return s.contains(getString("tooltip.dc_mods.dc_craft")) || s.contains(getString("tool_tip.dc_mods.7meter"));
     }
 
     public static boolean isMinecraftName(String s) {
-        return s.contains(getString("attribute.name.generic.attack_damage")) || s.contains(getString("attribute.name.generic.attack_speed"));
+        return s.contains(getString("attribute.name.generic.attack_damage"))
+                || s.contains(getString("attribute.name.generic.attack_speed"))
+                || s.contains(getString("attribute.name.generic.armor"))
+                || s.contains(getString("attribute.name.generic.armor_toughness"))
+                || s.contains(getString("attribute.name.generic.attack_knockback"))
+                || s.contains(getString("attribute.name.generic.flying_speed"))
+                || s.contains(getString("attribute.name.generic.knockback_resistance"))
+                || s.contains(getString("attribute.name.generic.follow_range"))
+                || s.contains(getString("attribute.name.generic.attack_speed"))
+                || s.contains(getString("attribute.name.generic.movement_speed"))
+                ;
+    }
+
+    //不知道应该写什么方法名
+    public static boolean az(String s) {
+        return s.contains(getString("tooltip.dc_mods.hurts"))
+                || s.contains(getString("tool_tip.dc_mods.wood_ring"))
+                || s.contains(getString("item.dc_m.super_wood_helmet"))
+                || s.contains(getString("item.dc_m.super_wood_chestplate"))
+                || s.contains(getString("item.dc_m.super_wood_leggings"))
+                || s.contains(getString("item.dc_m.super_wood_boots"));
     }
 
     public int drawInBatch(@NotNull FormattedCharSequence formattedCharSequence, float x, float y, int rgb, boolean b1, @NotNull Matrix4f matrix4f, @NotNull MultiBufferSource multiBufferSource, @NotNull DisplayMode mode, int i, int i1) {
@@ -117,11 +140,12 @@ public class DCItemFont extends Font {
             else if (text.equals(getString("tooltip.dc_mods.strong"))) c = rgb & 0xFFA9A9A9;
             else if (text.contains(getString("attribute.dc_mods.super_damage")) || text.contains(getString("attribute.dc_mods.dc_defense"))) c = rgb & 0x01ADD8E6 ;
             else if (text.contains(getString("modifier.dc_m.super_wood_ingot"))) c = rgb & 0x800080;
-            else if (text.contains(getString("tooltip.dc_mods.hurts")) || text.contains(getString("tool_tip.dc_mods.wood_ring"))) c = rgb & 0xFFD8BFD8;
+            else if (az(text)) c = rgb & 0xFFD8BFD8;
             else if (isDCEnchFont(text)) c = rgb & 0xFFF0F0F0;
             else if (isTabFont(text)) c = rgb & 0xFFFFD700;
             else if (isDaiChangTip(text)) c = rgb & 0xFFD700;
             else if (text.contains(getString("curios.slot"))) c = rgb & 0xFFADD8E6;
+            else if (text.contains(getString("attribute.name.generic.max_health"))) c = rgb & 0xFFFF9999;
             else  c = rgb;
             int darkerC = (c & 0x00FFFFFF) | (0x80000000 & c) >> 1;
             super.drawInBatch(s, x, y, c, dropShadow, matrix4f, bufferSource, mode, i, i1);//前景色
