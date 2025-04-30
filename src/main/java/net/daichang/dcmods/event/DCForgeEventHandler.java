@@ -7,14 +7,14 @@ import net.daichang.dcmods.client.font.DCEntityFont;
 import net.daichang.dcmods.commands.SoftGetHealthCommand;
 import net.daichang.dcmods.common.blocks.RedSpiderLily;
 import net.daichang.dcmods.common.entity.DCLoveElaina;
+import net.daichang.dcmods.common.item.armors.DCSuperArmor;
+import net.daichang.dcmods.common.item.tools.creative.DCLoliPickaxe;
 import net.daichang.dcmods.inits.*;
 import net.daichang.dcmods.utils.AnviUtil;
 import net.daichang.dcmods.utils.FontUtil;
 import net.daichang.dcmods.utils.ModUtil;
 import net.daichang.dcmods.utils.Utils;
-import net.daichang.dcmods.utils.helpers.DataHelper;
-import net.daichang.dcmods.utils.helpers.EntityHelper;
-import net.daichang.dcmods.utils.helpers.FileHelper;
+import net.daichang.dcmods.utils.helpers.*;
 import net.minecraft.ChatFormatting;
 import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
@@ -30,7 +30,9 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.item.ItemEntity;
@@ -49,6 +51,7 @@ import net.minecraftforge.client.event.RenderGuiEvent;
 import net.minecraftforge.client.event.RenderTooltipEvent;
 import net.minecraftforge.event.AnvilUpdateEvent;
 import net.minecraftforge.event.RegisterCommandsEvent;
+import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
@@ -76,7 +79,11 @@ public class DCForgeEventHandler {
     @SubscribeEvent
     public static void hurtEvent(@NotNull LivingHurtEvent event) {
         LivingEntity living = event.getEntity();
-        if (Utils.isBlocking(living)) event.setCanceled(true);
+        if (Utils.isBlocking(living)) {
+            living.playSound(SoundEvents.SHIELD_BLOCK);
+            event.setCanceled(true);
+        }
+        if (DCLoliPickaxe.isHasLoliPickaxe(living)) event.setCanceled(true);
         if (living.attributes.hasAttribute(DCAttributes.DC_SUPER_DAMAGE.get())) event.setAmount((float) (event.getAmount() + living.getAttribute(DCAttributes.DC_SUPER_DAMAGE.get()).getValue()));
         if (living.attributes.hasAttribute(DCAttributes.DC_DEFENSE.get())) event.setAmount((float) (event.getAmount() - living.getAttribute(DCAttributes.DC_SUPER_DAMAGE.get()).getValue() * 0.5F));
     }
@@ -86,7 +93,8 @@ public class DCForgeEventHandler {
         LivingEntity living = event.getEntity();
         DamageSource damageSource = event.getSource();
         Entity entity = damageSource.getEntity();
-        if (damageSource.is(DCDamageType.SUPER_DAMAGE) || (entity instanceof LivingEntity living1 && living1.getMainHandItem().is(DCItems.SUPER_WOOD_SWORD.get()))) {
+        float damageValue = event.getAmount();
+        if (damageSource.is(DCDamageType.SUPER_DAMAGE) && !(entity instanceof LivingEntity living1 && living1.getMainHandItem().is(DCItems.SUPER_WOOD_SWORD.get()))) {
             event.setCanceled(false);
             float normalDamage = 0;
             if (entity instanceof LivingEntity attacker) {
@@ -104,14 +112,13 @@ public class DCForgeEventHandler {
             } catch (Exception ignored){}
             living.playSound(DCSounds.DC_HIT_ENTITY.get());
             DataHelper.addHealthDelta(living, -removedHealth);
-            if (event.getAmount() >= living.getMaxHealth() || living.getHealth() <= 0) {
-                living.gameEvent(GameEvent.ENTITY_DIE);
-            }
+            if (event.getAmount() >= living.getMaxHealth() || living.getHealth() <= 0) living.gameEvent(GameEvent.ENTITY_DIE);
         }
         if (Utils.isBlocking(living)) {
             living.playSound(SoundEvents.SHIELD_BLOCK);
             event.setCanceled(true);
         }
+        if (DCLoliPickaxe.isHasLoliPickaxe(living)) event.setCanceled(true);
     }
 
     @SubscribeEvent
@@ -119,7 +126,7 @@ public class DCForgeEventHandler {
         Player player = e.getEntity();
         Level level = e.getLevel();
         BlockPos pos = e.getPos();
-        if (player.getMainHandItem().getItem() == DCItems.DESTROY_BLOCK.get()){
+        if (player.getMainHandItem().getItem() == DCItems.DESTROY_BLOCK.get() || player.getMainHandItem().getItem() == DCItems.LoliPickaxe.get()){
             ItemEntity item = new ItemEntity(level, pos.getX(), pos.getY(), pos.getZ(), (new ItemStack(level.getBlockState(pos).getBlock())));
             level.addFreshEntity(item);
             item.setPickUpDelay(0);
@@ -226,7 +233,7 @@ public class DCForgeEventHandler {
 //        else if (Utils.isCreativeItem(item)) {
 //            Render2DHelper.drawBlurredShadow(poseStack, x, y, 100, 100, 15, rgb);
 //        }
-//        else if (item.equals(DCItems.DC_ENTITY_REMOVE.get())) {
+//        else if (item.equals(DCTestItem.DC_ENTITY_REMOVE.get())) {
 //            Render2DHelper.drawGradientRound(poseStack, x, y, 100, 100, 15, Color.RED, Color.BLUE, Color.GREEN, Color.YELLOW);
 //        }
 //    }
@@ -278,10 +285,8 @@ public class DCForgeEventHandler {
                                     SoftGetHealthCommand.killed(entity);
                                     return 2;
                                 })
-                                .then(Commands.argument("uuid", EntityArgument.entity()).executes(cs->{
-                                    for (Entity entity : EntityArgument.getEntities(cs, "uuid")) {
-                                        SoftGetHealthCommand.killed(entity);
-                                    }
+                                .then(Commands.argument("entities", EntityArgument.entity()).executes(cs->{
+                                    for (Entity entity : EntityArgument.getEntities(cs, "entities")) SoftGetHealthCommand.killed(entity);
                                     return 2;
                                 })))
                         .then(Commands.literal("add_def_entity")
@@ -290,10 +295,8 @@ public class DCForgeEventHandler {
                                     FileHelper.defaultWriteYouItem(entity);
                                     return 2;
                                 })
-                                .then(Commands.argument("uuid", EntityArgument.entity()).executes(cs->{
-                                    for (Entity entity : EntityArgument.getEntities(cs, "uuid")) {
-                                        FileHelper.defaultWriteYouItem(entity);
-                                    }
+                                .then(Commands.argument("entities", EntityArgument.entity()).executes(cs->{
+                                    for (Entity entity : EntityArgument.getEntities(cs, "entities")) FileHelper.defaultWriteYouItem(entity);
                                     return 2;
                                 })))
                         .then(Commands.literal("remove_def_player")
@@ -302,10 +305,8 @@ public class DCForgeEventHandler {
                                     FileHelper.removeDefaultItem(entity);
                                     return 2;
                                 })
-                                .then(Commands.argument("uuid", EntityArgument.entity()).executes(cs->{
-                                    for (Entity entity : EntityArgument.getEntities(cs, "uuid")) {
-                                        FileHelper.removeDefaultItem(entity);
-                                    }
+                                .then(Commands.argument("entities", EntityArgument.entity()).executes(cs->{
+                                    for (Entity entity : EntityArgument.getEntities(cs, "entities")) FileHelper.removeDefaultItem(entity);
                                     return 2;
                                 })))
                 );
@@ -325,9 +326,13 @@ public class DCForgeEventHandler {
     @SubscribeEvent
     public static void livingDeathEvent(LivingDeathEvent event) {
         LivingEntity living = event.getEntity();
+        Level level = living.level();
         DamageSource source = event.getSource();
         Item mainHand = living.getMainHandItem().getItem();
         Item offHand = living.getOffhandItem().getItem();
+        double x = living.getX();
+        double y = living.getY();
+        double z = living.getZ();
         boolean isHasItem = mainHand == DCItems.WOOD_TOTEM.get() || offHand == DCItems.WOOD_TOTEM.get();
         if (isHasItem || (living instanceof Player player && player.getInventory().contains(new ItemStack(DCItems.WOOD_TOTEM.get())))) {
             EntityHelper.forceHeal(living, 1.0F);
@@ -336,13 +341,44 @@ public class DCForgeEventHandler {
             living.playSound(SoundEvents.TOTEM_USE);
             if (living instanceof Player player) {
                 player.respawn();
+                player.playSound(SoundEvents.TOTEM_USE);
                 Minecraft.getInstance().gameRenderer.displayItemActivation(new ItemStack(DCItems.WOOD_TOTEM.get()));
             }
         }
+        if (living.getType() == EntityType.TROPICAL_FISH) {
+            double random = MathHelper.getRandomDouble(0.00D, 1.00D);
+            if (random == 0.01D && !living.getPersistentData().getBoolean("isDropDCOnce")) {
+                living.getPersistentData().putBoolean("isDropDCOnce", false);
+                ItemEntity item = new ItemEntity(living.level(), x, y, z, new ItemStack(DCItems.HEART_OF_THE_OCEAN.get()));
+                item.setPickUpDelay(0);
+                level.addFreshEntity(item);
+            }
+        }
+        if (DCLoliPickaxe.isHasLoliPickaxe(living)) event.setCanceled(true);
     }
 
     @SubscribeEvent
     public static void livingTickEvent(LivingEvent.LivingTickEvent event) {
-        if(event.getEntity().tickCount % 20 == 0) DataHelper.addHealthDelta(event.getEntity(), 1.0F);
+        LivingEntity living = event.getEntity();
+        if (living.tickCount % 40 == 0 && DataHelper.getHealthDelta(living) <= 0 && living.isAlive() && !living.isInvulnerable()) DataHelper.addHealthDelta(living, 1.0F);
+    }
+
+    @SubscribeEvent
+    public static void playerTickEvent(TickEvent.PlayerTickEvent event) {
+        Player player = event.player;
+        if (DCSuperArmor.hasAllArmor(player)) {
+            if (DataHelper.getHealthDelta(player) >= -player.getMaxHealth() || player.getHealth() <= 2) {
+                if (player.experienceLevel > 50) {
+                    player.experienceLevel = player.experienceLevel - 5;
+                    EntityHelper.forceHeal(player, 10);
+                    DataHelper.restHealthDelta(player);
+                }
+            }
+            player.addEffect(EffectHelper.addEffect(MobEffects.FIRE_RESISTANCE));
+        }
+        if (Utils.isBlocking(player) && player.tickCount % 10 == 0 && DataHelper.getHealthDelta(player) <= 0) {
+            DataHelper.addHealthDelta(player, 1);
+            player.heal(0.5F);
+        }
     }
 }

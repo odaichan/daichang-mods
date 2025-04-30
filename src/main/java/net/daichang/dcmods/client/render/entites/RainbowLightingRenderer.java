@@ -12,6 +12,7 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.LightningBolt;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import org.jetbrains.annotations.NotNull;
 import org.joml.Matrix4f;
 
 import java.util.Random;
@@ -22,7 +23,7 @@ public class RainbowLightingRenderer extends LightningBoltRenderer {
 		super(context);
 	}
 
-	public void render(LightningBolt p_115266_, float p_115267_, float p_115268_, PoseStack p_115269_, MultiBufferSource p_115270_, int p_115271_) {
+	public void render(LightningBolt p_115266_, float p_115267_, float p_115268_, @NotNull PoseStack stack, @NotNull MultiBufferSource bufferSource, int p_115271_) {
 		float[] afloat = new float[8];
 		float[] afloat1 = new float[8];
 		float f = 0.0F;
@@ -34,8 +35,8 @@ public class RainbowLightingRenderer extends LightningBoltRenderer {
 			f += (float)(randomsource.nextInt(11) - 5);
 			f1 += (float)(randomsource.nextInt(11) - 5);
 		}
-		VertexConsumer vertexconsumer = p_115270_.getBuffer(RenderType.lightning());
-		Matrix4f matrix4f = p_115269_.last().pose();
+		VertexConsumer vertexconsumer = bufferSource.getBuffer(RenderType.endPortal());
+		Matrix4f matrix4f = stack.last().pose();
 		for(int j = 0; j < 4; ++j) {
 			RandomSource randomsource1 = RandomSource.create(p_115266_.seed);
 			for(int k = 0; k < 3; ++k) {

@@ -5,6 +5,7 @@ import com.google.common.collect.Multimap;
 import net.daichang.dcmods.client.font.DCItemFont;
 import net.daichang.dcmods.inits.DCAttributes;
 import net.daichang.dcmods.utils.Utils;
+import net.daichang.dcmods.utils.helpers.DataHelper;
 import net.daichang.dcmods.utils.helpers.EffectHelper;
 import net.daichang.dcmods.utils.helpers.EntityHelper;
 import net.daichang.dcmods.utils.helpers.MathHelper;
@@ -74,7 +75,7 @@ public class DCSuperSwordItem extends ISwordItem {
     }
 
     @Override
-    public @NotNull Multimap<Attribute, AttributeModifier> getDefaultAttributeModifiers(EquipmentSlot pEquipmentSlot) {
+    public @NotNull Multimap<Attribute, AttributeModifier> getDefaultAttributeModifiers(@NotNull EquipmentSlot pEquipmentSlot) {
         if (pEquipmentSlot == EquipmentSlot.MAINHAND) return this.mainHandModifiers;
         if (pEquipmentSlot == EquipmentSlot.OFFHAND) return this.offHandModifiers;
         return super.getDefaultAttributeModifiers(pEquipmentSlot);
@@ -97,12 +98,13 @@ public class DCSuperSwordItem extends ISwordItem {
         living.addEffect(EffectHelper.addEffect(MobEffects.DAMAGE_RESISTANCE, 20, 3,true));
         living.heal(5.5F);
         EntityHelper.forceHeal(living, 5.5F);
+        if (DataHelper.getHealthDelta(living) <= 0) DataHelper.addHealthDelta(living, 10.5F);
         living.invulnerableTime = 1;
         super.onUseTick(p_41428_, living, p_41430_, p_41431_);
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, @Nullable Level p_41422_, List<Component> list, TooltipFlag p_41424_) {
+    public void appendHoverText(ItemStack stack, @Nullable Level p_41422_, @NotNull List<Component> list, @NotNull TooltipFlag p_41424_) {
         CompoundTag comTag = stack.getTag();
         if (Screen.hasShiftDown()) {
             list.add(Component.literal(Component.translatable("tooltip.dc_mods.hurts").getString() + comTag.getInt("dc_attking")));
@@ -127,19 +129,14 @@ public class DCSuperSwordItem extends ISwordItem {
         }
         else {
             list.add(Component.translatable("tool_tip.dc_mods.7meter"));
+            list.add(Component.literal("Subscribe to DaiChang on Bilibili"));
             list.add(Component.literal("< Press Shift to more >"));
         }
-        if (Screen.hasControlDown()) list.add(Component.literal("Subscribe to DaiChang on Bilibili"));
         super.appendHoverText(stack, p_41422_, list, p_41424_);
     }
 
     @Override
-    public boolean isDamaged(ItemStack stack) {
-        return stack.getTag().getInt("dc_attking") < 10000 || super.isDamaged(stack);
-    }
-
-    @Override
-    public boolean hurtEnemy(ItemStack stack, LivingEntity target, @NotNull LivingEntity living) {
+    public boolean hurtEnemy(ItemStack stack, @NotNull LivingEntity target, @NotNull LivingEntity living) {
         if (living instanceof Player player) Utils.attackEntity(stack, target, player);
         return super.hurtEnemy(stack, target, living);
     }

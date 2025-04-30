@@ -41,6 +41,5 @@ public abstract class MixinGameRenderer {
 
     @Inject(method = "tick", at = @At("HEAD"))
     private void tick(CallbackInfo ci) {
-
     }
 }

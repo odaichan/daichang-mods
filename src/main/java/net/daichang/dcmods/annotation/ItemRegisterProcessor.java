@@ -1,7 +1,7 @@
 package net.daichang.dcmods.annotation;
 
 import net.daichang.dcmods.DCMod;
-import net.daichang.dcmods.common.item.crafts.DCItems;
+import net.daichang.dcmods.common.item.crafts.DCTestItem;
 import net.minecraft.world.item.Item;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -22,7 +22,7 @@ import java.util.*;
 public class ItemRegisterProcessor extends AbstractProcessor {
     public static List<String> item_list = new ArrayList<>();
 
-    public static Class<? extends Item> clazz = DCItems.class;
+    public static Class<? extends Item> clazz = DCTestItem.class;
 
     public static final DeferredRegister<Item> deferred = DeferredRegister.create(ForgeRegistries.ITEMS, DCMod.MOD_ID);
     public static Map<String, RegistryObject<Item>> addonItems = createItem();
@@ -40,7 +40,7 @@ public class ItemRegisterProcessor extends AbstractProcessor {
     }
 
     private static RegistryObject<Item> createItems(String name, Item.Properties properties){
-        return deferred.register(name, DCItems::new);
+        return deferred.register(name, DCTestItem::new);
     }
 
     @Override

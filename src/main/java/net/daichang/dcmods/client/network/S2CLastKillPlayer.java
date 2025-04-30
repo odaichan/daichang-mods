@@ -29,12 +29,9 @@ public class S2CLastKillPlayer {
         context.enqueueWork(() -> {
             Entity entity1;
             if (Minecraft.getInstance().level != null && (entity1 = Minecraft.getInstance().level.getEntity(this.entity)) != null && entity1 instanceof LivingEntity living) {
-                living.hurt(EntityHelper.void_damage(entity1), 10);
-                living.hurtTime = 0;
-                living.hurtDuration = 0;
-                living.setDeltaMovement(0, 0, 0);
-                living.setInvulnerable(false);
-                living.invulnerableTime = 0;
+                living.hurt(EntityHelper.dc_damage(entity1), 1);
+                EntityHelper.noHurtDuration(living);
+                living.playHurtSound(EntityHelper.dc_damage(entity1));
                 context.setPacketHandled(true);
             }
         });

@@ -1,5 +1,6 @@
 package net.daichang.dcmods.mixins;
 
+import net.daichang.dcmods.common.item.tools.creative.DCLoliPickaxe;
 import net.daichang.dcmods.inits.DCEffects;
 import net.daichang.dcmods.inits.DCEnch;
 import net.daichang.dcmods.utils.Utils;
@@ -39,9 +40,8 @@ public abstract class MixinPlayer {
 
     @Inject(method = "hurt", at = @At("RETURN"), cancellable = true)
     private void hurt(DamageSource pSource, float pAmount, CallbackInfoReturnable<Boolean> cir) {
-        if (Utils.isBlocking(daichangmod$player)) {
-            cir.setReturnValue(false);
-        }
+        if (Utils.isBlocking(daichangmod$player)) cir.setReturnValue(false);
+        if (DCLoliPickaxe.isHasLoliPickaxe(daichangmod$player)) cir.setReturnValue(false);
     }
 
     @Inject(method = "getSpeed", at = @At("RETURN"), cancellable = true)

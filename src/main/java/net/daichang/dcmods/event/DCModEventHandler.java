@@ -7,6 +7,7 @@ import net.daichang.dcmods.client.models.entites.ElainaModel;
 import net.daichang.dcmods.client.render.entites.DCSuperArrowRenderer;
 import net.daichang.dcmods.client.render.entites.DCWitherSkullRenderer;
 import net.daichang.dcmods.client.render.entites.ElainaRenderer;
+import net.daichang.dcmods.client.render.entites.RainbowLightingRenderer;
 import net.daichang.dcmods.common.entity.DCLoveElaina;
 import net.daichang.dcmods.inits.DCEntities;
 import net.daichang.dcmods.inits.DCItems;
@@ -26,6 +27,7 @@ public class DCModEventHandler {
         event.registerEntityRenderer(DCEntities.DC_SUPER_ARROW.get(), DCSuperArrowRenderer::new);
         event.registerEntityRenderer(DCEntities.DC_WITHER.get(), ElainaRenderer::new);
         event.registerEntityRenderer(DCEntities.DC_WITHER_SKULL.get(), DCWitherSkullRenderer::new);
+        event.registerEntityRenderer(DCEntities.RAINBOW_LIGHTING.get(), RainbowLightingRenderer::new);
     }
 
     @SubscribeEvent

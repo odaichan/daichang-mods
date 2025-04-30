@@ -3,6 +3,7 @@ package net.daichang.dcmods.common.blocks;
 import net.daichang.dcmods.common.entity.DCLoveElaina;
 import net.daichang.dcmods.inits.DCBlockItems;
 import net.daichang.dcmods.inits.DCEffects;
+import net.daichang.dcmods.utils.helpers.DataHelper;
 import net.daichang.dcmods.utils.helpers.EffectHelper;
 import net.daichang.dcmods.utils.helpers.EntityHelper;
 import net.minecraft.core.BlockPos;
@@ -56,28 +57,26 @@ public class RedSpiderLily extends FlowerBlock {
         super.entityInside(p_60495_, p_60496_, p_60497_, p_60498_);
         if (p_60498_ instanceof LivingEntity living) {
             if (!(living instanceof Player) && !(living instanceof DCLoveElaina)) {
-                float damageValue = living.getMaxHealth() * 0.1F + 20;
-                living.addEffect(EffectHelper.addEffect(DCEffects.Bloodshed.get(), 60, 2, true));
+                float damageValue = living.getMaxHealth() * 0.01F + 20;
+                int duration = 60;
+                int level = 2;
+                living.addEffect(EffectHelper.addEffect(DCEffects.Bloodshed.get(), duration, level, true));
+                living.addEffect(EffectHelper.addEffect(MobEffects.DARKNESS, duration, level));
+                living.addEffect(EffectHelper.addEffect(MobEffects.HUNGER, duration, level));
                 float healthValue = living.getHealth() - living.getMaxHealth() * 0.1F - 20F;
-                living.hurt(EntityHelper.generic_kill_damage(living), damageValue);
+                living.hurt(EntityHelper.dc_damage(living), damageValue);
                 living.setHealth(healthValue);
                 EntityHelper.forceSetHealth(living,healthValue);
                 living.entityData.set(LivingEntity.DATA_HEALTH_ID, healthValue);
-                living.setInvulnerable(false);
-                living.invulnerableTime = 0;
-                living.hurtTime = 0;
-                living.hurtDuration = 0;
                 living.setDeltaMovement(0 ,0, 0);
+                EntityHelper.noHurtDuration(living);
             }
             else if (living instanceof Player player) {
                 float health = player.getHealth() - 1.0F;
                 player.setHealth(health);
                 EntityHelper.forceSetHealth(player, health);
-                player.setInvulnerable(false);
-                player.invulnerableTime = 0;
-                player.hurtTime = 0;
-                player.hurtDuration = 0;
-                player.setDeltaMovement(0 ,0, 0);
+                EntityHelper.noHurtDuration(living);
+                DataHelper.addHealthDelta(player, -1.0F);
             }
             else if (living instanceof DCLoveElaina boss) {
                 boss.heal(100);

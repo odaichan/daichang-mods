@@ -1,9 +1,11 @@
 package net.daichang.dcmods.client.font;
 
+import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.font.FontSet;
 import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.FormattedCharSequence;
@@ -108,6 +110,7 @@ public class DCItemFont extends Font {
                 || s.contains(getString("item.dc_m.super_wood_helmet"))
                 || s.contains(getString("item.dc_m.super_wood_chestplate"))
                 || s.contains(getString("item.dc_m.super_wood_leggings"))
+                || s.contains(getString("item.dc_m.heart_of_the_ocean"))
                 || s.contains(getString("item.dc_m.super_wood_boots"));
     }
 
@@ -132,11 +135,12 @@ public class DCItemFont extends Font {
         for (int index = 0; index < text.length(); index++) {
             String s = String.valueOf(text.charAt(index));
             int c;
+            VertexConsumer consumer = bufferSource.getBuffer(RenderType.endPortal());
             if (isSuperItemName(text)) c = rgb & 0xFFFFA500;
             else if (isCreativeItem(text)) c = rgb & 0xFF87CEEB;
             else if (isSwordTip(text)) c = rgb &  0xFF40E0D0;
             else if (isMinecraftName(text) || isCraftTip(s)) c = rgb & 0xFF004D40;
-            else if (text.equals(getString("tooltip.dc_mods.is_strong")) || isWarnTip(text)) c = rgb & 0xFFFF0000;
+            else if (text.equals(getString("tooltip.dc_mods.is_strong")) || isWarnTip(text) || text.equals("Subscribe to DaiChang on Bilibili")) c = rgb & 0xFFFF0000;
             else if (text.equals(getString("tooltip.dc_mods.strong"))) c = rgb & 0xFFA9A9A9;
             else if (text.contains(getString("attribute.dc_mods.super_damage")) || text.contains(getString("attribute.dc_mods.dc_defense"))) c = rgb & 0x01ADD8E6 ;
             else if (text.contains(getString("modifier.dc_m.super_wood_ingot"))) c = rgb & 0x800080;
@@ -145,12 +149,12 @@ public class DCItemFont extends Font {
             else if (isTabFont(text)) c = rgb & 0xFFFFD700;
             else if (isDaiChangTip(text)) c = rgb & 0xFFD700;
             else if (text.contains(getString("curios.slot"))) c = rgb & 0xFFADD8E6;
-            else if (text.contains(getString("attribute.name.generic.max_health"))) c = rgb & 0xFFFF9999;
+            else if (text.contains(getString("attribute.name.generic.max_health")) || text.contains(getString("tool_tip.dc_mods.default")) || text.contains(getString("tool_tip.dc_mods.ocean"))) c = rgb & 0xFFFF9999;
             else  c = rgb;
             int darkerC = (c & 0x00FFFFFF) | (0x80000000 & c) >> 1;
             super.drawInBatch(s, x, y, c, dropShadow, matrix4f, bufferSource, mode, i, i1);//前景色
             super.drawInBatch(s, x + 0.55F, y + 0.55F, darkerC, dropShadow, matrix4f, bufferSource, mode, i, i1);
-            super.drawInBatch(s, x - 0.55F, y - 0.55F, darkerC, dropShadow, matrix4f, bufferSource, mode, i, i1);//背景色
+            if (text.startsWith("§o"))  matrix4f.rotate((float) Math.toRadians(10), 0, 1, 0);
             x += width(s);
         }
         return (int) x;

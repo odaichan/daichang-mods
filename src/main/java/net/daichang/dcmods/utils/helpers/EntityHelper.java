@@ -23,6 +23,8 @@ import net.minecraft.world.phys.Vec3;
 import java.util.ArrayList;
 import java.util.List;
 
+
+//一些灵感来源于Omni-mob,部分来源于梦幻终焉
 public class EntityHelper extends DataHelper {
 
     public static void noHurtDuration(LivingEntity living) {
@@ -56,6 +58,14 @@ public class EntityHelper extends DataHelper {
 
     public static DamageSource dc_damage(Entity attack) {
         return new DCDamageSource(attack.level().registryAccess().registryOrThrow(Registries.DAMAGE_TYPE).getHolderOrThrow(DCDamageType.SUPER_DAMAGE), attack);
+    }
+
+    public static DamageSource mob_attack_damage(Entity attack) {
+        return damageSource(attack, DamageTypes.MOB_ATTACK);
+    }
+
+    public static DamageSource player_attack_damage(Entity attack) {
+        return damageSource(attack, DamageTypes.PLAYER_ATTACK);
     }
 
     public static void spawnEntity(Level level, Entity entity, EntityType<?> spawn) {

@@ -29,37 +29,39 @@ public class ISwordItem extends SwordItem {
     }
 
     @Override
-    public InteractionResultHolder<ItemStack> use(Level pLevel, Player pPlayer, InteractionHand pUsedHand) {
+    public @NotNull InteractionResultHolder<ItemStack> use(@NotNull Level pLevel, Player pPlayer, @NotNull InteractionHand pUsedHand) {
         ItemStack stack = pPlayer.getItemInHand(pUsedHand);
-        stack.getTag().putInt("onDCSwordBlock", new Random().nextInt());
+        if (stack.getTag() != null) stack.getTag().putInt("onDCSwordBlock", new Random().nextInt());
         pPlayer.startUsingItem(pUsedHand);
         return super.use(pLevel, pPlayer, pUsedHand);
     }
 
     @Override
-    public Multimap<Attribute, AttributeModifier> getDefaultAttributeModifiers(EquipmentSlot pEquipmentSlot) {
+    public @NotNull Multimap<Attribute, AttributeModifier> getDefaultAttributeModifiers(@NotNull EquipmentSlot pEquipmentSlot) {
         return super.getDefaultAttributeModifiers(pEquipmentSlot);
     }
 
     @Override
     public Multimap<Attribute, AttributeModifier> getAttributeModifiers(EquipmentSlot slot, ItemStack stack) {
-        if (!(stack.getTag().contains("onDCSwordBlock"))) stack.getTag().putInt("onDCSwordBlock", 0);
+        if (stack.getTag() != null && !(stack.getTag().contains("onDCSwordBlock"))) stack.getTag().putInt("onDCSwordBlock", 0);
         return super.getAttributeModifiers(slot, stack);
     }
 
     @Override
-    public boolean hurtEnemy(ItemStack pStack, LivingEntity pTarget, LivingEntity pAttacker) {
-        EntityHelper.noHurtDuration(pAttacker);
+    public boolean hurtEnemy(ItemStack pStack, @NotNull LivingEntity pTarget, @NotNull LivingEntity pAttacker) {
+        EntityHelper.noHurtDuration(pTarget);
+        pTarget.hurt(EntityHelper.player_attack_damage(pAttacker), 5);
+        if (pStack.getTag() != null) pStack.getTag().putInt("onDCSwordBlock", new Random().nextInt());
         return super.hurtEnemy(pStack, pTarget, pAttacker);
     }
 
     @Override
-    public int getUseDuration(ItemStack pStack) {
+    public int getUseDuration(@NotNull ItemStack pStack) {
         return 72000;
     }
 
     @Override
-    public UseAnim getUseAnimation(ItemStack pStack) {
+    public @NotNull UseAnim getUseAnimation(@NotNull ItemStack pStack) {
         return Utils.getUseAnim();
     }
 

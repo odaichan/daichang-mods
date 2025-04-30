@@ -24,10 +24,10 @@ public class DCMod {
     public static final String MOD_ID = "dc_m";
 
     String[] strings = {
-            "修复了部分动画问题",
-            "添加了大部分物品的合成表",
-            "修改了彼岸花的机制",
-            "修改了世界管理者的动画"
+            "添加了海洋之心"
+            , "修改了物品字体"
+            , "修改了彼岸花的机制"
+            , "修改了氪金萝莉机制"
     };
 
 

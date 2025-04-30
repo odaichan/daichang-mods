@@ -4,6 +4,7 @@ import net.daichang.dcmods.DCMod;
 import net.daichang.dcmods.common.item.BaseSuperItem;
 import net.daichang.dcmods.common.item.DCTier;
 import net.daichang.dcmods.common.item.armors.DCSuperArmor;
+import net.daichang.dcmods.common.item.crafts.HeartOfTheOcean;
 import net.daichang.dcmods.common.item.other.DCWitherSpawnEgg;
 import net.daichang.dcmods.common.item.tools.*;
 import net.daichang.dcmods.common.item.tools.bow.DCArrow;
@@ -89,6 +90,7 @@ public class DCItems {
     public static final RegistryObject<Item> WOOD_CHESTPLATE;
     public static final RegistryObject<Item> WOOD_LEGGINGS;
     public static final RegistryObject<Item> WOOD_BOOTS;
+    public static final RegistryObject<Item> HEART_OF_THE_OCEAN;
 
     static {
         WOOD_INGOT = normalItemRegister("wood_ingot", ()-> new Item(new Item.Properties().stacksTo(16).rarity(Rarity.COMMON)));
@@ -131,5 +133,6 @@ public class DCItems {
         WOOD_CHESTPLATE = armorRegister("super_wood_chestplate", DCSuperArmor.Chestplate::new);
         WOOD_LEGGINGS = armorRegister("super_wood_leggings", DCSuperArmor.Leggings::new);
         WOOD_BOOTS = armorRegister("super_wood_boots", DCSuperArmor.Boots::new);
+        HEART_OF_THE_OCEAN = normalItemRegister("heart_of_the_ocean", HeartOfTheOcean::new);
     }
 }

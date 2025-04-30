@@ -45,7 +45,7 @@ public class ElainaRenderer extends MobRenderer<DCLoveElaina, ElainaModel<DCLove
     @Override
     public void render(DCLoveElaina boss, float f1, float f2, PoseStack poseStack, MultiBufferSource bufferSource, int p_115460_) {
         super.render(boss, f1, f2, poseStack, bufferSource, p_115460_);
-        if (boss.deathTime > 0 && boss.deathTime < 240) {
+        if (boss.deathTime > 0 && boss.deathTime < 220) {
             float f = ((float)boss.deathTime + f2 - 1.0F) / 20.0F * 1.6F;
             f = Mth.sqrt(f);
             if (f > 1.0F) f = 1.0F;

@@ -13,6 +13,8 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
+
+//一些灵感来源于Omni-mob,部分来源于梦幻终焉
 public class DataHelper {
     public static EntityDataAccessor<Float> DC_GET_HEALTH_DATA;
     public static String DC_GET_HEALTH = "dcGetHealth";
@@ -110,5 +112,9 @@ public class DataHelper {
 
     public static void addHealthDelta(LivingEntity living, float value) {
         setHealthDelta(living,getHealthDelta(living) + value);
-    }//
+    }
+
+    public static void restHealthDelta(LivingEntity living) {
+        setHealthDelta(living, 0.0F);
+    }
 }

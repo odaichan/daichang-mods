@@ -108,5 +108,8 @@
   "tooltip.dc_m.has_chestplate": "Obtain life recovery and power effects",
   "tooltip.dc_m.leggings": "When wearing, gain speed and jump enhancement effect",
   "tooltip.dc_m.has_boots": "Get lucky and increase movement speed effect",
-  "effect.dc_m.speed_increase" : "Speed Increase"
+  "effect.dc_m.speed_increase" : "Speed Increase",
+  "tool_tip.dc_mods.ocean": "The mysterious magic in the ocean",
+  "item.dc_m.heart_of_the_ocean" : "Heart of the Ocean",
+  "tool_tip.dc_mods.default": "Default effect of armor: Conduit Power"
 }

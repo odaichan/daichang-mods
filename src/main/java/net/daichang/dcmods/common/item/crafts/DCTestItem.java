@@ -4,8 +4,8 @@ import net.daichang.dcmods.annotation.AutoItemRegister;
 import net.minecraft.world.item.Item;
 
 @AutoItemRegister(registerId = "item")
-public class DCItems extends Item {
-    public DCItems() {
+public class DCTestItem extends Item {
+    public DCTestItem() {
         super(new Properties());
     }
 }

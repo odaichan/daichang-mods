@@ -7,7 +7,9 @@ import net.daichang.dcmods.common.item.DCTier;
 import net.daichang.dcmods.inits.DCAttributes;
 import net.daichang.dcmods.inits.DCEffects;
 import net.daichang.dcmods.inits.DCItems;
+import net.daichang.dcmods.utils.helpers.DataHelper;
 import net.daichang.dcmods.utils.helpers.EffectHelper;
+import net.daichang.dcmods.utils.lists.items.SuperItemList;
 import net.minecraft.client.gui.Font;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvent;
@@ -35,8 +37,39 @@ public class DCSuperArmor extends ArmorItem {
     public Multimap<Attribute, AttributeModifier> modifiers;
     private static final ArmorMaterial pMaterial = createArmorMaterial("super_wood", DCTier.SUPERS.getLevel(), Ingredient.of(DCItems.SUPER_WOOD_INGOT.get()));
 
+    public DCSuperArmor(Type pType) {
+        super(pMaterial, pType, new Properties().fireResistant().rarity(Rarity.EPIC));
+        ImmutableMultimap.Builder<Attribute, AttributeModifier> mainHand = ImmutableMultimap.builder();
+        mainHand.put(Attributes.ATTACK_DAMAGE, new AttributeModifier(UUID.randomUUID(), "Weapon modifier", 2.4D, AttributeModifier.Operation.ADDITION));
+        mainHand.put(Attributes.ATTACK_SPEED, new AttributeModifier(UUID.randomUUID(), "Weapon modifier", 0.1D, AttributeModifier.Operation.ADDITION));
+        mainHand.put(Attributes.ARMOR, new AttributeModifier(UUID.randomUUID(), "Weapon modifier", 7.3D, AttributeModifier.Operation.ADDITION));
+        mainHand.put(Attributes.ARMOR_TOUGHNESS, new AttributeModifier(UUID.randomUUID(), "Weapon modifier", 4.3D, AttributeModifier.Operation.ADDITION));
+        mainHand.put(Attributes.MAX_HEALTH, new AttributeModifier(UUID.randomUUID(), "Weapon modifier", 7.8D, AttributeModifier.Operation.ADDITION));
+        mainHand.put(DCAttributes.DC_SUPER_DAMAGE.get(), new AttributeModifier(UUID.randomUUID(), "Item modifier", 5.2D, AttributeModifier.Operation.ADDITION));
+        mainHand.put(DCAttributes.DC_DEFENSE.get(), new AttributeModifier(UUID.randomUUID(), "Item modifier", 5.2D, AttributeModifier.Operation.ADDITION));
+        modifiers = mainHand.build();
+    }
+
     @Override
-    public void appendHoverText(@NotNull ItemStack pStack, @Nullable Level pLevel, List<Component> pTooltipComponents, TooltipFlag pIsAdvanced) {
+    public void onArmorTick(ItemStack stack, Level level, Player player) {
+        super.onArmorTick(stack, level, player);
+        if (player.tickCount % 40 == 0) DataHelper.addHealthDelta(player, 1.0F);
+        if (player.isUnderWater()) {
+            player.addEffect(EffectHelper.addEffect(MobEffects.CONDUIT_POWER, 20, 5));
+            player.addEffect(EffectHelper.addEffect(MobEffects.DAMAGE_BOOST, 20, 2));
+        }
+    }
+
+    public static boolean hasAllArmor(Player player) {
+        return player.getInventory().getArmor(0).is(DCItems.WOOD_HELMET.get())
+                && player.getInventory().getArmor(1).is(DCItems.WOOD_CHESTPLATE.get())
+                && player.getInventory().getArmor(2).is(DCItems.WOOD_LEGGINGS.get())
+                && player.getInventory().getArmor(3).is(DCItems.WOOD_BOOTS.get());
+    }
+
+    @Override
+    public void appendHoverText(@NotNull ItemStack pStack, @Nullable Level pLevel, List<Component> pTooltipComponents, @NotNull TooltipFlag pIsAdvanced) {
+        pTooltipComponents.add(Component.translatable("tool_tip.dc_mods.default"));
         pTooltipComponents.add(Component.translatable("tool_tip.dc_mods.when_worn"));
         super.appendHoverText(pStack, pLevel, pTooltipComponents, pIsAdvanced);
     }
@@ -60,7 +93,7 @@ public class DCSuperArmor extends ArmorItem {
 
             @Override
             public @NotNull SoundEvent getEquipSound() {
-                return SoundEvents.ARMOR_EQUIP_DIAMOND;
+                return SoundEvents.ARMOR_EQUIP_NETHERITE;
             }
 
             @Override
@@ -85,18 +118,6 @@ public class DCSuperArmor extends ArmorItem {
         };
     }
 
-    public DCSuperArmor(Type pType) {
-        super(pMaterial, pType, new Properties().fireResistant().rarity(Rarity.EPIC));
-        ImmutableMultimap.Builder<Attribute, AttributeModifier> mainHand = ImmutableMultimap.builder();
-        mainHand.put(Attributes.ATTACK_DAMAGE, new AttributeModifier(UUID.randomUUID(), "Weapon modifier", 2.4D, AttributeModifier.Operation.ADDITION));
-        mainHand.put(Attributes.ATTACK_SPEED, new AttributeModifier(UUID.randomUUID(), "Weapon modifier", 0.1D, AttributeModifier.Operation.ADDITION));
-        mainHand.put(Attributes.ARMOR, new AttributeModifier(UUID.randomUUID(), "Weapon modifier", 7.3D, AttributeModifier.Operation.ADDITION));
-        mainHand.put(Attributes.ARMOR_TOUGHNESS, new AttributeModifier(UUID.randomUUID(), "Weapon modifier", 4.3D, AttributeModifier.Operation.ADDITION));
-        mainHand.put(Attributes.MAX_HEALTH, new AttributeModifier(UUID.randomUUID(), "Weapon modifier", 5.2D, AttributeModifier.Operation.ADDITION));
-        mainHand.put(DCAttributes.DC_SUPER_DAMAGE.get(), new AttributeModifier(UUID.randomUUID(), "Item modifier", 5.2D, AttributeModifier.Operation.ADDITION));
-        mainHand.put(DCAttributes.DC_DEFENSE.get(), new AttributeModifier(UUID.randomUUID(), "Item modifier", 5.2D, AttributeModifier.Operation.ADDITION));
-        modifiers = mainHand.build();
-    }
 
     @Override
     public boolean isFireResistant() {
@@ -122,10 +143,11 @@ public class DCSuperArmor extends ArmorItem {
     public static class Helmet extends DCSuperArmor {
         public Helmet() {
             super(Type.HELMET);
+            SuperItemList.addItem(this);
         }
 
         @Override
-        public Multimap<Attribute, AttributeModifier> getDefaultAttributeModifiers(@NotNull EquipmentSlot pEquipmentSlot) {
+        public @NotNull Multimap<Attribute, AttributeModifier> getDefaultAttributeModifiers(@NotNull EquipmentSlot pEquipmentSlot) {
             return pEquipmentSlot == EquipmentSlot.HEAD ? modifiers : super.getDefaultAttributeModifiers(pEquipmentSlot);
         }
 
@@ -143,19 +165,20 @@ public class DCSuperArmor extends ArmorItem {
         }
 
         @Override
-        public void appendHoverText(@NotNull ItemStack pStack, @Nullable Level pLevel, List<Component> list, TooltipFlag pIsAdvanced) {
-            list.add(Component.translatable("tool_tip.dc_mods.has_helmet"));
+        public void appendHoverText(@NotNull ItemStack pStack, @Nullable Level pLevel, List<Component> list, @NotNull TooltipFlag pIsAdvanced) {
             super.appendHoverText(pStack, pLevel, list, pIsAdvanced);
+            list.add(Component.translatable("tool_tip.dc_mods.has_helmet"));
         }
     }
 
     public static class Chestplate extends DCSuperArmor {
         public Chestplate() {
             super(Type.CHESTPLATE);
+            SuperItemList.addItem(this);
         }
 
         @Override
-        public Multimap<Attribute, AttributeModifier> getDefaultAttributeModifiers(@NotNull EquipmentSlot pEquipmentSlot) {
+        public @NotNull Multimap<Attribute, AttributeModifier> getDefaultAttributeModifiers(@NotNull EquipmentSlot pEquipmentSlot) {
             return pEquipmentSlot == EquipmentSlot.CHEST ? modifiers : super.getDefaultAttributeModifiers(pEquipmentSlot);
         }
 
@@ -163,20 +186,21 @@ public class DCSuperArmor extends ArmorItem {
         public void onArmorTick(ItemStack stack, Level level, Player player) {
             super.onArmorTick(stack, level, player);
             player.addEffect(EffectHelper.addEffect(MobEffects.DAMAGE_BOOST));
-            player.addEffect(EffectHelper.addEffect(DCEffects.Heal.get(), 40, 2));
+            player.addEffect(EffectHelper.addEffect(DCEffects.Heal.get(), 40, 1));
         }
 
 
         @Override
-        public void appendHoverText(@NotNull ItemStack pStack, @Nullable Level pLevel, List<Component> list, TooltipFlag pIsAdvanced) {
-            list.add(Component.translatable("tooltip.dc_m.has_chestplate"));
+        public void appendHoverText(@NotNull ItemStack pStack, @Nullable Level pLevel, List<Component> list, @NotNull TooltipFlag pIsAdvanced) {
             super.appendHoverText(pStack, pLevel, list, pIsAdvanced);
+            list.add(Component.translatable("tooltip.dc_m.has_chestplate"));
         }
     }
 
     public static class Leggings extends DCSuperArmor  {
         public Leggings() {
             super(Type.LEGGINGS);
+            SuperItemList.addItem(this);
         }
 
         @Override
@@ -192,9 +216,9 @@ public class DCSuperArmor extends ArmorItem {
         }
 
         @Override
-        public void appendHoverText(@NotNull ItemStack pStack, @Nullable Level pLevel, List<Component> list, TooltipFlag pIsAdvanced) {
-            list.add(Component.translatable("tooltip.dc_m.leggings"));
+        public void appendHoverText(@NotNull ItemStack pStack, @Nullable Level pLevel, List<Component> list, @NotNull TooltipFlag pIsAdvanced) {
             super.appendHoverText(pStack, pLevel, list, pIsAdvanced);
+            list.add(Component.translatable("tooltip.dc_m.leggings"));
         }
 
 
@@ -207,6 +231,7 @@ public class DCSuperArmor extends ArmorItem {
     public static class Boots extends DCSuperArmor {
         public Boots() {
             super(Type.BOOTS);
+            SuperItemList.addItem(this);
         }
 
         @Override
@@ -222,9 +247,9 @@ public class DCSuperArmor extends ArmorItem {
         }
 
         @Override
-        public void appendHoverText(@NotNull ItemStack pStack, @Nullable Level pLevel, List<Component> pTooltipComponents, TooltipFlag pIsAdvanced) {
-            pTooltipComponents.add(Component.translatable("tooltip.dc_m.has_boots"));
+        public void appendHoverText(@NotNull ItemStack pStack, @Nullable Level pLevel, List<Component> pTooltipComponents, @NotNull TooltipFlag pIsAdvanced) {
             super.appendHoverText(pStack, pLevel, pTooltipComponents, pIsAdvanced);
+            pTooltipComponents.add(Component.translatable("tooltip.dc_m.has_boots"));
         }
     }
     //public static class Helmet extends OlivineArmor {
