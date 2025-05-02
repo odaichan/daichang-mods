@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="Patchouli-1.20.1-84.1-FORGE">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/libs/Patchouli-1.20.1-84.1-FORGE.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

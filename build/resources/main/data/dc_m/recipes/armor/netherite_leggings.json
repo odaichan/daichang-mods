@@ -1,0 +1,15 @@
+{
+  "type": "minecraft:smithing_transform",
+  "addition": {
+    "item": "dc_m:super_wood_ingot"
+  },
+  "base": {
+    "item": "minecraft:netherite_leggings"
+  },
+  "result": {
+    "item": "dc_m:super_wood_leggings"
+  },
+  "template": {
+    "item": "dc_m:heart_of_the_ocean"
+  }
+}

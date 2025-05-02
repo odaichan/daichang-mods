@@ -111,5 +111,6 @@
   "effect.dc_m.speed_increase" : "Speed Increase",
   "tool_tip.dc_mods.ocean": "The mysterious magic in the ocean",
   "item.dc_m.heart_of_the_ocean" : "Heart of the Ocean",
-  "tool_tip.dc_mods.default": "Default effect of armor: Conduit Power"
+  "tool_tip.dc_mods.default": "Default effect of armor: Conduit Power",
+  "tool_tip.dc_mods.repier_item": "Ensure that the items in your backpack are not damaged"
 }

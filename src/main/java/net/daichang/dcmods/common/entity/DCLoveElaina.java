@@ -111,12 +111,12 @@ public class DCLoveElaina extends Monster implements PowerableMob, RangedAttackM
     @Override
     protected void customServerAiStep() {
         super.customServerAiStep();
-        if (this.tickCount % 10 == 0) {
+        if (this.tickCount % 20 == 0) {
             float value = 0;
             switch (difficulty) {
-                case PEACEFUL, EASY -> value = 10;
-                case NORMAL -> value = 20;
-                case HARD -> value = 200;
+                case PEACEFUL, EASY -> value = 4;
+                case NORMAL -> value = 7;
+                case HARD -> value = 1145;
             }
             EntityHelper.forceHeal(this, value);
         }
@@ -132,16 +132,6 @@ public class DCLoveElaina extends Monster implements PowerableMob, RangedAttackM
         this.setDeltaMovement(Vec3.ZERO);
         Entity entity = damageSource.getEntity();
         double canTeleport = MathHelper.getRandomDouble(0.0D, 1.0D);
-        if (canTeleport == 0.1) {
-            LivingEntity target = this.getTarget();
-            if (target != null) {
-                Vec3 targetPos = target.getEyePosition();
-                Vec3 lookAngle = target.getLookAngle().normalize();
-                Vec3 teleportPos = targetPos.subtract(lookAngle.scale(4.0));
-                this.setPos(teleportPos.x, teleportPos.y, teleportPos.z);
-                this.playSound(SoundEvents.ENDERMAN_TELEPORT);
-            }
-        }
         if (entity instanceof LivingEntity living && !(living instanceof ServerPlayer player && player.isCreative())) {
             this.setTarget(living);
         }
@@ -157,8 +147,8 @@ public class DCLoveElaina extends Monster implements PowerableMob, RangedAttackM
                 || d.is(DamageTypes.ARROW)
                 || d.is(DamageTypes.WITHER)
                 || d.is(DamageTypes.WITHER_SKULL)
-                || d.is(DamageTypes.MAGIC)
-                ;
+                || d.is(DamageTypes.EXPLOSION)
+                || d.is(DamageTypes.MAGIC);
     }
 
     @Override
@@ -168,8 +158,10 @@ public class DCLoveElaina extends Monster implements PowerableMob, RangedAttackM
 
     @Override
     public void die(@NotNull DamageSource p_21014_) {
-        if (getHealth() <= 10) super.die(p_21014_);
-        DCForgeEventHandler.livingEntities.remove(this);
+        if (getHealth() <= 0) {
+            super.die(p_21014_);
+            DCForgeEventHandler.livingEntities.remove(this);
+        }
     }
 
     @Override
@@ -178,7 +170,10 @@ public class DCLoveElaina extends Monster implements PowerableMob, RangedAttackM
     @Override
     public boolean doHurtTarget(@NotNull Entity target) {
         addAttackCount(1);
-        if (target instanceof LivingEntity living && !(target instanceof Player)) Utils.attackEntity(living, this);
+        if (target instanceof LivingEntity living && !(target instanceof Player)) {
+            Utils.attackEntity(living, this);
+            if (getHealth() < getMaxHealth() * 0.3) lastKill(living);
+        }
         else if (target instanceof Player player){
             player.hurt(EntityHelper.mob_attack_damage(this), 5);
             player.hurtTime = 0;
@@ -205,14 +200,10 @@ public class DCLoveElaina extends Monster implements PowerableMob, RangedAttackM
         if (getHealth() <= 0) {
             ++this.deathTime;
             isDeadAnimationState.startIfStopped(tickCount);
-            if (this.deathTime >= 1000) {
+            if (this.deathTime >= 2000) {
                 try {
                     this.playSound(this.getDeathSound());
                 } catch (Exception ignored){}
-                ItemEntity item = new ItemEntity(level, getX(), getY(), getZ(), superSword());
-                if (level instanceof ServerLevel serverLevel) for (ServerPlayer serverPlayer : serverLevel.players())serverPlayer.displayClientMessage(Component.literal(DCItemFont.getString("entities.dc_mods.dc_wither_name") + " left the game").withStyle(ChatFormatting.YELLOW), false);
-                level.addFreshEntity(item);
-                item.getPersistentData().putInt("isDCItem", 1);
                 DCForgeEventHandler.livingEntities.remove(this);
                 this.dropExperience();
                 this.die(this.damageSources().magic());
@@ -220,16 +211,6 @@ public class DCLoveElaina extends Monster implements PowerableMob, RangedAttackM
                 this.setRemoved(RemovalReason.KILLED);
             }
         }
-    }
-
-    @Override
-    public void dropCustomDeathLoot(DamageSource pDamageSource, int pLooting, boolean pHitByPlayer) {
-        super.dropCustomDeathLoot(pDamageSource, pLooting, pHitByPlayer);
-    }
-
-    @Override
-    public void dropAllDeathLoot(DamageSource pDamageSource) {
-        super.dropAllDeathLoot(pDamageSource);
     }
 
     @Override
@@ -253,19 +234,35 @@ public class DCLoveElaina extends Monster implements PowerableMob, RangedAttackM
 
     @Override
     public void onRemovedFromWorld() {
-        if (this.deathTime >= 400) super.onRemovedFromWorld();
+        if (this.deathTime >= 1200) super.onRemovedFromWorld();
         DCForgeEventHandler.livingEntities.remove(this);
     }
 
     @Override
     public void onClientRemoval() {
-        if (this.deathTime >= 400) super.onClientRemoval();
+        if (this.deathTime >= 1200) super.onClientRemoval();
         DCForgeEventHandler.livingEntities.remove(this);
     }
 
     @Override
+    public void dropCustomDeathLoot(DamageSource pDamageSource, int pLooting, boolean pHitByPlayer) {
+        super.dropCustomDeathLoot(pDamageSource, pLooting, pHitByPlayer);
+    }
+
+    @Override
+    public void dropAllDeathLoot(DamageSource pDamageSource) {
+        super.dropAllDeathLoot(pDamageSource);
+        try {
+            ItemEntity item = new ItemEntity(level, getX(), getY(), getZ(), superSword());
+            if (level instanceof ServerLevel serverLevel) for (ServerPlayer serverPlayer : serverLevel.players())serverPlayer.displayClientMessage(Component.literal(DCItemFont.getString("entities.dc_mods.dc_wither_name") + " left the game").withStyle(ChatFormatting.YELLOW), false);
+            level.addFreshEntity(item);
+            item.getPersistentData().putInt("isDCItem", 1);
+        } catch (Exception ignored) {}
+    }
+
+    @Override
     public void remove(@NotNull RemovalReason p_276115_) {
-        if (this.deathTime >= 400 || getHealth() <= 0) super.remove(p_276115_);
+        if (this.deathTime >= 1200 && getHealth() <= 0) super.remove(p_276115_);
         DCForgeEventHandler.livingEntities.remove(this);
     }
 
@@ -273,6 +270,11 @@ public class DCLoveElaina extends Monster implements PowerableMob, RangedAttackM
     public @Nullable Component getCustomName() {
         if (isDeadOrDying() || this.getHealth() <= 10) return Component.translatable("entities.dc_mods.dc_wither_name_tow");
         return Component.translatable("entities.dc_mods.dc_wither_name");
+    }
+
+    @Override
+    public boolean shouldDropLoot() {
+        return true;
     }
 
     @Override
@@ -375,9 +377,7 @@ public class DCLoveElaina extends Monster implements PowerableMob, RangedAttackM
                         }
                     }
                 }
-                if (getAttackValue() >= 7 || count == 0.1D) {
-                    performRangedAttack(living, 2);
-                }
+                if (getAttackValue() >= 7 || count == 0.1D) performRangedAttack(living, 2);
                 setIsRangeAttack(false);
             }
             if (this.isDeadOrDying() || this.getHealth() < 10) {
@@ -407,7 +407,6 @@ public class DCLoveElaina extends Monster implements PowerableMob, RangedAttackM
     void lastKill(Entity entity) {
         if (entity instanceof LivingEntity target && !(entity instanceof Player)) {
             Utils.attackEntity(target, this);
-            Utils.attackEntity(target, target);
             target.addEffect(EffectHelper.addEffect(DCEffects.Freeze.get()));
         }
         else if (entity instanceof ServerPlayer player && player.gameMode.isSurvival()) {
@@ -418,7 +417,7 @@ public class DCLoveElaina extends Monster implements PowerableMob, RangedAttackM
 
     @Override
     public boolean isInvulnerable() {
-        return getHealth() < 10;
+        return getHealth() <= 0;
     }
 
     @Override
@@ -428,7 +427,7 @@ public class DCLoveElaina extends Monster implements PowerableMob, RangedAttackM
 
     @Override
     public void setHealth(float p_21154_) {
-        if (p_21154_ > this.getHealth()) super.setHealth(p_21154_);
+        if (p_21154_ > this.getHealth() - 20) super.setHealth(p_21154_);
     }
 
     @Override
@@ -480,6 +479,7 @@ public class DCLoveElaina extends Monster implements PowerableMob, RangedAttackM
         if (!(livingEntity instanceof Player)) {
             livingEntity.addEffect(EffectHelper.addEffect(DCEffects.Freeze.get(), 60));
             livingEntity.addEffect(EffectHelper.addEffect(DCEffects.Bloodshed.get()));
+            lastKill(livingEntity);
         }
         if (livingEntity instanceof Player player) {
             player.addEffect(EffectHelper.addEffect(MobEffects.HUNGER, 60));

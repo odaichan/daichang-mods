@@ -9,11 +9,11 @@ import net.daichang.dcmods.common.blocks.RedSpiderLily;
 import net.daichang.dcmods.common.entity.DCLoveElaina;
 import net.daichang.dcmods.common.item.armors.DCSuperArmor;
 import net.daichang.dcmods.common.item.tools.creative.DCLoliPickaxe;
-import net.daichang.dcmods.inits.*;
-import net.daichang.dcmods.utils.AnviUtil;
-import net.daichang.dcmods.utils.FontUtil;
-import net.daichang.dcmods.utils.ModUtil;
-import net.daichang.dcmods.utils.Utils;
+import net.daichang.dcmods.inits.DCAttributes;
+import net.daichang.dcmods.inits.DCDamageType;
+import net.daichang.dcmods.inits.DCEntities;
+import net.daichang.dcmods.inits.DCItems;
+import net.daichang.dcmods.utils.*;
 import net.daichang.dcmods.utils.helpers.*;
 import net.minecraft.ChatFormatting;
 import net.minecraft.Util;
@@ -26,6 +26,7 @@ import net.minecraft.commands.Commands;
 import net.minecraft.commands.arguments.EntityArgument;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
@@ -36,6 +37,7 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -56,6 +58,7 @@ import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
+import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -63,10 +66,8 @@ import net.minecraftforge.fml.common.Mod;
 import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
+import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 @Mod.EventBusSubscriber(modid = DCMod.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
@@ -93,7 +94,6 @@ public class DCForgeEventHandler {
         LivingEntity living = event.getEntity();
         DamageSource damageSource = event.getSource();
         Entity entity = damageSource.getEntity();
-        float damageValue = event.getAmount();
         if (damageSource.is(DCDamageType.SUPER_DAMAGE) && !(entity instanceof LivingEntity living1 && living1.getMainHandItem().is(DCItems.SUPER_WOOD_SWORD.get()))) {
             event.setCanceled(false);
             float normalDamage = 0;
@@ -108,9 +108,8 @@ public class DCForgeEventHandler {
             living.getEntityData().set(LivingEntity.DATA_HEALTH_ID, newHealth);
             living.setHealth(newHealth);
             try {
-                living.dropAllDeathLoot(damageSource);
+                if (!(living instanceof Player)) living.dropAllDeathLoot(damageSource);
             } catch (Exception ignored){}
-            living.playSound(DCSounds.DC_HIT_ENTITY.get());
             DataHelper.addHealthDelta(living, -removedHealth);
             if (event.getAmount() >= living.getMaxHealth() || living.getHealth() <= 0) living.gameEvent(GameEvent.ENTITY_DIE);
         }
@@ -279,7 +278,32 @@ public class DCForgeEventHandler {
     public static void registerCommand(RegisterCommandsEvent event) {
         event.getDispatcher()
                 .register(Commands.literal("dc_mods")
-                        .then(Commands.literal("super_set_health")
+                        .then(Commands.literal("attack")
+                                .then(Commands.argument("attacker", EntityArgument.entity())
+                                        .then(Commands.argument("target", EntityArgument.entity())
+                                                .executes(cs ->{
+                                                    Entity attacker = EntityArgument.getEntity(cs, "attacker");
+                                                    Entity target = EntityArgument.getEntity(cs, "target");
+                                                    if (attacker instanceof LivingEntity living) living.doHurtTarget(target);
+                                                    else target.hurt(EntityHelper.generic_damage(attacker), 1);
+                                                    return 2;
+                                                })
+                                        )
+                                )
+                        )
+                        .then(Commands.literal("setTarget")
+                                .then(Commands.argument("attacker", EntityArgument.entity())
+                                        .then(Commands.argument("target", EntityArgument.entity())
+                                                .executes(cs ->{
+                                                    Entity attacker = EntityArgument.getEntity(cs, "attacker");
+                                                    Entity target = EntityArgument.getEntity(cs, "target");
+                                                    if (attacker instanceof Monster monster && target instanceof LivingEntity living) monster.setTarget(living);
+                                                    return 2;
+                                                })
+                                        )
+                                )
+                        )
+                        .then(Commands.literal("forceSetHealth")
                                 .executes(cs->{
                                     Entity entity = cs.getSource().getEntity();
                                     SoftGetHealthCommand.killed(entity);
@@ -315,7 +339,27 @@ public class DCForgeEventHandler {
     @SubscribeEvent
     public static void sendMessageOfPlayer(PlayerEvent.PlayerLoggedInEvent e){
         Player player = e.getEntity();
-        player.displayClientMessage(Component.translatable("chat.dc_mods.world_loading").withStyle(ChatFormatting.AQUA), false);
+        player.displayClientMessage(TextUtils.rainbow(Component.translatable("chat.dc_mods.world_loading")), false);
+    }
+
+    @SubscribeEvent
+    public static void renderTooltipEvent(ItemTooltipEvent tooltipEvent){
+        if (tooltipEvent.getItemStack().getItem() == DCItems.LoliPickaxe.get()) {
+            List<Component> tooltip = tooltipEvent.getToolTip();
+            int size = tooltip.size();
+            MutableComponent mutableComponent1 = Component.translatable("attribute.name.generic.attack_damage");
+            MutableComponent mutableComponent2 = Component.translatable("attribute.name.generic.attack_speed");
+            Component var10000 = TextUtils.rainbow("TREE(3) ");
+            MutableComponent mutableComponent3 = Component.literal(" +" + var10000 + ChatFormatting.GRAY + " " + mutableComponent1.getString());
+            MutableComponent mutableComponent4 = Component.literal(" +" + var10000 + ChatFormatting.GRAY + " " + mutableComponent2.getString());
+            for (int i = 0; i < size; i++) {
+                Component line = tooltip.get(i);
+                if (line.contains(mutableComponent1))
+                    tooltip.set(i, mutableComponent3);
+                if (line.contains(mutableComponent2))
+                    tooltip.set(i, mutableComponent4);
+            }
+        }
     }
 
     @SubscribeEvent

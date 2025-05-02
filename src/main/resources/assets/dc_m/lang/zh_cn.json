@@ -111,5 +111,6 @@
   "effect.dc_m.speed_increase": "移速提升",
   "item.dc_m.heart_of_the_ocean": "海洋之心",
   "tool_tip.dc_mods.ocean": "大海中的神秘魔法...",
-  "tool_tip.dc_mods.default": "盔甲默认效果：潮涌能量"
+  "tool_tip.dc_mods.default": "盔甲默认效果：潮涌能量",
+  "tool_tip.dc_mods.repier_item": "修复你背包中的物品...."
 }

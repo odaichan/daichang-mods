@@ -15,7 +15,7 @@ import net.minecraft.world.entity.LivingEntity;
 public final class MethodUtil extends DataHelper {
     public static float getHealth(LivingEntity entity) {
         CompoundTag tag = entity.getPersistentData();
-        if (Heal2ZList.isH2Z(entity) || GetHealthList.isHealth(entity) || DeathList.isDeath(entity)) {
+        if (Heal2ZList.isH2Z(entity) || GetHealthList.isHealth(entity)) {
             return 0;
         }
         if ((EffectHelper.hasEffect(entity, DCEffects.Bloodshed.get())|| tag.getBoolean("isByDCKill")) && entity.getHealth() >= 0) return entity.getHealth() - entity.getMaxHealth() * 0.1F;
@@ -54,7 +54,7 @@ public final class MethodUtil extends DataHelper {
             return true;
         }
         if (DCLoliPickaxe.isHasLoliPickaxe(entity)) return false;
-        if (entity.getEntityData().get(DataHelper.DC_GET_HEALTH_DATA) <= -entity.getMaxHealth()) return true;
+        if (DataHelper.getHealthDelta(entity) <= -entity.getMaxHealth()) return true;
         return entity.isDeadOrDying();
     }
 
@@ -63,16 +63,7 @@ public final class MethodUtil extends DataHelper {
             return true;
         }
         if (DCLoliPickaxe.isHasLoliPickaxe(entity)) return false;
-        if (entity.getEntityData().get(DataHelper.DC_GET_HEALTH_DATA) <= -entity.getMaxHealth()) return true;
+        if (DataHelper.getHealthDelta(entity) <= -entity.getMaxHealth()) return true;
         return value;
-    }
-
-    public static boolean isHasDCMark(Entity entity) {
-        boolean abc = false;
-        CompoundTag tag = entity.getPersistentData();
-        if (entity instanceof LivingEntity living && tag.contains("dcGetHealth")) {
-            abc = true;
-        }
-        return abc;
     }
 }

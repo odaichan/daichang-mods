@@ -1,17 +1,24 @@
 package net.daichang.dcmods.common.item.tools.creative;
 
 import net.daichang.dcmods.client.font.DCItemFont;
+import net.daichang.dcmods.utils.TextUtils;
+import net.daichang.dcmods.utils.helpers.DataHelper;
 import net.daichang.dcmods.utils.helpers.EntityHelper;
 import net.daichang.dcmods.utils.lists.items.CreativeItemList;
 import net.minecraft.client.gui.Font;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.client.extensions.common.IClientItemExtensions;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
+import java.util.List;
 import java.util.function.Consumer;
 
 public class DCHeal extends Item {
@@ -23,8 +30,14 @@ public class DCHeal extends Item {
     void heal(LivingEntity living) {
         living.setHealth(living.getMaxHealth());
         EntityHelper.forceSetHealth(living, living.getMaxHealth());
+        DataHelper.restHealthDelta(living);
     }
 
+    @Override
+    public void appendHoverText(ItemStack pStack, @Nullable Level pLevel, List<Component> pTooltipComponents, TooltipFlag pIsAdvanced) {
+        pTooltipComponents.add(TextUtils.rainbow("DaiChang"));
+        super.appendHoverText(pStack, pLevel, pTooltipComponents, pIsAdvanced);
+    }
 
     @Override
     public boolean isFoil(@NotNull ItemStack p_41453_) {

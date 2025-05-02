@@ -1,5 +1,7 @@
 package net.daichang.dcmods.common.item.tools.creative;
 
+import com.google.common.collect.ImmutableMultimap;
+import com.google.common.collect.Multimap;
 import net.daichang.dcmods.inits.DCItems;
 import net.daichang.dcmods.inits.DCSounds;
 import net.daichang.dcmods.utils.Utils;
@@ -11,7 +13,11 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.attributes.Attribute;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -26,8 +32,14 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 
 public class DCLoliPickaxe extends Item {
+    public Multimap<Attribute, AttributeModifier> mainHandModifiers;
+
     public DCLoliPickaxe() {
         super(new Properties().stacksTo(1).fireResistant().rarity(Rarity.RARE));
+        ImmutableMultimap.Builder<Attribute, AttributeModifier> mainHand = ImmutableMultimap.builder();
+        mainHand.put(Attributes.ATTACK_DAMAGE, new AttributeModifier(BASE_ATTACK_DAMAGE_UUID, "Weapon modifier", 2, AttributeModifier.Operation.ADDITION));
+        mainHand.put(Attributes.ATTACK_SPEED, new AttributeModifier(BASE_ATTACK_SPEED_UUID, "Weapon modifier", -2.4, AttributeModifier.Operation.ADDITION));
+        mainHandModifiers = mainHand.build();
         CreativeItemList.addItem(this);
     }
 
@@ -89,6 +101,11 @@ public class DCLoliPickaxe extends Item {
             isHas = true;
         }
         return isHas;
+    }
+
+    @Override
+    public @NotNull Multimap<Attribute, AttributeModifier> getDefaultAttributeModifiers(EquipmentSlot pSlot) {
+        return pSlot == EquipmentSlot.MAINHAND ? mainHandModifiers : super.getDefaultAttributeModifiers(pSlot);
     }
 
     @Override

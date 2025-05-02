@@ -8,11 +8,9 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import it.unimi.dsi.fastutil.ints.Int2ObjectLinkedOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
 import net.daichang.dcmods.DCMod;
-import net.daichang.dcmods.inits.DCAttributes;
-import net.daichang.dcmods.inits.DCBlockItems;
-import net.daichang.dcmods.inits.DCItems;
-import net.daichang.dcmods.inits.DCSounds;
+import net.daichang.dcmods.inits.*;
 import net.daichang.dcmods.utils.helpers.DataHelper;
+import net.daichang.dcmods.utils.helpers.EffectHelper;
 import net.daichang.dcmods.utils.helpers.EntityHelper;
 import net.daichang.dcmods.utils.helpers.MathHelper;
 import net.daichang.dcmods.utils.lists.DeathList;
@@ -271,6 +269,7 @@ public class Utils {
 
     public static void attackEntity(ItemStack stack, LivingEntity target, Player player) {
         DamageSource damageSource = EntityHelper.dc_damage(player);
+        Level playerLevel = player.level;
         target.level().broadcastDamageEvent(target, damageSource);
         final float normal = (float) player.getAttributeValue(Attributes.ATTACK_DAMAGE);
         final float dc_super_damage = (float) player.getAttributeValue(DCAttributes.DC_SUPER_DAMAGE.get());
@@ -306,6 +305,13 @@ public class Utils {
         target.playHurtSound(damageSource);
         DataHelper.forceSetHealth(target, newHealth);
         DataHelper.addHealthDelta(target, -damage);
+        if (target.getHealth() < 10) {
+            target.die(damageSource);
+            target.setPose(Pose.DYING);
+            target.gameEvent(GameEvent.ENTITY_DIE);
+            if (playerLevel instanceof ServerLevel level) player.killedEntity(level, target);
+            DeathList.addDeath(target);
+        }
     }
 
     public static void attackEntity(LivingEntity target, LivingEntity player) {
@@ -323,18 +329,20 @@ public class Utils {
             entityKillEntity(target, damageSource);
             DeathList.addDeath(target);
         }
+        target.addEffect(EffectHelper.addEffect(DCEffects.Freeze.get()));
     }
 
     public static void itemKillEntity(LivingEntity target, DamageSource damageSource) {
         entityKillEntity(target, damageSource);
+        DeathList.addDeath(target);
     }
 
     public static void entityKillEntity(LivingEntity target, DamageSource damageSource) {
         target.hurt(damageSource, 233333);
-        target.kill();
         target.die(damageSource);
         target.setPose(Pose.DYING);
         target.gameEvent(GameEvent.ENTITY_DIE);
+        target.kill();
     }
 
     public static UseAnim getUseAnim() {
