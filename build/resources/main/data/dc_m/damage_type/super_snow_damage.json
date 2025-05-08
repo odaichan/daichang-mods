@@ -1,5 +1,6 @@
 {
   "exhaustion": 0.1,
   "message_id": "super_snow_damage",
-  "scaling": "always"
+  "scaling": "always",
+  "effects": "freezing"
 }

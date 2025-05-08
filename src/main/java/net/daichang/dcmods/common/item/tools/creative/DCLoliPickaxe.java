@@ -5,6 +5,7 @@ import com.google.common.collect.Multimap;
 import net.daichang.dcmods.inits.DCItems;
 import net.daichang.dcmods.inits.DCSounds;
 import net.daichang.dcmods.utils.Utils;
+import net.daichang.dcmods.utils.helpers.DataHelper;
 import net.daichang.dcmods.utils.helpers.EntityHelper;
 import net.daichang.dcmods.utils.lists.GetHealthList;
 import net.daichang.dcmods.utils.lists.items.CreativeItemList;
@@ -50,30 +51,28 @@ public class DCLoliPickaxe extends Item {
         double y = pPlayer.getY();
         double z = pPlayer.getZ();
         AABB aabb = new AABB(x - range, y - range, z - range, x + range, y + range, z + range);
-        if (pPlayer.isShiftKeyDown()) {
-            for (Entity entity : pLevel.getEntitiesOfClass(Entity.class, aabb)) killEntity(entity, pPlayer);
-        }
+        if (pPlayer.isShiftKeyDown()) for (Entity entity : pLevel.getEntitiesOfClass(Entity.class, aabb)) killEntity(entity, pPlayer);
+        pPlayer.playSound(DCSounds.LOLI_SUCCRSS.get());
         return super.use(pLevel, pPlayer, pUsedHand);
     }
 
     @Override
     public boolean hurtEnemy(@NotNull ItemStack pStack, @NotNull LivingEntity pTarget, @NotNull LivingEntity pAttacker) {
         killEntity(pTarget, pAttacker);
+        pAttacker.playSound(DCSounds.LOLI_SUCCRSS.get());
         return super.hurtEnemy(pStack, pTarget, pAttacker);
     }
 
     @Override
     public boolean onLeftClickEntity(ItemStack stack, Player player, Entity entity) {
-        killEntity(entity, player);
+        if (entity instanceof LivingEntity living) hurtEnemy(stack, living, player);
         return super.onLeftClickEntity(stack, player, entity);
     }
 
     public static void killEntity(Entity target, Entity attacker) {
         if (target instanceof LivingEntity living && !isHasLoliPickaxe(living)) {
             DamageSource source = EntityHelper.dc_damage(attacker);
-            attacker.playSound(DCSounds.LOLI_SUCCRSS.get());
             Utils.Override_DATA_HEALTH_ID(living, 0.0F);
-            GetHealthList.addHealth(living);
             try {
                 living.dropAllDeathLoot(source);
             } catch (Exception ignored) {}
@@ -83,7 +82,11 @@ public class DCLoliPickaxe extends Item {
             EntityHelper.forceSetHealth(living, 0.0F);
             living.gameEvent(GameEvent.ENTITY_DIE);
             living.die(source);
-            if (!living.getPersistentData().contains("dc_death") && !(living instanceof Player)) living.getPersistentData().putInt("dc_death", 0);
+            if (!living.getPersistentData().contains("dc_death") && !(living instanceof Player)) {
+                living.getPersistentData().putInt("dc_death", 0);
+                GetHealthList.addHealth(living);
+            }
+            DataHelper.addHealthDelta(living, -living.getMaxHealth() - 1);
         }
         if (!(target instanceof LivingEntity)) {
             Entity.RemovalReason reason = Entity.RemovalReason.KILLED;

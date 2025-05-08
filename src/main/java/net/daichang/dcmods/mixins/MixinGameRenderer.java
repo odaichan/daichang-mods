@@ -1,6 +1,6 @@
 package net.daichang.dcmods.mixins;
 
-import net.daichang.dcmods.common.entity.DCLoveElaina;
+import net.daichang.dcmods.common.entities.boss.DCLoveElaina;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.PostChain;

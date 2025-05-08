@@ -4,11 +4,10 @@ import net.daichang.dcmods.DCMod;
 import net.daichang.dcmods.client.PacketHandler;
 import net.daichang.dcmods.client.models.entites.DCGirlModel;
 import net.daichang.dcmods.client.models.entites.ElainaModel;
-import net.daichang.dcmods.client.render.entites.DCSuperArrowRenderer;
-import net.daichang.dcmods.client.render.entites.DCWitherSkullRenderer;
-import net.daichang.dcmods.client.render.entites.ElainaRenderer;
-import net.daichang.dcmods.client.render.entites.RainbowLightingRenderer;
-import net.daichang.dcmods.common.entity.DCLoveElaina;
+import net.daichang.dcmods.client.models.entites.SteveModel;
+import net.daichang.dcmods.client.render.entites.*;
+import net.daichang.dcmods.common.entities.boss.DCLoveElaina;
+import net.daichang.dcmods.common.entities.boss.DCSteve;
 import net.daichang.dcmods.inits.DCEntities;
 import net.daichang.dcmods.inits.DCItems;
 import net.minecraft.client.renderer.item.ItemProperties;
@@ -28,17 +27,20 @@ public class DCModEventHandler {
         event.registerEntityRenderer(DCEntities.DC_WITHER.get(), ElainaRenderer::new);
         event.registerEntityRenderer(DCEntities.DC_WITHER_SKULL.get(), DCWitherSkullRenderer::new);
         event.registerEntityRenderer(DCEntities.RAINBOW_LIGHTING.get(), RainbowLightingRenderer::new);
+        event.registerEntityRenderer(DCEntities.DC_STEVE.get(), SteveRenderer::new);
     }
 
     @SubscribeEvent
     public static void registerLayerDefinitions(EntityRenderersEvent.RegisterLayerDefinitions event) {
         event.registerLayerDefinition(DCGirlModel.LAYER_LOCATION, DCGirlModel::createBodyLayer);
         event.registerLayerDefinition(ElainaModel.LAYER_LOCATION, ElainaModel::createBodyLayer);
+        event.registerLayerDefinition(SteveModel.LAYER_LOCATION, SteveModel::createBodyLayer);
     }
 
     @SubscribeEvent
     public static void registerAttributes(EntityAttributeCreationEvent event) {
         event.put(DCEntities.DC_WITHER.get(), DCLoveElaina.createAttributes().build());
+        event.put(DCEntities.DC_STEVE.get(), DCSteve.createAttributes().build());
     }
 
     @SubscribeEvent

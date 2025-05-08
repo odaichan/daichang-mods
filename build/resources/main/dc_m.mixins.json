@@ -10,6 +10,7 @@
     "MixinLivingEntity",
     "MixinPlayer",
     "MixinServerPlayer",
+    "MixinTrident",
     "sword_block.UseAnimMixin"
   ],
   "client": [

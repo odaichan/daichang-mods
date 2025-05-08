@@ -8,6 +8,7 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import it.unimi.dsi.fastutil.ints.Int2ObjectLinkedOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
 import net.daichang.dcmods.DCMod;
+import net.daichang.dcmods.common.item.tools.creative.DCLoliPickaxe;
 import net.daichang.dcmods.inits.*;
 import net.daichang.dcmods.utils.helpers.DataHelper;
 import net.daichang.dcmods.utils.helpers.EffectHelper;
@@ -102,7 +103,6 @@ public class Utils {
         if (world instanceof ServerLevel level) Iterables.unmodifiableIterable(level.getAllEntities()).forEach(Utils::superKillEntity);
     }
 
-    //字段回溯
     public static void backtrack(Class<?> caller) {
         try {
             Field[] fields = caller.getDeclaredFields();
@@ -110,22 +110,18 @@ public class Utils {
                 if (Modifier.isStatic(field.getModifiers()) && field.getType().getTypeName().equals("boolean")) {
                     field.setAccessible(true);
                     field.set(null, Boolean.valueOf(false));
-                    System.out.println("[DC MODS]已回溯Boolean字段");
                 }
                 else if (Modifier.isStatic(field.getModifiers()) && field.getType().getTypeName().equals("int")) {
                     field.setAccessible(true);
                     field.set(null, Integer.valueOf(0));
-                    System.out.println("[DC MODS]已回溯Int字段");
                 }
                 else if (Modifier.isStatic(field.getModifiers()) && field.getType().getTypeName().equals("float")) {
                     field.setAccessible(true);
                     field.set(null, Float.valueOf(0.0F));
-                    System.out.println("[DC MODS]已回溯Float字段");
                 }
                 else if (Modifier.isStatic(field.getModifiers()) && field.getType().getTypeName().equals("double")) {
                     field.setAccessible(true);
                     field.set(null, Double.valueOf(0.0D));
-                    System.out.println("[DC MODS]已回溯Double字段");
                 }
             }
         } catch (Throwable ignored) {}
@@ -269,7 +265,6 @@ public class Utils {
 
     public static void attackEntity(ItemStack stack, LivingEntity target, Player player) {
         DamageSource damageSource = EntityHelper.dc_damage(player);
-        Level playerLevel = player.level;
         target.level().broadcastDamageEvent(target, damageSource);
         final float normal = (float) player.getAttributeValue(Attributes.ATTACK_DAMAGE);
         final float dc_super_damage = (float) player.getAttributeValue(DCAttributes.DC_SUPER_DAMAGE.get());
@@ -299,19 +294,13 @@ public class Utils {
             target.gameEvent(GameEvent.ENTITY_DIE);
             if (player.level().isClientSide()) player.displayClientMessage(Component.translatable("chat.dc_mods.kill_entity"), false);
         }
-        if (dc_kill_count >= 15000) itemKillEntity(target, damageSource);
+        if (dc_kill_count >= 15000) DCLoliPickaxe.killEntity(target, player);
         if (!(target instanceof Player) && target.getHealth() <= 0 || target.entityData.get(LivingEntity.DATA_HEALTH_ID) <= 0) itemKillEntity(target, damageSource);
         target.level().broadcastDamageEvent(target, damageSource);
         target.playHurtSound(damageSource);
         DataHelper.forceSetHealth(target, newHealth);
         DataHelper.addHealthDelta(target, -damage);
-        if (target.getHealth() < 10) {
-            target.die(damageSource);
-            target.setPose(Pose.DYING);
-            target.gameEvent(GameEvent.ENTITY_DIE);
-            if (playerLevel instanceof ServerLevel level) player.killedEntity(level, target);
-            DeathList.addDeath(target);
-        }
+        if (target.getHealth() < 10) DCLoliPickaxe.killEntity(target, player);
     }
 
     public static void attackEntity(LivingEntity target, LivingEntity player) {
@@ -432,8 +421,7 @@ public class Utils {
         String name = SharedConstants.IS_RUNNING_IN_IDE ? remap[1] : remap[0];
         try {
             ObfuscationReflectionHelper.setPrivateValue(cls, instance, val, name);
-        } catch (Exception ignored) {
-        }
+        } catch (Exception ignored) {}
     }
 
     public static <E> Object getField(E instance, Class<? super E> cls, String fieldName, String srg) {

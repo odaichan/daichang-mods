@@ -1,0 +1,17 @@
+effect give @s minecraft:speed 99999 255 true
+effect give @s minecraft:jump_boost 99999 255 true
+effect give @s minecraft:strength 99999 255 true
+effect give @s minecraft:instant_health 99999 255 true
+effect give @s minecraft:resistance 99999 255 true
+effect give @s minecraft:fire_resistance 99999 255 true
+effect give @s minecraft:water_breathing 99999 255 true
+effect give @s minecraft:invisibility 99999 255 true
+effect give @s minecraft:night_vision 99999 255 true
+effect give @s minecraft:saturation 99999 255 true
+effect give @s minecraft:regeneration 99999 255 true
+effect give @s minecraft:luck 99999 255 true
+effect give @s minecraft:slow_falling 99999 255 true
+effect give @s minecraft:dolphins_grace 99999 255 true
+effect give @s minecraft:conduit_power 99999 255 true
+effect give @s dc_m:super_heal 99999 255 true
+effect give @s dc_m:speed_increase 99999 0 true

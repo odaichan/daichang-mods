@@ -1,7 +1,7 @@
 package net.daichang.dcmods.common.item.tools.bow;
 
 import net.daichang.dcmods.client.font.DCItemFont;
-import net.daichang.dcmods.common.entity.DCSuperArrow;
+import net.daichang.dcmods.common.entities.projectile.DCSuperArrow;
 import net.daichang.dcmods.inits.DCEntities;
 import net.daichang.dcmods.inits.DCItems;
 import net.daichang.dcmods.utils.lists.items.SuperItemList;

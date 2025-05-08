@@ -2,6 +2,7 @@ package net.daichang.dcmods;
 
 import com.sun.tools.attach.VirtualMachine;
 import io.netty.util.internal.shaded.org.jctools.util.UnsafeAccess;
+import net.daichang.dcmods.addons.avaritia.AvaritiaItems;
 import net.daichang.dcmods.addons.curios.CuriosItems;
 import net.daichang.dcmods.addons.tconstruct.ModifierRegister;
 import net.daichang.dcmods.inits.*;
@@ -24,10 +25,7 @@ public class DCMod {
     public static final String MOD_ID = "dc_m";
 
     String[] strings = {
-            "添加了海洋之心"
-            , "修改了物品字体"
-            , "修改了彼岸花的机制"
-            , "修改了氪金萝莉机制"
+            "bzd写什么"
     };
 
 
@@ -51,6 +49,7 @@ public class DCMod {
 //        DaiChangMaginc.INSTANCE.addClassFileLoadHook("Lnet/daichang/dcmods/DCMod.defineClassEx;");
         if (ModUtil.isTconstructLoad() && ModUtil.isEtstLoad()) ModifierRegister.MODIFIERS.register(modEventBus);
         if (ModUtil.isCuriosLoad()) CuriosItems.items.register(modEventBus);
+        if (ModUtil.isAvaritiaLoad()) AvaritiaItems.items.register(modEventBus);
         DCTabs.inits(modEventBus);
         for (String s : strings) logger("[Update]" + s);
         for (String s : ModHelper.getAllModFileName()) logger("Obtained loaded mods " + s);

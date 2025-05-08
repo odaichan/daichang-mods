@@ -2,11 +2,12 @@ package net.daichang.dcmods.event;
 
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.brigadier.arguments.FloatArgumentType;
 import net.daichang.dcmods.DCMod;
-import net.daichang.dcmods.client.font.DCEntityFont;
 import net.daichang.dcmods.commands.SoftGetHealthCommand;
 import net.daichang.dcmods.common.blocks.RedSpiderLily;
-import net.daichang.dcmods.common.entity.DCLoveElaina;
+import net.daichang.dcmods.common.entities.BossEntity;
+import net.daichang.dcmods.common.entities.boss.DCLoveElaina;
 import net.daichang.dcmods.common.item.armors.DCSuperArmor;
 import net.daichang.dcmods.common.item.tools.creative.DCLoliPickaxe;
 import net.daichang.dcmods.inits.DCAttributes;
@@ -18,6 +19,7 @@ import net.daichang.dcmods.utils.helpers.*;
 import net.minecraft.ChatFormatting;
 import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -27,8 +29,8 @@ import net.minecraft.commands.arguments.EntityArgument;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffects;
@@ -50,6 +52,7 @@ import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.RenderGuiEvent;
+import net.minecraftforge.client.event.RenderLivingEvent;
 import net.minecraftforge.client.event.RenderTooltipEvent;
 import net.minecraftforge.event.AnvilUpdateEvent;
 import net.minecraftforge.event.RegisterCommandsEvent;
@@ -73,9 +76,9 @@ import java.util.concurrent.CopyOnWriteArrayList;
 @Mod.EventBusSubscriber(modid = DCMod.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class DCForgeEventHandler {
 
-    public static CopyOnWriteArrayList<LivingEntity> livingEntities = new CopyOnWriteArrayList<>();
+    public static CopyOnWriteArrayList<LivingEntity> bossList = new CopyOnWriteArrayList<>();
 
-    private static final Map<DCLoveElaina, Integer> prevBarWidthMap = new HashMap<>();
+    private static final Map<BossEntity, Integer> prevBarWidthMap = new HashMap<>();
 
     @SubscribeEvent
     public static void hurtEvent(@NotNull LivingHurtEvent event) {
@@ -96,7 +99,7 @@ public class DCForgeEventHandler {
         Entity entity = damageSource.getEntity();
         if (damageSource.is(DCDamageType.SUPER_DAMAGE) && !(entity instanceof LivingEntity living1 && living1.getMainHandItem().is(DCItems.SUPER_WOOD_SWORD.get()))) {
             event.setCanceled(false);
-            float normalDamage = 0;
+            float normalDamage = living.getMaxHealth() * 0.01F;
             if (entity instanceof LivingEntity attacker) {
                 if (attacker.attributes.hasAttribute(Attributes.ATTACK_DAMAGE)) normalDamage = normalDamage +  (float) attacker.getAttribute(Attributes.ATTACK_DAMAGE).getValue();
                 if (attacker.attributes.hasAttribute(DCAttributes.DC_SUPER_DAMAGE.get())) normalDamage = normalDamage + (float) attacker.getAttribute(DCAttributes.DC_SUPER_DAMAGE.get()).getValue();
@@ -161,7 +164,7 @@ public class DCForgeEventHandler {
         if (Minecraft.getInstance().player == null) {
             return;
         }
-        if (EntityHelper.hasElaina(Minecraft.getInstance().player.level())) {
+        if (EntityHelper.hasBoss(Minecraft.getInstance().player.level())) {
             int w = event.getWindow().getGuiScaledWidth();
             int h = event.getWindow().getGuiScaledHeight();
             int posX = w / 2;
@@ -173,32 +176,33 @@ public class DCForgeEventHandler {
             RenderSystem.setShader(GameRenderer::getPositionTexShader);
             RenderSystem.blendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
             RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
-            Iterator<LivingEntity> iterator = livingEntities.iterator();
+            Iterator<LivingEntity> iterator = bossList.iterator();
             while (iterator.hasNext()) {
                 synchronized (iterator) {
                     LivingEntity entity = iterator.next();
                     if (entity == null) continue;
-                    if (entity instanceof DCLoveElaina elaina) {
-                        float maxHealth = elaina.getMaxHealth();
-                        float health = elaina.getHealth();
+                    if (entity instanceof BossEntity boss) {
+                        Font font = boss.getBossBarFont();
+                        float maxHealth = boss.getMaxHealth();
+                        float health = boss.getHealth();
                         int barWidth = (int)(health / maxHealth * 190.0f);
-                        int prevBarWidth = prevBarWidthMap.getOrDefault(elaina, barWidth);
+                        int prevBarWidth = prevBarWidthMap.getOrDefault(boss, barWidth);
 
-                        float transitionSpeed = 0.1F; // 变化速率
+                        float transitionSpeed = 0.1F;
                         int interpolatedBarWidth = (int) ((1 - transitionSpeed * event.getPartialTick()) * prevBarWidth + transitionSpeed * event.getPartialTick() * barWidth);
-                        prevBarWidthMap.put(elaina, barWidth);
+                        prevBarWidthMap.put(boss, barWidth);
 
-                        String displayName = elaina.getDisplayName().getString();
+                        String displayName = boss.getDisplayName().getString();
                         String displayHealth = String.format("%.1f/%.1f", health, maxHealth);
-                        int displayNameWidth = DCEntityFont.getFont().width(displayName);
-                        int healthWidth = DCEntityFont.getFont().width(displayHealth);
+                        int displayNameWidth = font.width(displayName);
+                        int healthWidth = font.width(displayHealth);
 
-                        graphics.blit(new ResourceLocation("dc_m:textures/entities/health_bar_1.png"), posX - 97, posY - 116 + offset, 0.0f, 0.0f, 256, 256, 256, 256);
-                        graphics.blit(new ResourceLocation("dc_m:textures/entities/health_bar_3.png"), posX - 97, posY - 148 + offset, 0.0f, 0.0f, interpolatedBarWidth, 256, 256, 256);
-                        graphics.blit(new ResourceLocation("dc_m:textures/entities/health_bar_2.png"), posX - 97, posY - 148 + offset, 0.0f, 0.0f, barWidth, 256, 256, 256);
+                        graphics.blit(boss.getBossBar(), posX - 97, posY - 116 + offset, 0.0f, 0.0f, 256, 256, 256, 256);
+                        if (boss.isHasMask()) graphics.blit(boss.getBossBarMask(), posX - 97, posY - 148 + offset, 0.0f, 0.0f, interpolatedBarWidth, 256, 256, 256);
+                        graphics.blit(boss.getBossBarOn(), posX - 97, posY - 148 + offset, 0.0f, 0.0f, barWidth, 256, 256, 256);
                         source.getBuffer(RenderType.endPortal());
-                        graphics.drawString(DCEntityFont.getFont(), Component.literal(displayName), posX - (displayNameWidth / 2), posY + -92 + offset, -26368, false);
-                        graphics.drawString(DCEntityFont.getFont(), Component.literal(displayHealth), posX - (healthWidth / 2), posY + -82 + offset, -26368, false);
+                        graphics.drawString(font, Component.literal(displayName), posX - (displayNameWidth / 2), posY + -92 + offset, -26368, false);
+                        graphics.drawString(font, Component.literal(displayHealth), posX - (healthWidth / 2), posY + -82 + offset, -26368, false);
                         offset += 30;
                     }
                 }
@@ -313,11 +317,30 @@ public class DCForgeEventHandler {
                                     for (Entity entity : EntityArgument.getEntities(cs, "entities")) SoftGetHealthCommand.killed(entity);
                                     return 2;
                                 })))
+                        .then(Commands.literal("forceKillEntity")
+                                .executes(cs->{
+                                    Entity entity = cs.getSource().getEntity();
+                                    DCLoliPickaxe.killEntity(entity, entity);
+                                    return 2;
+                                })
+                                .then(Commands.argument("radius", FloatArgumentType.floatArg(0, Float.MAX_VALUE))
+                                        .executes(cs->{
+                                            ServerPlayer p = cs.getSource().getPlayer();
+                                            double x = p.getX();
+                                            double y = p.getY();
+                                            double z = p.getY();
+                                            for (Entity entity : EntityHelper.getEntity(cs.getSource().getLevel(),x,y,z, FloatArgumentType.getFloat(cs, "radius"))) if (entity != p)  DCLoliPickaxe.killEntity(entity, entity);
+                                            return 4;
+                                        }))
+                                .then(Commands.argument("entities", EntityArgument.entity()).executes(cs->{
+                                    for (Entity entity : EntityArgument.getEntities(cs, "entities")) DCLoliPickaxe.killEntity(entity, entity);
+                                    return 2;
+                                })))
                         .then(Commands.literal("add_def_entity")
                                 .executes(cs->{
                                     Entity entity = cs.getSource().getEntity();
                                     FileHelper.defaultWriteYouItem(entity);
-                                    return 2;
+                                    return 4;
                                 })
                                 .then(Commands.argument("entities", EntityArgument.entity()).executes(cs->{
                                     for (Entity entity : EntityArgument.getEntities(cs, "entities")) FileHelper.defaultWriteYouItem(entity);
@@ -327,7 +350,7 @@ public class DCForgeEventHandler {
                                 .executes(cs->{
                                     Entity entity = cs.getSource().getEntity();
                                     FileHelper.removeDefaultItem(entity);
-                                    return 2;
+                                    return 4;
                                 })
                                 .then(Commands.argument("entities", EntityArgument.entity()).executes(cs->{
                                     for (Entity entity : EntityArgument.getEntities(cs, "entities")) FileHelper.removeDefaultItem(entity);
@@ -342,6 +365,7 @@ public class DCForgeEventHandler {
         player.displayClientMessage(TextUtils.rainbow(Component.translatable("chat.dc_mods.world_loading")), false);
     }
 
+    @OnlyIn(Dist.CLIENT)
     @SubscribeEvent
     public static void renderTooltipEvent(ItemTooltipEvent tooltipEvent){
         if (tooltipEvent.getItemStack().getItem() == DCItems.LoliPickaxe.get()) {
@@ -349,9 +373,9 @@ public class DCForgeEventHandler {
             int size = tooltip.size();
             MutableComponent mutableComponent1 = Component.translatable("attribute.name.generic.attack_damage");
             MutableComponent mutableComponent2 = Component.translatable("attribute.name.generic.attack_speed");
-            Component var10000 = TextUtils.rainbow("TREE(3) ");
-            MutableComponent mutableComponent3 = Component.literal(" +" + var10000 + ChatFormatting.GRAY + " " + mutableComponent1.getString());
-            MutableComponent mutableComponent4 = Component.literal(" +" + var10000 + ChatFormatting.GRAY + " " + mutableComponent2.getString());
+            String var10000 = "TREE3";
+            MutableComponent mutableComponent3 = Component.literal(ChatFormatting.GRAY + " +" + var10000 +  " " + mutableComponent1.getString());
+            MutableComponent mutableComponent4 = Component.literal(ChatFormatting.GRAY + " +" + var10000 +  " " + mutableComponent2.getString());
             for (int i = 0; i < size; i++) {
                 Component line = tooltip.get(i);
                 if (line.contains(mutableComponent1))
@@ -424,5 +448,10 @@ public class DCForgeEventHandler {
             DataHelper.addHealthDelta(player, 1);
             player.heal(0.5F);
         }
+    }
+
+    @SubscribeEvent
+    public static void livingRenderEvent(RenderLivingEvent.Pre event) {
+
     }
 }

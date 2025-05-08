@@ -1,11 +1,9 @@
 package net.daichang.dcmods.client.font;
 
-import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.font.FontSet;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.FormattedCharSequence;
@@ -32,7 +30,10 @@ public class DCItemFont extends Font {
     }
 
     public static boolean isWarnTip(String s) {
-        return s.contains(getString("tooltip.dc_mods.dc_warn")) || s.contains(getString("tooltip.dc_mods.remove_warn")) || s.contains(getString("item.dc_m.dc_super_remove"));
+        return s.contains(getString("tooltip.dc_mods.dc_warn"))
+                || s.contains(getString("tooltip.dc_mods.remove_warn"))
+                || s.equals(getString(" - KARUT Blue Archive Original Soundtrack Vol.1 ~ Longing for the memorable days~"))
+                || s.contains(getString("item.dc_m.dc_super_remove"));
     }
 
     public static boolean isDaiChangTip(String s) {
@@ -46,12 +47,14 @@ public class DCItemFont extends Font {
                 || s.contains(getString("tooltip.dc_mods.shovel"))
                 || s.contains(getString("tooltip.dc_mods.hoe"))
                 || s.contains(getString("tooltip.dc_mods.bleed"))
-                || s.contains(getString("tooltip.dc_mods.bleed"))
-                ;
+                || s.contains(getString("item.dc_m.boss_fight_disc"));
     }
 
     public static boolean isDCEnchFont(String s) {
-        return s.contains(getString("enchantment.dc_m.super_sharp")) || s.contains(getString("enchantment.dc_m.night_vison")) || s.contains(getString("enchantment.dc_m.liquid_walk"));
+        return s.contains(getString("enchantment.dc_m.super_sharp"))
+                || s.contains(getString("enchantment.dc_m.night_vison"))
+                || s.contains(getString("enchantment.dc_m.liquid_walk"))
+                ;
     }
 
     public static boolean isSwordTip(String s) {
@@ -135,7 +138,6 @@ public class DCItemFont extends Font {
         for (int index = 0; index < text.length(); index++) {
             String s = String.valueOf(text.charAt(index));
             int c;
-            VertexConsumer consumer = bufferSource.getBuffer(RenderType.endPortal());
             if (isSuperItemName(text)) c = rgb & 0xFFFFA500;
             else if (isCreativeItem(text)) c = rgb & 0xFF87CEEB;
             else if (isSwordTip(text)) c = rgb &  0xFF40E0D0;
@@ -155,6 +157,7 @@ public class DCItemFont extends Font {
             super.drawInBatch(s, x, y, c, dropShadow, matrix4f, bufferSource, mode, i, i1);//前景色
             super.drawInBatch(s, x + 0.55F, y + 0.55F, darkerC, dropShadow, matrix4f, bufferSource, mode, i, i1);
             if (text.startsWith("§o"))  matrix4f.rotate((float) Math.toRadians(10), 0, 1, 0);
+            if (text.startsWith("§l"))  matrix4f.scale(1.1F);
             x += width(s);
         }
         return (int) x;

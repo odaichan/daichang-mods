@@ -1,5 +1,6 @@
 package net.daichang.dcmods.inits;
 
+import net.daichang.dcmods.addons.avaritia.AvaritiaItems;
 import net.daichang.dcmods.addons.curios.CuriosItems;
 import net.daichang.dcmods.utils.ModUtil;
 import net.minecraft.core.registries.Registries;
@@ -57,6 +58,7 @@ public class DCTabs {
                         for (RegistryObject<Item> object : DCItems.armors) {
                             tabData.accept(object.get());
                         }
+                        if (ModUtil.isAvaritiaLoad()) for (RegistryObject<Item> object : AvaritiaItems.list) tabData.accept(object.get());
                     }).build());
 
     public static final RegistryObject<CreativeModeTab> DC_MOD_CREATIVE_TAB = tab.register("dc_mod_creative_tab",

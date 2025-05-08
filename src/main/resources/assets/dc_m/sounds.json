@@ -23,6 +23,14 @@
       }
     ]
   },
+  "steve_boss_fight": {
+    "sounds": [
+      {
+        "name": "dc_m:steve_boss_fight",
+        "stream": false
+      }
+    ]
+  },
   "boss_death": {
     "sounds": [
       {

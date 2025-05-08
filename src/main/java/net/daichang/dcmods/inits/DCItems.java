@@ -5,6 +5,8 @@ import net.daichang.dcmods.common.item.BaseSuperItem;
 import net.daichang.dcmods.common.item.DCTier;
 import net.daichang.dcmods.common.item.armors.DCSuperArmor;
 import net.daichang.dcmods.common.item.crafts.HeartOfTheOcean;
+import net.daichang.dcmods.common.item.disc.DCBossFightDisc;
+import net.daichang.dcmods.common.item.other.DCSteveSpawnEgg;
 import net.daichang.dcmods.common.item.other.DCWitherSpawnEgg;
 import net.daichang.dcmods.common.item.tools.*;
 import net.daichang.dcmods.common.item.tools.bow.DCArrow;
@@ -79,6 +81,7 @@ public class DCItems {
 
 
     public static final RegistryObject<Item> DC_WITHER_SPAWN;
+    public static final RegistryObject<Item> DC_STEVE;
 
 
     public static final RegistryObject<Item> LoliPickaxe;
@@ -92,6 +95,7 @@ public class DCItems {
     public static final RegistryObject<Item> WOOD_BOOTS;
     public static final RegistryObject<Item> HEART_OF_THE_OCEAN;
 
+    public static final RegistryObject<Item> BOSS_FIGHT_DISC;
     static {
         WOOD_INGOT = normalItemRegister("wood_ingot", ()-> new Item(new Item.Properties().stacksTo(16).rarity(Rarity.COMMON)));
         DC_BOW = normalItemRegister("dc_bow", DCBow::new);
@@ -123,8 +127,9 @@ public class DCItems {
         //SPAWN EGG
         DC_WITHER_SPAWN = creativeItemRegister("dc_wither_spawn_egg", DCWitherSpawnEgg::new);
 
-        LoliPickaxe = creativeItemRegister("loli_pickaxe", DCLoliPickaxe::new);
+        DC_STEVE = creativeItemRegister("dc_steve_spawn_egg", DCSteveSpawnEgg::new);
 
+        LoliPickaxe = creativeItemRegister("loli_pickaxe", DCLoliPickaxe::new);
 
         WOOD_TOTEM = registry("super_wood_totem", SuperWoodTotem::new);
 
@@ -134,5 +139,6 @@ public class DCItems {
         WOOD_LEGGINGS = armorRegister("super_wood_leggings", DCSuperArmor.Leggings::new);
         WOOD_BOOTS = armorRegister("super_wood_boots", DCSuperArmor.Boots::new);
         HEART_OF_THE_OCEAN = normalItemRegister("heart_of_the_ocean", HeartOfTheOcean::new);
+        BOSS_FIGHT_DISC = normalItemRegister("boss_fight_disc", DCBossFightDisc::new);
     }
 }

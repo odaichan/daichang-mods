@@ -1,10 +1,11 @@
 package net.daichang.dcmods.inits;
 
 import net.daichang.dcmods.DCMod;
-import net.daichang.dcmods.common.entity.DCLoveElaina;
-import net.daichang.dcmods.common.entity.DCSuperArrow;
-import net.daichang.dcmods.common.entity.DCWitherSkull;
-import net.daichang.dcmods.common.entity.RainbowLightingEntity;
+import net.daichang.dcmods.common.entities.boss.DCLoveElaina;
+import net.daichang.dcmods.common.entities.boss.DCSteve;
+import net.daichang.dcmods.common.entities.projectile.DCSuperArrow;
+import net.daichang.dcmods.common.entities.projectile.DCWitherSkull;
+import net.daichang.dcmods.common.entities.entity.RainbowLightingEntity;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
@@ -21,6 +22,8 @@ public class DCEntities {
     public static final RegistryObject<EntityType<DCWitherSkull>> DC_WITHER_SKULL = register("dc_wither_skull", EntityType.Builder.of(DCWitherSkull::new, MobCategory.MISC).setShouldReceiveVelocityUpdates(true).sized(0.5F, 0.5F).clientTrackingRange(4).updateInterval(1));
 
     public static final RegistryObject<EntityType<DCLoveElaina>> DC_WITHER = register("elaina",EntityType.Builder.<DCLoveElaina>of(DCLoveElaina::new, MobCategory.MISC).setShouldReceiveVelocityUpdates(true).setTrackingRange(64).setUpdateInterval(3).setCustomClientFactory(DCLoveElaina::new).sized(0.5f, 2.1f));
+
+    public static final RegistryObject<EntityType<DCSteve>> DC_STEVE = register("steve",EntityType.Builder.<DCSteve>of(DCSteve::new, MobCategory.MISC).setShouldReceiveVelocityUpdates(true).setTrackingRange(64).setUpdateInterval(3).setCustomClientFactory(DCSteve::new).sized(0.5f, 1.8f));
 
     private static <T extends Entity> RegistryObject<EntityType<T>> register(String register_id, EntityType.Builder<T> entityTypeBuilder) {
         return entities.register(register_id, () -> entityTypeBuilder.build(register_id));

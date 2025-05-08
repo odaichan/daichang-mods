@@ -19,6 +19,7 @@
   "item.dc_m.data_set" : "Data Health Set",
   "item.dc_m.time_clock" : "Time Clock",
   "item.dc_m.dc_wither_spawn_egg" : "Admin Summon Stone",
+  "item.dc_m.dc_steve_spawn_egg" : "Steve Spawn Egg",
   "item.dc_m.super_wood_axe" : "Super Wood Axe",
   "item.dc_m.super_wood_shovel" : "Super Wood Shovel",
   "item.dc_m.super_wood_hoe" : "Super Wood Hoe",
@@ -112,5 +113,11 @@
   "tool_tip.dc_mods.ocean": "The mysterious magic in the ocean",
   "item.dc_m.heart_of_the_ocean" : "Heart of the Ocean",
   "tool_tip.dc_mods.default": "Default effect of armor: Conduit Power",
-  "tool_tip.dc_mods.repier_item": "Ensure that the items in your backpack are not damaged"
+  "tool_tip.dc_mods.repier_item": "Ensure that the items in your backpack are not damaged",
+  "item.dc_m.boss_fight_disc" : "Boss Fight Disc",
+  "entity.dc_m.steve" : "Steve",
+  "advancements.dc_mods.the_start" : "Beginning...",
+  "advancements.dc_mods.the_start_tip" : "Obtain the first wooden alloy ingot",
+  "advancements.dc_m.normal_wood_sword" : "Overcome all obstacles",
+  "advancements.dc_m.normal_wood_sword_tip" : "Produce a Normal Wood Sword"
 }

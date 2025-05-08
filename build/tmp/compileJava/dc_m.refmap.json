@@ -8,6 +8,9 @@
     "net/daichang/dcmods/mixins/MixinItemEntity": {
       "tick": "Lnet/minecraft/world/entity/item/ItemEntity;m_8119_()V"
     },
+    "net/daichang/dcmods/mixins/MixinTrident": {
+      "releaseUsing": "Lnet/minecraft/world/item/TridentItem;m_5551_(Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/level/Level;Lnet/minecraft/world/entity/LivingEntity;I)V"
+    },
     "net/daichang/dcmods/mixins/MixinItemEntityRenderer": {
       "render(Lnet/minecraft/world/entity/item/ItemEntity;FFLcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;I)V": "Lnet/minecraft/client/renderer/entity/ItemEntityRenderer;m_7392_(Lnet/minecraft/world/entity/item/ItemEntity;FFLcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;I)V"
     },
@@ -74,6 +77,9 @@
       },
       "net/daichang/dcmods/mixins/MixinItemEntity": {
         "tick": "Lnet/minecraft/world/entity/item/ItemEntity;m_8119_()V"
+      },
+      "net/daichang/dcmods/mixins/MixinTrident": {
+        "releaseUsing": "Lnet/minecraft/world/item/TridentItem;m_5551_(Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/level/Level;Lnet/minecraft/world/entity/LivingEntity;I)V"
       },
       "net/daichang/dcmods/mixins/MixinItemEntityRenderer": {
         "render(Lnet/minecraft/world/entity/item/ItemEntity;FFLcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;I)V": "Lnet/minecraft/client/renderer/entity/ItemEntityRenderer;m_7392_(Lnet/minecraft/world/entity/item/ItemEntity;FFLcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;I)V"

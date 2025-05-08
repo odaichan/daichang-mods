@@ -1,7 +1,7 @@
 package net.daichang.dcmods.client.render.entites.layers;
 
 import net.daichang.dcmods.client.models.entites.ElainaModel;
-import net.daichang.dcmods.common.entity.DCLoveElaina;
+import net.daichang.dcmods.common.entities.boss.DCLoveElaina;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.geom.EntityModelSet;
 import net.minecraft.client.model.geom.ModelLayers;

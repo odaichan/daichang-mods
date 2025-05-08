@@ -5,7 +5,7 @@ package net.daichang.dcmods.client.models.entites;// Made with Blockbench 4.12.4
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.daichang.dcmods.client.animation.ElainaAnimation;
-import net.daichang.dcmods.common.entity.DCLoveElaina;
+import net.daichang.dcmods.common.entities.boss.DCLoveElaina;
 import net.minecraft.client.model.HierarchicalModel;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.ModelPart;

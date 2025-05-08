@@ -1,7 +1,7 @@
 package net.daichang.dcmods.utils.helpers;
 
 import net.daichang.dcmods.common.damage_source.DCDamageSource;
-import net.daichang.dcmods.common.entity.DCLoveElaina;
+import net.daichang.dcmods.common.entities.BossEntity;
 import net.daichang.dcmods.event.DCForgeEventHandler;
 import net.daichang.dcmods.inits.DCDamageType;
 import net.minecraft.client.multiplayer.ClientLevel;
@@ -107,23 +107,23 @@ public class EntityHelper extends DataHelper {
         }
     }
 
-    public static boolean hasElaina(Level level) {
+    public static boolean hasBoss(Level level) {
         if (level == null) return false;
         boolean found = false;
         if (level instanceof ClientLevel clientLevel) {
             for (Entity entity : clientLevel.getEntities().getAll()) {
-                if (entity instanceof DCLoveElaina elaina) {
-                    if (!DCForgeEventHandler.livingEntities.contains(elaina))
-                        DCForgeEventHandler.livingEntities.add(elaina);
+                if (entity instanceof BossEntity elaina) {
+                    if (!DCForgeEventHandler.bossList.contains(elaina))
+                        DCForgeEventHandler.bossList.add(elaina);
                     found = true;
                 }
             }
         }
         if (level instanceof ServerLevel serverLevel) {
             for (Entity entity : serverLevel.getAllEntities()) {
-                if (entity instanceof DCLoveElaina elaina) {
-                    if (!DCForgeEventHandler.livingEntities.contains(elaina))
-                        DCForgeEventHandler.livingEntities.add(elaina);
+                if (entity instanceof BossEntity elaina) {
+                    if (!DCForgeEventHandler.bossList.contains(elaina))
+                        DCForgeEventHandler.bossList.add(elaina);
                     found = true;
                 }
             }

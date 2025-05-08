@@ -1,6 +1,6 @@
 package net.daichang.dcmods.common.blocks;
 
-import net.daichang.dcmods.common.entity.DCLoveElaina;
+import net.daichang.dcmods.common.entities.boss.DCLoveElaina;
 import net.daichang.dcmods.inits.DCBlockItems;
 import net.daichang.dcmods.inits.DCEffects;
 import net.daichang.dcmods.utils.helpers.DataHelper;

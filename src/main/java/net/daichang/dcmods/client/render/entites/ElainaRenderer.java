@@ -6,7 +6,7 @@ import com.mojang.math.Axis;
 import net.daichang.dcmods.DCMod;
 import net.daichang.dcmods.client.font.DCEntityFont;
 import net.daichang.dcmods.client.models.entites.ElainaModel;
-import net.daichang.dcmods.common.entity.DCLoveElaina;
+import net.daichang.dcmods.common.entities.boss.DCLoveElaina;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;

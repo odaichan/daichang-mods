@@ -21,6 +21,7 @@ import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.monster.EnderMan;
+import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.*;
 import net.minecraft.world.item.crafting.Ingredient;
@@ -54,24 +55,35 @@ public class DCSuperArmor extends ArmorItem {
     public void onArmorTick(ItemStack stack, Level level, Player player) {
         super.onArmorTick(stack, level, player);
         if (player.tickCount % 40 == 0) DataHelper.addHealthDelta(player, 1.0F);
-        if (player.isUnderWater()) {
+        if (player.isUnderWater() || player.isInPowderSnow) {
             player.addEffect(EffectHelper.addEffect(MobEffects.CONDUIT_POWER, 20, 5));
             player.addEffect(EffectHelper.addEffect(MobEffects.DAMAGE_BOOST, 20, 2));
         }
     }
 
     public static boolean hasAllArmor(Player player) {
-        return player.getInventory().getArmor(0).is(DCItems.WOOD_HELMET.get())
-                && player.getInventory().getArmor(1).is(DCItems.WOOD_CHESTPLATE.get())
-                && player.getInventory().getArmor(2).is(DCItems.WOOD_LEGGINGS.get())
-                && player.getInventory().getArmor(3).is(DCItems.WOOD_BOOTS.get());
+        Inventory i = player.getInventory();
+        return i.getArmor(0).is(DCItems.WOOD_HELMET.get())
+                && i.getArmor(1).is(DCItems.WOOD_CHESTPLATE.get())
+                && i.getArmor(2).is(DCItems.WOOD_LEGGINGS.get())
+                && i.getArmor(3).is(DCItems.WOOD_BOOTS.get());
+    }
+
+    public static int power(Player player) {
+        int var = 0;
+        Inventory inventory = player.getInventory();
+        if (inventory.getArmor(0).is(DCItems.WOOD_HELMET.get())) var = var + 3;
+        if (inventory.getArmor(1).is(DCItems.WOOD_CHESTPLATE.get())) var = var + 5;
+        if (inventory.getArmor(2).is(DCItems.WOOD_LEGGINGS.get())) var = var + 4;
+        if (inventory.getArmor(3).is(DCItems.WOOD_BOOTS.get())) var = var + 2;
+        return var;
     }
 
     @Override
-    public void appendHoverText(@NotNull ItemStack pStack, @Nullable Level pLevel, List<Component> pTooltipComponents, @NotNull TooltipFlag pIsAdvanced) {
-        pTooltipComponents.add(Component.translatable("tool_tip.dc_mods.default"));
-        pTooltipComponents.add(Component.translatable("tool_tip.dc_mods.when_worn"));
-        super.appendHoverText(pStack, pLevel, pTooltipComponents, pIsAdvanced);
+    public void appendHoverText(@NotNull ItemStack pStack, @Nullable Level pLevel, List<Component> list, @NotNull TooltipFlag pIsAdvanced) {
+        list.add(Component.translatable("tool_tip.dc_mods.default"));
+        list.add(Component.translatable("tool_tip.dc_mods.when_worn"));
+        super.appendHoverText(pStack, pLevel, list, pIsAdvanced);
     }
 
     public static @NotNull ArmorMaterial createArmorMaterial(String name, double level, Ingredient repairIngredient) {

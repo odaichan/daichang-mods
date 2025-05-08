@@ -16,6 +16,8 @@ public class DCSounds {
 
     public static final RegistryObject<SoundEvent> BOSS_FIGHT = sounds.register("boss_fight", () -> SoundEvent.createVariableRangeEvent(new ResourceLocation(MOD_ID, "boss_fight")));
 
+    public static final RegistryObject<SoundEvent> STEVE_BOSS_FIGHT = sounds.register("steve_boss_fight", () -> SoundEvent.createVariableRangeEvent(new ResourceLocation(MOD_ID, "steve_boss_fight")));
+
     public static final RegistryObject<SoundEvent> BOSS_DEATH = sounds.register("boss_death", () -> SoundEvent.createVariableRangeEvent(new ResourceLocation(MOD_ID, "boss_death")));
 
     public static final RegistryObject<SoundEvent> LOLI_SUCCRSS = sounds.register("loli_succrss", () -> SoundEvent.createVariableRangeEvent(new ResourceLocation(MOD_ID, "loli_succrss")));
