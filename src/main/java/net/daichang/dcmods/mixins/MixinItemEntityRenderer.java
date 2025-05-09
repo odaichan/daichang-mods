@@ -14,7 +14,7 @@ import net.minecraft.client.renderer.entity.ItemEntityRenderer;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.item.ItemEntity;
-import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Matrix4f;
 import org.spongepowered.asm.mixin.Mixin;
@@ -33,7 +33,7 @@ public abstract class MixinItemEntityRenderer extends EntityRenderer<ItemEntity>
 
     @Inject(method = "render(Lnet/minecraft/world/entity/item/ItemEntity;FFLcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;I)V", at  = @At("HEAD"))
     private void render(ItemEntity itemE, float p_115037_, float f2, PoseStack poseStack, MultiBufferSource bufferSource, int p_115041_, CallbackInfo ci) {
-        Item item = itemE.getItem().getItem();
+        ItemStack item = itemE.getItem();
         if (Utils.isCreativeItem(item)) {
             float f = ((float)100 + f2 - 1.0F) / 20.0F * 1.6F;
             f = Mth.sqrt(f);

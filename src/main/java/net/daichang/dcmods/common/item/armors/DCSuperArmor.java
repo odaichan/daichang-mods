@@ -17,6 +17,7 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -43,9 +44,11 @@ public class DCSuperArmor extends ArmorItem {
         ImmutableMultimap.Builder<Attribute, AttributeModifier> mainHand = ImmutableMultimap.builder();
         mainHand.put(Attributes.ATTACK_DAMAGE, new AttributeModifier(UUID.randomUUID(), "Weapon modifier", 2.4D, AttributeModifier.Operation.ADDITION));
         mainHand.put(Attributes.ATTACK_SPEED, new AttributeModifier(UUID.randomUUID(), "Weapon modifier", 0.1D, AttributeModifier.Operation.ADDITION));
+        mainHand.put(Attributes.ATTACK_SPEED, new AttributeModifier(UUID.randomUUID(), "Weapon modifier", 1.1D, AttributeModifier.Operation.MULTIPLY_BASE));
         mainHand.put(Attributes.ARMOR, new AttributeModifier(UUID.randomUUID(), "Weapon modifier", 7.3D, AttributeModifier.Operation.ADDITION));
         mainHand.put(Attributes.ARMOR_TOUGHNESS, new AttributeModifier(UUID.randomUUID(), "Weapon modifier", 4.3D, AttributeModifier.Operation.ADDITION));
         mainHand.put(Attributes.MAX_HEALTH, new AttributeModifier(UUID.randomUUID(), "Weapon modifier", 7.8D, AttributeModifier.Operation.ADDITION));
+        mainHand.put(Attributes.MAX_HEALTH, new AttributeModifier(UUID.randomUUID(), "Weapon modifier", 0.052D, AttributeModifier.Operation.MULTIPLY_TOTAL));
         mainHand.put(DCAttributes.DC_SUPER_DAMAGE.get(), new AttributeModifier(UUID.randomUUID(), "Item modifier", 5.2D, AttributeModifier.Operation.ADDITION));
         mainHand.put(DCAttributes.DC_DEFENSE.get(), new AttributeModifier(UUID.randomUUID(), "Item modifier", 5.2D, AttributeModifier.Operation.ADDITION));
         modifiers = mainHand.build();
@@ -55,10 +58,11 @@ public class DCSuperArmor extends ArmorItem {
     public void onArmorTick(ItemStack stack, Level level, Player player) {
         super.onArmorTick(stack, level, player);
         if (player.tickCount % 40 == 0) DataHelper.addHealthDelta(player, 1.0F);
-        if (player.isUnderWater() || player.isInPowderSnow) {
+        if (player.isUnderWater()) {
             player.addEffect(EffectHelper.addEffect(MobEffects.CONDUIT_POWER, 20, 5));
             player.addEffect(EffectHelper.addEffect(MobEffects.DAMAGE_BOOST, 20, 2));
         }
+        if (hasAllArmor(player)) player.getFoodData().setFoodLevel(20);
     }
 
     public static boolean hasAllArmor(Player player) {
@@ -130,6 +134,10 @@ public class DCSuperArmor extends ArmorItem {
         };
     }
 
+    @Override
+    public boolean makesPiglinsNeutral(ItemStack stack, LivingEntity wearer) {
+        return true;
+    }
 
     @Override
     public boolean isFireResistant() {
@@ -169,6 +177,7 @@ public class DCSuperArmor extends ArmorItem {
             player.addEffect(EffectHelper.addEffect(MobEffects.NIGHT_VISION));
             player.addEffect(EffectHelper.addEffect(MobEffects.HERO_OF_THE_VILLAGE));
             player.addEffect(EffectHelper.addEffect(MobEffects.HEAL));
+            if (player.isUnderWater()) player.setAirSupply(300);
         }
 
         @Override
@@ -199,6 +208,7 @@ public class DCSuperArmor extends ArmorItem {
             super.onArmorTick(stack, level, player);
             player.addEffect(EffectHelper.addEffect(MobEffects.DAMAGE_BOOST));
             player.addEffect(EffectHelper.addEffect(DCEffects.Heal.get(), 40, 1));
+            if (player.isInLava()) player.clearFire();
         }
 
 

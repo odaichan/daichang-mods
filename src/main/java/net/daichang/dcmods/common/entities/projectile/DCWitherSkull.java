@@ -1,12 +1,15 @@
 package net.daichang.dcmods.common.entities.projectile;
 
 import net.daichang.dcmods.common.entities.boss.DCLoveElaina;
+import net.daichang.dcmods.inits.DCEffects;
+import net.daichang.dcmods.utils.helpers.EffectHelper;
 import net.daichang.dcmods.utils.helpers.EntityHelper;
 import net.daichang.dcmods.utils.helpers.ExplodeHelper;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.WitherSkull;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.BlockHitResult;
@@ -39,9 +42,15 @@ public class DCWitherSkull extends WitherSkull {
     }
 
     void killEntity(Entity entity) {
-        if (entity instanceof LivingEntity living && !(living instanceof DCLoveElaina) && isSuPlayer(living)) {
-            float damage = living.getMaxHealth() * 0.1F + 47;
-            living.hurt(EntityHelper.dc_damage(this), damage);
+        if (entity instanceof LivingEntity living) {
+            if (!(living instanceof DCLoveElaina) && !(living instanceof Player)) {
+                float damage = living.getMaxHealth() * 0.1F + 47;
+                living.hurt(EntityHelper.dc_damage(this), damage);
+            }
+            if (isSuPlayer(living)) {
+                living.hurt(EntityHelper.mob_attack_damage(this), 3 + living.getMaxHealth() * 0.01F);
+                living.addEffect(EffectHelper.addEffect(DCEffects.Bloodshed.get()));
+            }
         }
     }
 

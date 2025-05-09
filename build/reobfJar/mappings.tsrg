@@ -9665,8 +9665,6 @@ net/daichang/dcmods/mixins/MixinGameRenderer net/daichang/dcmods/mixins/MixinGam
 	postEffect f_109050_
 	loadEffect (Lnet/minecraft/resources/ResourceLocation;)V m_109128_
 	shutdownEffect ()V m_109086_
-net/daichang/dcmods/mixins/MixinItemEntity net/daichang/dcmods/mixins/MixinItemEntity
-	dampensVibrations ()Z m_213854_
 net/daichang/dcmods/mixins/MixinLivingEntity net/daichang/dcmods/mixins/MixinLivingEntity
 	getMaxHealth ()F m_21233_
 net/daichang/dcmods/mixins/MixinLivingEntityRender net/daichang/dcmods/mixins/MixinLivingEntityRender

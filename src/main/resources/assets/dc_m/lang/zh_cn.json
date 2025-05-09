@@ -113,11 +113,18 @@
   "tool_tip.dc_mods.ocean": "大海中的神秘魔法...",
   "tool_tip.dc_mods.default": "盔甲默认效果：潮涌能量",
   "tool_tip.dc_mods.repier_item": "修复你背包中的物品....",
-  "item.dc_m.boss_fight_disc": "[唱片]Boss Fight",
+  "item.dc_m.boss_fight_disc": "[Disc]KARUT Blue Archive Original Soundtrack Vol.1 ~ Longing for the memorable days",
   "item.dc_m.dc_steve_spawn_egg": "史蒂夫 生成",
   "entity.dc_m.steve": "史蒂夫",
   "advancements.dc_mods.the_start": "开端",
   "advancements.dc_mods.the_start_tip": "获得第一个木制合金锭...",
   "advancements.dc_m.normal_wood_sword": "披荆斩棘！",
-  "advancements.dc_m.normal_wood_sword_tip": "制作出普通木制剑"
+  "advancements.dc_m.normal_wood_sword_tip": "制作出普通木制剑",
+  "item.dc_m.railway_guerrilla": "[Disc]Blue Archive OST 207. Railway Guerrilla",
+  "item.dc_m.railway_guerrilla.desc": "Blue Archive OST 207. Railway Guerrilla",
+  "item.dc_m.boss_fight_disc.desc": "KARUT Blue Archive Original Soundtrack Vol.1 ~ Longing for the memorable days",
+  "item.dc_m.recollection": "[Disc]【Minecraft Phonk】Recollection",
+  "item.dc_m.recollection.desc": "【Minecraft Phonk】Recollection",
+  "item.dc_m.moog_city_2": "[Disc]【Minecraft Phonk】Moog City 2",
+  "item.dc_m.moog_city_2.desc": "【Minecraft Phonk】Moog City 2"
 }

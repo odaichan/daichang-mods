@@ -1,5 +1,7 @@
 package net.daichang.dcmods.utils;
 
+import net.daichang.dcmods.utils.helpers.MathHelper;
+
 import java.awt.*;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
@@ -395,7 +397,7 @@ public class ConvolveFilter extends AbstractBufferedImageOp {
         /* 195 */
         if (this.premultiplyAlpha) {
             /* 197 */
-            ImageMath.premultiply(inPixels, 0, inPixels.length);
+            MathHelper.premultiply(inPixels, 0, inPixels.length);
         }
 
         /* 200 */
@@ -404,7 +406,7 @@ public class ConvolveFilter extends AbstractBufferedImageOp {
         /* 202 */
         if (this.premultiplyAlpha) {
             /* 204 */
-            ImageMath.unpremultiply(outPixels, 0, outPixels.length);
+            MathHelper.unpremultiply(outPixels, 0, outPixels.length);
         }
 
         /* 207 */

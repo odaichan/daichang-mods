@@ -6,7 +6,6 @@
   "refmap": "dc_m.refmap.json",
   "mixins": [
     "MixinEntity",
-    "MixinItemEntity",
     "MixinLivingEntity",
     "MixinPlayer",
     "MixinServerPlayer",

@@ -6,6 +6,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -16,7 +17,7 @@ public class RedSpiderLilyBlockItem extends DCBlockItem {
     }
 
     @Override
-    public void appendHoverText(ItemStack p_40572_, @Nullable Level p_40573_, List<Component> list, TooltipFlag p_40575_) {
+    public void appendHoverText(@NotNull ItemStack p_40572_, @Nullable Level p_40573_, List<Component> list, @NotNull TooltipFlag p_40575_) {
         list.add(Component.translatable("tooltip.dc_mods.flower_1"));
         list.add(Component.translatable("tooltip.dc_mods.flower_2"));
         list.add(Component.translatable("tooltip.dc_mods.flower_3"));

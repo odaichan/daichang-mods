@@ -52,7 +52,6 @@ import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.RenderGuiEvent;
-import net.minecraftforge.client.event.RenderLivingEvent;
 import net.minecraftforge.client.event.RenderTooltipEvent;
 import net.minecraftforge.event.AnvilUpdateEvent;
 import net.minecraftforge.event.RegisterCommandsEvent;
@@ -252,15 +251,15 @@ public class DCForgeEventHandler {
         float saturation = 1.0F;
         float brightness = 1.0F;
         int c = Color.HSBtoRGB((((hue * 720.0F + index) % 720.0F >= 360.0F) ? (720.0F - (hue * 720.0F + index) % 720.0F) : ((hue * 720.0F + index) % 720.0F)) / 256.0F, saturation, brightness);
-        if (Utils.isSuperTool(item)){
+        if (Utils.isSuperTool(stack)){
             event.setBorderStart(c);
             event.setBorderEnd(c);
         }
-        else if (Utils.isCreativeItem(item)) {
+        else if (Utils.isCreativeItem(stack)) {
             event.setBorderStart(Color.CYAN.getRGB());
             event.setBorderEnd(Color.CYAN.getRGB());
         }
-        else if (Utils.isNormalTool(item)) {
+        else if (Utils.isNormalTool(stack)) {
             event.setBorderStart(Color.WHITE.getRGB());
             event.setBorderEnd(Color.WHITE.getRGB());
         }
@@ -268,7 +267,7 @@ public class DCForgeEventHandler {
             event.setBorderStart(new Random().nextInt());
             event.setBorderEnd(new Random().nextInt());
         }
-        else if (Utils.isBlockItem(item)) {
+        else if (Utils.isBlockItem(stack)) {
             event.setBorderStart(Color.BLUE.getRGB());
             event.setBorderStart(Color.BLUE.getRGB());
         }
@@ -450,8 +449,4 @@ public class DCForgeEventHandler {
         }
     }
 
-    @SubscribeEvent
-    public static void livingRenderEvent(RenderLivingEvent.Pre event) {
-
-    }
 }

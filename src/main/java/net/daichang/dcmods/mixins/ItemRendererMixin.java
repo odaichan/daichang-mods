@@ -43,7 +43,7 @@ public abstract class ItemRendererMixin {
 
     @Inject(method = "renderModelLists", at = @At("HEAD"))
     private void renderModelLists(BakedModel p_115190_, @NotNull ItemStack p_115191_, int p_115192_, int p_115193_, PoseStack p_115194_, VertexConsumer p_115195_, CallbackInfo ci) {
-        if (realSword$context == ItemDisplayContext.GUI && Utils.isCreativeItem(p_115191_.getItem())) {
+        if (realSword$context == ItemDisplayContext.GUI && Utils.isCreativeItem(p_115191_)) {
             RandomSource randomsource = RandomSource.create();
             long i = 42L;
             for (Direction direction : Direction.values()) {

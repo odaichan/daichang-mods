@@ -43,6 +43,7 @@ public class DCMod {
         DCEntities.entities.register(modEventBus);
         DCEffects.effects.register(modEventBus);
         DCBlocks.block.register(modEventBus);
+        DCDiscs.items.register(modEventBus);
         DCBlockItems.items.register(modEventBus);
         MinecraftForge.EVENT_BUS.register(this);
 //        DaiChangMaginc.INSTANCE.initWindow();

@@ -5,9 +5,6 @@
       "shutdownEffect": "Lnet/minecraft/client/renderer/GameRenderer;m_109086_()V",
       "tick": "Lnet/minecraft/client/renderer/GameRenderer;m_109148_()V"
     },
-    "net/daichang/dcmods/mixins/MixinItemEntity": {
-      "tick": "Lnet/minecraft/world/entity/item/ItemEntity;m_8119_()V"
-    },
     "net/daichang/dcmods/mixins/MixinTrident": {
       "releaseUsing": "Lnet/minecraft/world/item/TridentItem;m_5551_(Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/level/Level;Lnet/minecraft/world/entity/LivingEntity;I)V"
     },
@@ -44,7 +41,9 @@
     },
     "net/daichang/dcmods/mixins/MixinEntity": {
       "getDeltaMovement": "Lnet/minecraft/world/entity/Entity;m_20184_()Lnet/minecraft/world/phys/Vec3;",
-      "tick": "Lnet/minecraft/world/entity/Entity;m_8119_()V"
+      "tick": "Lnet/minecraft/world/entity/Entity;m_8119_()V",
+      "kill": "Lnet/minecraft/world/entity/Entity;m_6074_()V",
+      "hurt": "Lnet/minecraft/world/entity/Entity;m_6469_(Lnet/minecraft/world/damagesource/DamageSource;F)Z"
     },
     "net/daichang/dcmods/mixins/MixinFont": {
       "drawInBatch(Lnet/minecraft/util/FormattedCharSequence;FFIZLorg/joml/Matrix4f;Lnet/minecraft/client/renderer/MultiBufferSource;Lnet/minecraft/client/gui/Font$DisplayMode;II)I": "Lnet/minecraft/client/gui/Font;m_272191_(Lnet/minecraft/util/FormattedCharSequence;FFIZLorg/joml/Matrix4f;Lnet/minecraft/client/renderer/MultiBufferSource;Lnet/minecraft/client/gui/Font$DisplayMode;II)I"
@@ -74,9 +73,6 @@
         "loadEffect": "Lnet/minecraft/client/renderer/GameRenderer;m_109128_(Lnet/minecraft/resources/ResourceLocation;)V",
         "shutdownEffect": "Lnet/minecraft/client/renderer/GameRenderer;m_109086_()V",
         "tick": "Lnet/minecraft/client/renderer/GameRenderer;m_109148_()V"
-      },
-      "net/daichang/dcmods/mixins/MixinItemEntity": {
-        "tick": "Lnet/minecraft/world/entity/item/ItemEntity;m_8119_()V"
       },
       "net/daichang/dcmods/mixins/MixinTrident": {
         "releaseUsing": "Lnet/minecraft/world/item/TridentItem;m_5551_(Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/level/Level;Lnet/minecraft/world/entity/LivingEntity;I)V"
@@ -114,7 +110,9 @@
       },
       "net/daichang/dcmods/mixins/MixinEntity": {
         "getDeltaMovement": "Lnet/minecraft/world/entity/Entity;m_20184_()Lnet/minecraft/world/phys/Vec3;",
-        "tick": "Lnet/minecraft/world/entity/Entity;m_8119_()V"
+        "tick": "Lnet/minecraft/world/entity/Entity;m_8119_()V",
+        "kill": "Lnet/minecraft/world/entity/Entity;m_6074_()V",
+        "hurt": "Lnet/minecraft/world/entity/Entity;m_6469_(Lnet/minecraft/world/damagesource/DamageSource;F)Z"
       },
       "net/daichang/dcmods/mixins/MixinFont": {
         "drawInBatch(Lnet/minecraft/util/FormattedCharSequence;FFIZLorg/joml/Matrix4f;Lnet/minecraft/client/renderer/MultiBufferSource;Lnet/minecraft/client/gui/Font$DisplayMode;II)I": "Lnet/minecraft/client/gui/Font;m_272191_(Lnet/minecraft/util/FormattedCharSequence;FFIZLorg/joml/Matrix4f;Lnet/minecraft/client/renderer/MultiBufferSource;Lnet/minecraft/client/gui/Font$DisplayMode;II)I"

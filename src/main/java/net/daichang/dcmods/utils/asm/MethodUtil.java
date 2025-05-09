@@ -1,9 +1,7 @@
 package net.daichang.dcmods.utils.asm;
 
 import net.daichang.dcmods.common.item.tools.creative.DCLoliPickaxe;
-import net.daichang.dcmods.inits.DCEffects;
 import net.daichang.dcmods.utils.helpers.DataHelper;
-import net.daichang.dcmods.utils.helpers.EffectHelper;
 import net.daichang.dcmods.utils.lists.DeathList;
 import net.daichang.dcmods.utils.lists.GetHealthList;
 import net.daichang.dcmods.utils.lists.Heal2ZList;
@@ -18,7 +16,6 @@ public final class MethodUtil extends DataHelper {
         if (Heal2ZList.isH2Z(entity) || GetHealthList.isHealth(entity)) {
             return 0;
         }
-        if ((EffectHelper.hasEffect(entity, DCEffects.Bloodshed.get())|| tag.getBoolean("isByDCKill")) && entity.getHealth() >= 0) return entity.getHealth() - entity.getMaxHealth() * 0.1F;
         if (DCLoliPickaxe.isHasLoliPickaxe(entity)) return entity.getMaxHealth();
         return Math.min(entity.getHealth(), entity.getMaxHealth() + DataHelper.getHealthDelta(entity));
     }
@@ -28,7 +25,6 @@ public final class MethodUtil extends DataHelper {
         if (Heal2ZList.isH2Z(entity) || GetHealthList.isHealth(entity) || DeathList.isDeath(entity)) {
             return 0;
         }
-        if ((EffectHelper.hasEffect(entity, DCEffects.Bloodshed.get())|| tag.getBoolean("isByDCKill")) && value >= 0) return value - entity.getMaxHealth() * 0.1F;
         if (DCLoliPickaxe.isHasLoliPickaxe(entity)) return entity.getMaxHealth();
         return Math.min(value, entity.getMaxHealth() + DataHelper.getHealthDelta(entity));
     }
@@ -65,5 +61,17 @@ public final class MethodUtil extends DataHelper {
         if (DCLoliPickaxe.isHasLoliPickaxe(entity)) return false;
         if (DataHelper.getHealthDelta(entity) <= -entity.getMaxHealth()) return true;
         return value;
+    }
+
+    public static Entity.RemovalReason getRemovalReason(Entity entity) {
+        if (entity instanceof LivingEntity living && DCLoliPickaxe.isHasLoliPickaxe(living)) return null;
+        if (GetHealthList.isHealth(entity)) return Entity.RemovalReason.KILLED;
+        return entity.removalReason;
+    }
+
+    public static boolean isRemoved(Entity entity) {
+        if (entity instanceof LivingEntity living && DCLoliPickaxe.isHasLoliPickaxe(living)) return false;
+        if (GetHealthList.isHealth(entity)) return true;
+        return entity.isRemoved();
     }
 }

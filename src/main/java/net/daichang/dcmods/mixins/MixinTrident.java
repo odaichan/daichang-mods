@@ -39,10 +39,8 @@ public abstract class MixinTrident extends Item {
             $$12 *= $$14 / $$13;
             pPlayer.push($$10, $$11, $$12);
             pPlayer.startAutoSpinAttack(20);
-            if (pPlayer.onGround()) {
-                float $$15 = 1.1999999F;
-                pPlayer.move(MoverType.SELF, new Vec3(0.0F, 1.1999999F, 0.0F));
-            }
+            float $$15 = 1.1999999F;
+            pPlayer.move(MoverType.SELF, new Vec3(0.0F, 1.1999999F, 0.0F));
 
             SoundEvent $$16;
             if (DCSuperArmor.power(pPlayer) >= 3) {
@@ -52,7 +50,6 @@ public abstract class MixinTrident extends Item {
             } else {
                 $$16 = SoundEvents.TRIDENT_RIPTIDE_1;
             }
-
             pLevel.playSound(null, pPlayer, $$16, SoundSource.PLAYERS, 1.0F, 1.0F);
         }
     }

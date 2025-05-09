@@ -1,9 +1,0 @@
-{
-  "replace": false,
-  "values": [
-    "dc_m:dc_craft",
-    "dc_m:destroy_block",
-    "dc_m:time_clock",
-    "dc_m:dc_super_remove"
-  ]
-}

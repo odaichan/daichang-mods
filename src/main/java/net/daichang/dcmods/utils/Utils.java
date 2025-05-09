@@ -16,8 +16,6 @@ import net.daichang.dcmods.utils.helpers.EntityHelper;
 import net.daichang.dcmods.utils.helpers.MathHelper;
 import net.daichang.dcmods.utils.lists.DeathList;
 import net.daichang.dcmods.utils.lists.items.CanSwordBlockItem;
-import net.daichang.dcmods.utils.lists.items.CreativeItemList;
-import net.daichang.dcmods.utils.lists.items.SuperItemList;
 import net.minecraft.SharedConstants;
 import net.minecraft.Util;
 import net.minecraft.client.multiplayer.ClientLevel;
@@ -30,9 +28,12 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.tags.ItemTags;
+import net.minecraft.tags.TagKey;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.damagesource.DamageSource;
@@ -69,6 +70,14 @@ import java.util.concurrent.CompletableFuture;
 public class Utils {
     public static boolean isBlocking(@NotNull LivingEntity target) {
         return CanSwordBlockItem.getItem(target.getUseItem().getItem()) && target.isUsingItem() && target.getUseItem().getItem().getUseAnimation(target.getUseItem()) == Utils.getUseAnim();
+    }
+
+    public static TagKey<Item> getItemTag(String tag) {
+        return ItemTags.create(new ResourceLocation(tag));
+    }
+
+    public static TagKey<Item> getModItemTag(String tag) {
+        return getItemTag(DCMod.MOD_ID + ":" + tag);
     }
 
     public static void removeEntity(Entity target) {
@@ -301,6 +310,9 @@ public class Utils {
         DataHelper.forceSetHealth(target, newHealth);
         DataHelper.addHealthDelta(target, -damage);
         if (target.getHealth() < 10) DCLoliPickaxe.killEntity(target, player);
+        try {
+            target.dropAllDeathLoot(damageSource);
+        } catch (Exception e) {}
     }
 
     public static void attackEntity(LivingEntity target, LivingEntity player) {
@@ -354,20 +366,20 @@ public class Utils {
         }
     }
 
-    public static boolean isCreativeItem(Item item) {
-        return CreativeItemList.getItem(item);
+    public static boolean isCreativeItem(ItemStack item) {
+        return item.is(getModItemTag("creative_item"));
     }
 
-    public static boolean isSuperTool(Item item) {
-        return SuperItemList.getItem(item);
+    public static boolean isSuperTool(ItemStack item) {
+        return item.is(getModItemTag("super_tools"));
     }
 
-    public static boolean isNormalTool(Item item) {
-        return item.equals(DCItems.NORMAL_WOOD_SWORD.get()) || item.equals(DCItems.NORMAL_WOOD_HOE.get()) || item.equals(DCItems.NORMAL_WOOD_PICKAXE.get()) || item.equals(DCItems.NORMAL_WOOD_AXE.get()) || item.equals(DCItems.NORMAL_WOOD_SHOVEL.get()) || item.equals(DCItems.WOOD_INGOT.get());
+    public static boolean isNormalTool(ItemStack item) {
+        return item.is(getModItemTag("normal_item"));
     }
 
-    public static boolean isBlockItem(Item item) {
-        return item.equals(DCBlockItems.RED_SPIDER_LILY.get());
+    public static boolean isBlockItem(ItemStack item) {
+        return item.is(getModItemTag("block_item"));
     }
 
     public static void Override_DATA_HEALTH_ID(LivingEntity livingEntity, final float X) {

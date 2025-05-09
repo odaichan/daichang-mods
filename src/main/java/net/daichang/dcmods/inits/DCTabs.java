@@ -59,6 +59,7 @@ public class DCTabs {
                             tabData.accept(object.get());
                         }
                         if (ModUtil.isAvaritiaLoad()) for (RegistryObject<Item> object : AvaritiaItems.list) tabData.accept(object.get());
+                        for (RegistryObject<Item> object : DCDiscs.discs) tabData.accept(object.get());
                     }).build());
 
     public static final RegistryObject<CreativeModeTab> DC_MOD_CREATIVE_TAB = tab.register("dc_mod_creative_tab",

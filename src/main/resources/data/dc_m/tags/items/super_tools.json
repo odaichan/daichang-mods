@@ -1,0 +1,21 @@
+{
+  "replace": false,
+  "values": [
+    "dc_m:super_wood_ingot",
+    "dc_m:super_wood_sword",
+    "dc_m:super_wood_pickaxe",
+    "dc_m:super_wood_axe",
+    "dc_m:super_wood_shovel",
+    "dc_m:super_wood_hoe",
+    "dc_m:super_wood_helmet",
+    "dc_m:super_wood_chestplate",
+    "dc_m:super_wood_leggings",
+    "dc_m:super_wood_boots",
+    "dc_m:heart_of_the_ocean",
+    "dc_m:boss_fight_disc",
+    "dc_m:dc_bow",
+    "dc_m:dc_arrow",
+    "dc_m:railway_guerrilla",
+    "dc_m:recollection"
+  ]
+}

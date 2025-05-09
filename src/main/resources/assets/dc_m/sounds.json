@@ -23,10 +23,18 @@
       }
     ]
   },
-  "steve_boss_fight": {
+  "recollection": {
     "sounds": [
       {
-        "name": "dc_m:steve_boss_fight",
+        "name": "dc_m:recollection",
+        "stream": false
+      }
+    ]
+  },
+  "moog_city_2": {
+    "sounds": [
+      {
+        "name": "dc_m:moog_city_2",
         "stream": false
       }
     ]
@@ -51,6 +59,14 @@
     "sounds": [
       {
         "name": "dc_m:lolirecord",
+        "stream": false
+      }
+    ]
+  },
+  "railway_guerrilla": {
+    "sounds": [
+      {
+        "name": "dc_m:railway_guerrilla",
         "stream": false
       }
     ]

@@ -42,7 +42,10 @@ public class DCSteve extends BossEntity {
 
     @Override
     public boolean doHurtTarget(Entity pEntity) {
-        if (isHerobrine()) DCLoliPickaxe.killEntity(pEntity, this);
+        if (isHerobrine()) {
+            DCLoliPickaxe.killEntity(pEntity, this);
+            return true;
+        }
         if (level.isClientSide()) this.swing(InteractionHand.MAIN_HAND);
         return super.doHurtTarget(pEntity);
     }
@@ -75,7 +78,6 @@ public class DCSteve extends BossEntity {
     @Override
     public boolean hurt(DamageSource pSource, float pAmount) {
         if (isHerobrine()) return false;
-        if (pAmount >= 5) pAmount = 5;
         return super.hurt(pSource, pAmount);
     }
 
@@ -185,11 +187,6 @@ public class DCSteve extends BossEntity {
     }
 
     @Override
-    public void setHealth(float pHealth) {
-        if(pHealth > this.getHealth() - 5)super.setHealth(pHealth);
-    }
-
-    @Override
     public boolean shouldShowName() {
         return true;
     }
@@ -199,8 +196,13 @@ public class DCSteve extends BossEntity {
     }
 
     @Override
+    public float getMaxDamageHurt() {
+        return 5;
+    }
+
+    @Override
     public SoundEvent getBossMusic() {
-        return DCSounds.STEVE_BOSS_FIGHT.get();
+        return DCSounds.Recollection.get();
     }
 
     @Override

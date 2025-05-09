@@ -8,6 +8,7 @@ import net.minecraft.client.gui.Font;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -47,6 +48,10 @@ public class BossEntity extends Monster {
         return Minecraft.getInstance().font;
     }
 
+    public float getMaxDamageHurt() {
+        return Float.MAX_VALUE;
+    }
+
     @Override
     public boolean doHurtTarget(@NotNull Entity pEntity) {
         float damage = 0;
@@ -54,6 +59,30 @@ public class BossEntity extends Monster {
         damage = (float) (damage + this.getAttributeValue(DCAttributes.DC_SUPER_DAMAGE.get()));
         if (!(pEntity instanceof Player)) pEntity.hurt(EntityHelper.dc_damage(this), damage);
         return super.doHurtTarget(pEntity);
+    }
+
+    @Override
+    public boolean hurt(DamageSource pSource, float pAmount) {
+        if (pAmount > getMaxDamageHurt()) pAmount = getMaxDamageHurt();
+        if (isUnsafeDamage(pSource)) return false;
+        return super.hurt(pSource, pAmount);
+    }
+
+    public static boolean isUnsafeDamage(DamageSource d) {
+        return d.is(DamageTypes.GENERIC)
+                || d.is(DamageTypes.GENERIC_KILL)
+                || d.is(DamageTypes.FELL_OUT_OF_WORLD)
+                || d.is(DamageTypes.ARROW)
+                || d.is(DamageTypes.WITHER)
+                || d.is(DamageTypes.WITHER_SKULL)
+                || d.is(DamageTypes.EXPLOSION)
+                || d.is(DamageTypes.MAGIC);
+    }
+
+    @Override
+    public void setHealth(float pHealth) {
+        if (pHealth < getHealth() - getMaxDamageHurt()) pHealth = getHealth() - getMaxDamageHurt();
+        super.setHealth(pHealth);
     }
 
     @Override

@@ -73,6 +73,19 @@ public class DCLaunchPluginService implements ILaunchPluginService {
                                 logger("Changed IsAlive Method :"  + classNode.name);
                                 writer = true;
                             }
+                            case "m_213877_" -> {
+                                rMethod(call, "isRemoved", "(Lnet/minecraft/world/entity/Entity;)Z");
+                                logger("Changed IsRemoved Method :"  + classNode.name);
+                                writer = true;
+                            }
+                        }
+                    }
+                    if (abstractInsnNode instanceof FieldInsnNode field && field.getOpcode() == Opcodes.GETFIELD) {
+                        switch (field.name) {
+                            case "f_146795_" -> {
+                                rField(methodNode, field, "getRemovalReason", "(Lnet/minecraft/world/entity/Entity;)Lnet/minecraft/world/entity/Entity$RemovalReason;");
+                                writer = true;
+                            }
                         }
                     }
                 }

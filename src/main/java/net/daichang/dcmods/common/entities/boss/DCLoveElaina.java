@@ -32,7 +32,6 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
@@ -128,8 +127,7 @@ public class DCLoveElaina extends BossEntity implements PowerableMob, RangedAtta
 
     @Override
     public boolean hurt(@NotNull DamageSource damageSource, float damage) {
-        if (damage > 20) damage = 20;
-        if (getHealth() <= 10 || isDeadOrDying() || isUnsafeDamage(damageSource)) return false;
+        if (getHealth() <= 0 || isDeadOrDying()) return false;
         this.setDeltaMovement(Vec3.ZERO);
         Entity entity = damageSource.getEntity();
         double canTeleport = MathHelper.getRandomDouble(0.0D, 1.0D);
@@ -141,16 +139,6 @@ public class DCLoveElaina extends BossEntity implements PowerableMob, RangedAtta
         return super.hurt(damageSource, damage);
     }
 
-    public static boolean isUnsafeDamage(DamageSource d) {
-        return d.is(DamageTypes.GENERIC)
-                || d.is(DamageTypes.GENERIC_KILL)
-                || d.is(DamageTypes.FELL_OUT_OF_WORLD)
-                || d.is(DamageTypes.ARROW)
-                || d.is(DamageTypes.WITHER)
-                || d.is(DamageTypes.WITHER_SKULL)
-                || d.is(DamageTypes.EXPLOSION)
-                || d.is(DamageTypes.MAGIC);
-    }
 
     @Override
     public @NotNull MobType getMobType() {
@@ -395,10 +383,6 @@ public class DCLoveElaina extends BossEntity implements PowerableMob, RangedAtta
                     }
                 }
             }
-            if (getHealth() > getMaxHealth()) {
-                setHealth(getMaxHealth());
-                EntityHelper.forceSetHealth(this, getMaxHealth());
-            }
         }
     }
 
@@ -406,6 +390,7 @@ public class DCLoveElaina extends BossEntity implements PowerableMob, RangedAtta
         if (entity instanceof LivingEntity target && !(entity instanceof Player)) {
             Utils.attackEntity(target, this);
             target.addEffect(EffectHelper.addEffect(DCEffects.Freeze.get()));
+            target.addEffect(EffectHelper.addEffect(DCEffects.Bloodshed.get(), 20, 5, true));
         }
         else if (entity instanceof ServerPlayer player && player.gameMode.isSurvival()) {
             player.hurt(EntityHelper.dc_damage(this), 1);
@@ -429,11 +414,6 @@ public class DCLoveElaina extends BossEntity implements PowerableMob, RangedAtta
     }
 
     @Override
-    public void setHealth(float p_21154_) {
-        if (p_21154_ > this.getHealth() - 20) super.setHealth(p_21154_);
-    }
-
-    @Override
     public boolean isDeadOrDying() {
         return getHealth() <= 0;
     }
@@ -448,12 +428,12 @@ public class DCLoveElaina extends BossEntity implements PowerableMob, RangedAtta
                 .add(Attributes.MAX_HEALTH, 520.0F)
                 .add(Attributes.MOVEMENT_SPEED, 0.3D)
                 .add(Attributes.ATTACK_DAMAGE, 19.2)
-                .add(Attributes.ARMOR_TOUGHNESS, 4.7D)
+                .add(Attributes.ARMOR_TOUGHNESS, 8.9D)
                 .add(Attributes.KNOCKBACK_RESISTANCE, 32.1D)
                 .add(ForgeMod.ENTITY_REACH.get(), 4.6D)
                 .add(DCAttributes.DC_SUPER_DAMAGE.get(), 15.2D)
                 .add(DCAttributes.DC_DEFENSE.get(), 10.0D)
-                .add(Attributes.ARMOR, 7.3D);
+                .add(Attributes.ARMOR, 27.3D);
     }
 
     @Override
@@ -517,6 +497,11 @@ public class DCLoveElaina extends BossEntity implements PowerableMob, RangedAtta
 
     public SoundEvent getBossMusic() {
         return DCSounds.BOSS_FIGHT.get();
+    }
+
+    @Override
+    public float getMaxDamageHurt() {
+        return 10.0F;
     }
 
     @Override
