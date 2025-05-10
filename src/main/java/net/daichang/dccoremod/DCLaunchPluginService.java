@@ -59,7 +59,13 @@ public class DCLaunchPluginService implements ILaunchPluginService {
                         && !classNode.name.contains("com/mega/uom/client/music/")
                         && !classNode.name.contains("net/minecraft/")
                         && !classNode.name.contains("io/redspace/ironsspellbooks/api/util/Utils")
+                        && !classNode.name.contains("com/freefish/torchesbecomesunlight/server/entity/ai/")
+                        && !classNode.name.contains("tamaized/voidscape/entity/ai/nullservant/")
+                        && !classNode.name.contains("de/teamlapen/vampirism/")
                         && !classNode.name.contains("com/mega/uom/mixin/")
+                        && !classNode.name.contains("com/github/alexthe666/")
+                        && !classNode.name.contains("com/c2h6s/etstlib/")
+                        && !classNode.name.contains("committee/nova/mods/avaritia/")
                         && !classNode.name.contains("net/minecraftforge/")) {
                     if (abstractInsnNode instanceof MethodInsnNode call && call.getOpcode() != Opcodes.INVOKESPECIAL) {
                         switch (call.name) {
@@ -71,19 +77,6 @@ public class DCLaunchPluginService implements ILaunchPluginService {
                             case "m_6084_" -> {
                                 rMethod(call, "isAlive", "(Lnet/minecraft/world/entity/Entity;)Z");
                                 logger("Changed IsAlive Method :"  + classNode.name);
-                                writer = true;
-                            }
-                            case "m_213877_" -> {
-                                rMethod(call, "isRemoved", "(Lnet/minecraft/world/entity/Entity;)Z");
-                                logger("Changed IsRemoved Method :"  + classNode.name);
-                                writer = true;
-                            }
-                        }
-                    }
-                    if (abstractInsnNode instanceof FieldInsnNode field && field.getOpcode() == Opcodes.GETFIELD) {
-                        switch (field.name) {
-                            case "f_146795_" -> {
-                                rField(methodNode, field, "getRemovalReason", "(Lnet/minecraft/world/entity/Entity;)Lnet/minecraft/world/entity/Entity$RemovalReason;");
                                 writer = true;
                             }
                         }

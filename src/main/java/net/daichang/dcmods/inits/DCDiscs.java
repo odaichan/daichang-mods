@@ -29,6 +29,6 @@ public class DCDiscs {
         BossFight = discRegister("boss_fight_disc", ()-> new DCBaseDisc(DCSounds.BOSS_FIGHT.get(), 2440));
         Light = discRegister("railway_guerrilla", () -> new DCBaseDisc(DCSounds.Railway_Guerrilla.get(), 2480));
         Recollection = discRegister("recollection", () -> new DCBaseDisc(DCSounds.Recollection.get(), 4800));
-        MoogCity2 = discRegister("moog_city_2", () -> new DCBaseDisc(DCSounds.Recollection.get(), 3700));
+        MoogCity2 = discRegister("moog_city_2", () -> new DCBaseDisc(DCSounds.Moog_City_2.get(), 3700));
     }
 }

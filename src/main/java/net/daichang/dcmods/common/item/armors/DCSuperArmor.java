@@ -2,13 +2,19 @@ package net.daichang.dcmods.common.item.armors;
 
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
-import net.daichang.dcmods.client.font.DCItemFont;
+import com.mega.uom.attribute.ModAttributes;
+import io.redspace.ironsspellbooks.api.registry.AttributeRegistry;
+import net.daichang.dcmods.client.font.DCOceanItemFont;
 import net.daichang.dcmods.common.item.DCTier;
 import net.daichang.dcmods.inits.DCAttributes;
 import net.daichang.dcmods.inits.DCEffects;
 import net.daichang.dcmods.inits.DCItems;
+import net.daichang.dcmods.utils.ModUtil;
+import net.daichang.dcmods.utils.TextUtils;
+import net.daichang.dcmods.utils.Utils;
 import net.daichang.dcmods.utils.helpers.DataHelper;
 import net.daichang.dcmods.utils.helpers.EffectHelper;
+import net.daichang.dcmods.utils.helpers.EntityHelper;
 import net.daichang.dcmods.utils.lists.items.SuperItemList;
 import net.minecraft.client.gui.Font;
 import net.minecraft.network.chat.Component;
@@ -28,6 +34,7 @@ import net.minecraft.world.item.*;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.client.extensions.common.IClientItemExtensions;
+import net.minecraftforge.common.ForgeMod;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -42,16 +49,42 @@ public class DCSuperArmor extends ArmorItem {
     public DCSuperArmor(Type pType) {
         super(pMaterial, pType, new Properties().fireResistant().rarity(Rarity.EPIC));
         ImmutableMultimap.Builder<Attribute, AttributeModifier> mainHand = ImmutableMultimap.builder();
-        mainHand.put(Attributes.ATTACK_DAMAGE, new AttributeModifier(UUID.randomUUID(), "Weapon modifier", 2.4D, AttributeModifier.Operation.ADDITION));
-        mainHand.put(Attributes.ATTACK_SPEED, new AttributeModifier(UUID.randomUUID(), "Weapon modifier", 0.1D, AttributeModifier.Operation.ADDITION));
-        mainHand.put(Attributes.ATTACK_SPEED, new AttributeModifier(UUID.randomUUID(), "Weapon modifier", 1.1D, AttributeModifier.Operation.MULTIPLY_BASE));
-        mainHand.put(Attributes.ARMOR, new AttributeModifier(UUID.randomUUID(), "Weapon modifier", 7.3D, AttributeModifier.Operation.ADDITION));
-        mainHand.put(Attributes.ARMOR_TOUGHNESS, new AttributeModifier(UUID.randomUUID(), "Weapon modifier", 4.3D, AttributeModifier.Operation.ADDITION));
-        mainHand.put(Attributes.MAX_HEALTH, new AttributeModifier(UUID.randomUUID(), "Weapon modifier", 7.8D, AttributeModifier.Operation.ADDITION));
-        mainHand.put(Attributes.MAX_HEALTH, new AttributeModifier(UUID.randomUUID(), "Weapon modifier", 0.052D, AttributeModifier.Operation.MULTIPLY_TOTAL));
-        mainHand.put(DCAttributes.DC_SUPER_DAMAGE.get(), new AttributeModifier(UUID.randomUUID(), "Item modifier", 5.2D, AttributeModifier.Operation.ADDITION));
-        mainHand.put(DCAttributes.DC_DEFENSE.get(), new AttributeModifier(UUID.randomUUID(), "Item modifier", 5.2D, AttributeModifier.Operation.ADDITION));
+        mainHand.put(Attributes.ATTACK_DAMAGE, new AttributeModifier(UUID.randomUUID(), "Armor modifier", 2.4D, AttributeModifier.Operation.ADDITION));
+        mainHand.put(Attributes.ATTACK_SPEED, new AttributeModifier(UUID.randomUUID(), "Armor modifier", 0.1D, AttributeModifier.Operation.ADDITION));
+        mainHand.put(ForgeMod.SWIM_SPEED.get(), new AttributeModifier(UUID.randomUUID(), "Armor modifier", 0.1D, AttributeModifier.Operation.ADDITION));
+        mainHand.put(Attributes.ARMOR, new AttributeModifier(UUID.randomUUID(), "Armor modifier", 7.3D, AttributeModifier.Operation.ADDITION));
+        mainHand.put(Attributes.ARMOR_TOUGHNESS, new AttributeModifier(UUID.randomUUID(), "Armor modifier", 4.3D, AttributeModifier.Operation.ADDITION));
+        mainHand.put(Attributes.MAX_HEALTH, new AttributeModifier(UUID.randomUUID(), "Armor modifier", 7.8D, AttributeModifier.Operation.ADDITION));
+        mainHand.put(Attributes.MAX_HEALTH, new AttributeModifier(UUID.randomUUID(), "Armor modifier", 0.052D, AttributeModifier.Operation.MULTIPLY_TOTAL));
+        mainHand.put(Attributes.KNOCKBACK_RESISTANCE, new AttributeModifier(UUID.randomUUID(), "Armor modifier", 4.3D, AttributeModifier.Operation.ADDITION));
+        mainHand.put(Attributes.KNOCKBACK_RESISTANCE, new AttributeModifier(UUID.randomUUID(), "Armor modifier", 0.1D, AttributeModifier.Operation.MULTIPLY_TOTAL));
+        mainHand.put(ForgeMod.ENTITY_REACH.get(), new AttributeModifier(UUID.randomUUID(), "Armor modifier", 0.23D, AttributeModifier.Operation.MULTIPLY_TOTAL));
+        mainHand.put(DCAttributes.DC_SUPER_DAMAGE.get(), new AttributeModifier(UUID.randomUUID(), "Armor modifier", 5.2D, AttributeModifier.Operation.ADDITION));
+        mainHand.put(ForgeMod.BLOCK_REACH.get(), new AttributeModifier(UUID.randomUUID(), "Armor modifier", 0.23D, AttributeModifier.Operation.MULTIPLY_TOTAL));
+        mainHand.put(DCAttributes.DC_SUPER_DAMAGE.get(), new AttributeModifier(UUID.randomUUID(), "Armor modifier", 0.52D, AttributeModifier.Operation.MULTIPLY_TOTAL));
+        mainHand.put(DCAttributes.DC_DEFENSE.get(), new AttributeModifier(UUID.randomUUID(), "Armor modifier", 5.2D, AttributeModifier.Operation.ADDITION));
+        mainHand.put(DCAttributes.DC_DEFENSE.get(), new AttributeModifier(UUID.randomUUID(), "Armor modifier", 0.52D, AttributeModifier.Operation.MULTIPLY_TOTAL));
+        if (ModUtil.isIronSpellbokksLoad()) {
+            mainHand.put(AttributeRegistry.MAX_MANA.get(), new AttributeModifier(UUID.randomUUID(), "Armor modifier", 520.13D, AttributeModifier.Operation.ADDITION));
+            mainHand.put(AttributeRegistry.MAX_MANA.get(), new AttributeModifier(UUID.randomUUID(), "Armor modifier", 0.52D, AttributeModifier.Operation.MULTIPLY_TOTAL));
+            mainHand.put(AttributeRegistry.MANA_REGEN.get(), new AttributeModifier(UUID.randomUUID(), "Armor modifier", 30.4D, AttributeModifier.Operation.ADDITION));
+            mainHand.put(AttributeRegistry.MANA_REGEN.get(), new AttributeModifier(UUID.randomUUID(), "Armor modifier", 1.14D, AttributeModifier.Operation.MULTIPLY_TOTAL));
+            mainHand.put(AttributeRegistry.COOLDOWN_REDUCTION.get(), new AttributeModifier(UUID.randomUUID(), "Armor modifier", 0.14D, AttributeModifier.Operation.MULTIPLY_TOTAL));
+            mainHand.put(AttributeRegistry.SPELL_POWER.get(), new AttributeModifier(UUID.randomUUID(), "Armor modifier", 0.74D, AttributeModifier.Operation.MULTIPLY_TOTAL));
+            mainHand.put(AttributeRegistry.SPELL_RESIST.get(), new AttributeModifier(UUID.randomUUID(), "Armor modifier", 0.20D, AttributeModifier.Operation.MULTIPLY_TOTAL));
+        }
+        if (ModUtil.isFELoad()) {
+            mainHand.put(ModAttributes.FANTASY_ENDING_DAMAGE.get(), new AttributeModifier(UUID.randomUUID(), "Armor modifier", 0.52D, AttributeModifier.Operation.MULTIPLY_TOTAL));
+            mainHand.put(ModAttributes.FANTASY_ENDING_DAMAGE_RESISTANCE.get(), new AttributeModifier(UUID.randomUUID(), "Armor modifier", 0.52D, AttributeModifier.Operation.MULTIPLY_TOTAL));
+            mainHand.put(ModAttributes.FANTASY_SPELL_POWER.get(), new AttributeModifier(UUID.randomUUID(), "Armor modifier", 0.52D, AttributeModifier.Operation.MULTIPLY_TOTAL));
+            mainHand.put(ModAttributes.EVASION.get(), new AttributeModifier(UUID.randomUUID(), "Armor modifier", 0.20D, AttributeModifier.Operation.MULTIPLY_TOTAL));
+        }
         modifiers = mainHand.build();
+    }
+
+    @Override
+    public boolean isDamaged(ItemStack stack) {
+        return false;
     }
 
     @Override
@@ -59,27 +92,45 @@ public class DCSuperArmor extends ArmorItem {
         super.onArmorTick(stack, level, player);
         if (player.tickCount % 40 == 0) DataHelper.addHealthDelta(player, 1.0F);
         if (player.isUnderWater()) {
-            player.addEffect(EffectHelper.addEffect(MobEffects.CONDUIT_POWER, 20, 5));
+            player.addEffect(EffectHelper.addEffect(MobEffects.CONDUIT_POWER, 20, 2));
             player.addEffect(EffectHelper.addEffect(MobEffects.DAMAGE_BOOST, 20, 2));
         }
-        if (hasAllArmor(player)) player.getFoodData().setFoodLevel(20);
+        if (hasAllArmor(player)) {
+            player.getFoodData().setFoodLevel(20);
+            if (player.getHealth() < player.getMaxHealth() * 0.2F) {
+                if (player.experienceLevel > 50) {
+                    player.experienceLevel = player.experienceLevel - 5;
+                    EntityHelper.forceHeal(player, player.getMaxHealth() * 0.2F);
+                    DataHelper.restHealthDelta(player);
+                    player.displayClientMessage(TextUtils.rainbow(Component.translatable("chat.dc_m.save_player")), true);
+                }
+            }
+            player.addEffect(EffectHelper.addEffect(MobEffects.FIRE_RESISTANCE));
+            Utils.addAdvancementToPlayer(player, "dc_m:get_all_ocean_armor");
+            if (player.isUnderWater() || level.isRaining()) {
+                Utils.addAdvancementToPlayer(player, "dc_m:children_of_the_sea");
+                player.clearFire();
+                EntityHelper.forceHeal(player, 200.0F);
+                DataHelper.restHealthDelta(player);
+                player.addEffect(EffectHelper.addEffect(MobEffects.DAMAGE_BOOST, 1, 255, true));
+                player.addEffect(EffectHelper.addEffect(MobEffects.MOVEMENT_SPEED, 1, 2, true));
+                player.setTicksFrozen(0);
+            }
+        }
     }
 
     public static boolean hasAllArmor(Player player) {
         Inventory i = player.getInventory();
-        return i.getArmor(0).is(DCItems.WOOD_HELMET.get())
-                && i.getArmor(1).is(DCItems.WOOD_CHESTPLATE.get())
-                && i.getArmor(2).is(DCItems.WOOD_LEGGINGS.get())
-                && i.getArmor(3).is(DCItems.WOOD_BOOTS.get());
+        return i.getArmor(3).is(DCItems.WOOD_HELMET.get()) && i.getArmor(2).is(DCItems.WOOD_CHESTPLATE.get()) && i.getArmor(1).is(DCItems.WOOD_LEGGINGS.get()) && i.getArmor(0).is(DCItems.WOOD_BOOTS.get());
     }
 
     public static int power(Player player) {
         int var = 0;
         Inventory inventory = player.getInventory();
-        if (inventory.getArmor(0).is(DCItems.WOOD_HELMET.get())) var = var + 3;
-        if (inventory.getArmor(1).is(DCItems.WOOD_CHESTPLATE.get())) var = var + 5;
-        if (inventory.getArmor(2).is(DCItems.WOOD_LEGGINGS.get())) var = var + 4;
-        if (inventory.getArmor(3).is(DCItems.WOOD_BOOTS.get())) var = var + 2;
+        if (inventory.getArmor(3).is(DCItems.WOOD_HELMET.get())) var = var + 3;
+        if (inventory.getArmor(2).is(DCItems.WOOD_CHESTPLATE.get())) var = var + 5;
+        if (inventory.getArmor(1).is(DCItems.WOOD_LEGGINGS.get())) var = var + 4;
+        if (inventory.getArmor(0).is(DCItems.WOOD_BOOTS.get())) var = var + 2;
         return var;
     }
 
@@ -145,6 +196,11 @@ public class DCSuperArmor extends ArmorItem {
     }
 
     @Override
+    public int getDamage(ItemStack stack) {
+        return 0;
+    }
+
+    @Override
     public @Nullable String getArmorTexture(ItemStack stack, Entity entity, EquipmentSlot slot, String type) {
         return "dc_m:textures/models/armor/super_wood_layer_1.png";
     }
@@ -154,7 +210,7 @@ public class DCSuperArmor extends ArmorItem {
         consumer.accept(new IClientItemExtensions() {
             @Override
             public @NotNull Font getFont(ItemStack stack, FontContext context) {
-                return DCItemFont.getFont();
+                return DCOceanItemFont.getFont();
             }
         });
         super.initializeClient(consumer);
@@ -177,6 +233,7 @@ public class DCSuperArmor extends ArmorItem {
             player.addEffect(EffectHelper.addEffect(MobEffects.NIGHT_VISION));
             player.addEffect(EffectHelper.addEffect(MobEffects.HERO_OF_THE_VILLAGE));
             player.addEffect(EffectHelper.addEffect(MobEffects.HEAL));
+            player.removeEffect(MobEffects.DARKNESS);
             if (player.isUnderWater()) player.setAirSupply(300);
         }
 
@@ -189,6 +246,7 @@ public class DCSuperArmor extends ArmorItem {
         public void appendHoverText(@NotNull ItemStack pStack, @Nullable Level pLevel, List<Component> list, @NotNull TooltipFlag pIsAdvanced) {
             super.appendHoverText(pStack, pLevel, list, pIsAdvanced);
             list.add(Component.translatable("tool_tip.dc_mods.has_helmet"));
+            list.add(Component.translatable("tool_tip.dc_mods.has_helmet_2"));
         }
     }
 
@@ -266,6 +324,7 @@ public class DCSuperArmor extends ArmorItem {
             super.onArmorTick(stack, level, player);
             player.addEffect(EffectHelper.addEffect(MobEffects.LUCK));
             player.addEffect(EffectHelper.addEffect(DCEffects.Speed.get()));
+            player.resetFallDistance();
         }
 
         @Override

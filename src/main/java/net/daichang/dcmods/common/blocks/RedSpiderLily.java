@@ -3,6 +3,7 @@ package net.daichang.dcmods.common.blocks;
 import net.daichang.dcmods.common.entities.boss.DCLoveElaina;
 import net.daichang.dcmods.inits.DCBlockItems;
 import net.daichang.dcmods.inits.DCEffects;
+import net.daichang.dcmods.utils.Utils;
 import net.daichang.dcmods.utils.helpers.DataHelper;
 import net.daichang.dcmods.utils.helpers.EffectHelper;
 import net.daichang.dcmods.utils.helpers.EntityHelper;
@@ -77,6 +78,8 @@ public class RedSpiderLily extends FlowerBlock {
                 EntityHelper.forceSetHealth(player, health);
                 EntityHelper.noHurtDuration(living);
                 DataHelper.addHealthDelta(player, -1.0F);
+                Utils.addAdvancementToPlayer(player, "dc_m:red_spider_lily");
+                player.addEffect(EffectHelper.addEffect(MobEffects.DARKNESS));
             }
             else if (living instanceof DCLoveElaina boss) {
                 boss.heal(100);

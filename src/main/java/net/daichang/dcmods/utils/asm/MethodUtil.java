@@ -69,9 +69,8 @@ public final class MethodUtil extends DataHelper {
         return entity.removalReason;
     }
 
-    public static boolean isRemoved(Entity entity) {
+    public static boolean isRemoved(Entity entity, boolean value) {
         if (entity instanceof LivingEntity living && DCLoliPickaxe.isHasLoliPickaxe(living)) return false;
-        if (GetHealthList.isHealth(entity)) return true;
-        return entity.isRemoved();
+        return value;
     }
 }

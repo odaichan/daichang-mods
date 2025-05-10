@@ -1,0 +1,36 @@
+{
+  "display": {
+    "icon": {
+      "item": "dc_m:heart_of_the_ocean"
+    },
+    "title": {
+      "translate": "advancements.dc_m.heart_of_the_ocean"
+    },
+    "description": {
+      "translate": "advancements.dc_m.heart_of_the_ocean_tip"
+    },
+    "frame": "challenge",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "test_ad_2_0": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "dc_m:heart_of_the_ocean"
+            ],
+            "count": {
+              "min": 1,
+              "max": 1
+            }
+          }
+        ]
+      }
+    }
+  },
+  "parent": "dc_m:super_wood_ingot"
+}

@@ -1,6 +1,6 @@
 package net.daichang.dcmods.common.item.crafts;
 
-import net.daichang.dcmods.client.font.DCItemFont;
+import net.daichang.dcmods.client.font.DCOceanItemFont;
 import net.daichang.dcmods.utils.helpers.EffectHelper;
 import net.daichang.dcmods.utils.lists.items.SuperItemList;
 import net.minecraft.client.Minecraft;
@@ -53,7 +53,7 @@ public class HeartOfTheOcean extends Item {
         consumer.accept(new IClientItemExtensions() {
             @Override
             public @NotNull Font getFont(ItemStack stack, FontContext context) {
-                return DCItemFont.getFont();
+                return DCOceanItemFont.getFont();
             }
         });
         super.initializeClient(consumer);

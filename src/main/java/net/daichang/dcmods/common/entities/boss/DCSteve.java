@@ -5,6 +5,7 @@ import net.daichang.dcmods.client.network.S2CElainaPacket;
 import net.daichang.dcmods.common.entities.BossEntity;
 import net.daichang.dcmods.common.item.tools.creative.DCLoliPickaxe;
 import net.daichang.dcmods.inits.DCEntities;
+import net.daichang.dcmods.inits.DCItems;
 import net.daichang.dcmods.inits.DCSounds;
 import net.daichang.dcmods.utils.helpers.EntityHelper;
 import net.minecraft.resources.ResourceLocation;
@@ -20,7 +21,9 @@ import net.minecraft.world.entity.ai.goal.MeleeAttackGoal;
 import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
 import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
+import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.network.PacketDistributor;
@@ -100,6 +103,20 @@ public class DCSteve extends BossEntity {
     }
 
     @Override
+    public void die(DamageSource pDamageSource) {
+        super.die(pDamageSource);
+    }
+
+    @Override
+    public void dropAllDeathLoot(DamageSource pDamageSource) {
+        super.dropAllDeathLoot(pDamageSource);
+        try {
+            ItemEntity item = new ItemEntity(level, getX(), getY(), getZ(), new ItemStack(DCItems.HEART_OF_THE_OCEAN.get()));
+            level.addFreshEntity(item);
+        } catch (Exception ignored){}
+    }
+
+    @Override
     public void remove(RemovalReason pReason) {
         if (!isHerobrine()) super.remove(pReason);
     }
@@ -123,6 +140,11 @@ public class DCSteve extends BossEntity {
     public boolean isRemoved() {
         if (isHerobrine()) return false;
         return super.isRemoved();
+    }
+
+    @Override
+    public void dropCustomDeathLoot(DamageSource pDamageSource, int pLooting, boolean pHitByPlayer) {
+        super.dropCustomDeathLoot(pDamageSource, pLooting, pHitByPlayer);
     }
 
     @Override

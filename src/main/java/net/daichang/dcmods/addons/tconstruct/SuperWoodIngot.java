@@ -4,6 +4,7 @@ import com.c2h6s.etstlib.entity.specialDamageSources.LegacyDamageSource;
 import com.c2h6s.etstlib.register.EtSTLibHooks;
 import com.c2h6s.etstlib.tool.hooks.ModifyDamageSourceModifierHook;
 import net.daichang.dcmods.inits.DCAttributes;
+import net.daichang.dcmods.utils.TextUtils;
 import net.daichang.dcmods.utils.helpers.EntityHelper;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
@@ -44,7 +45,7 @@ public class SuperWoodIngot extends Modifier implements ModifyDamageSourceModifi
 
     @Override
     public void addTooltip(@NotNull IToolStackView iToolStackView, @NotNull ModifierEntry modifierEntry, @Nullable Player player, List<Component> list, @NotNull TooltipKey tooltipKey, @NotNull TooltipFlag tooltipFlag) {
-        list.add(Component.translatable("tconstruct.dc_m.tool_tip"));
+        list.add(TextUtils.rainbow(Component.translatable("tconstruct.dc_m.tool_tip").getString()));
     }
 
     @Override
@@ -55,7 +56,7 @@ public class SuperWoodIngot extends Modifier implements ModifyDamageSourceModifi
     @Override
     public void addAttributes(IToolStackView iToolStackView, ModifierEntry modifierEntry, EquipmentSlot equipmentSlot, BiConsumer<Attribute, AttributeModifier> biConsumer) {
         if (equipmentSlot.getType() == EquipmentSlot.Type.HAND) {
-            AttributeModifier modifier = new AttributeModifier(UUID.randomUUID(), "Item modifer", modifierEntry.getLevel() * 1.2F, AttributeModifier.Operation.ADDITION);
+            AttributeModifier modifier = new AttributeModifier(UUID.randomUUID(), "Item modifer", modifierEntry.getLevel() * 4.5F, AttributeModifier.Operation.ADDITION);
             biConsumer.accept(DCAttributes.DC_SUPER_DAMAGE.get(), modifier);
         }
     }

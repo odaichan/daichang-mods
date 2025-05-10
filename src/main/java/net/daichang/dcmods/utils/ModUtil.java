@@ -34,6 +34,15 @@ public class ModUtil extends ModHelper {
         return isModLoading("curios");
     }
 
+    //铁魔法
+    public static boolean isIronSpellbokksLoad() {
+        return isModLoading("irons_spellbooks");
+    }
+
+    public static boolean isFELoad() {
+        return isModLoading("fantasy_ending");
+    }
+
     //帕秋莉手册(用于做教程)
     public static boolean isPatchouliLoad() {
         return isModLoading("patchouli");

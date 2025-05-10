@@ -1,0 +1,36 @@
+{
+  "display": {
+    "icon": {
+      "item": "dc_m:normal_wood_pickaxe"
+    },
+    "title": {
+      "translate": "advancements.dc_m.normal_wood_pickaxe"
+    },
+    "description": {
+      "translate": "advancements.dc_m.normal_wood_pickaxe_tip"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "test_ad_2_0": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "dc_m:normal_wood_pickaxe"
+            ],
+            "count": {
+              "min": 1,
+              "max": 1
+            }
+          }
+        ]
+      }
+    }
+  },
+  "parent": "dc_m:the_start"
+}

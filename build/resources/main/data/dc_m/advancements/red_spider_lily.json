@@ -1,0 +1,23 @@
+{
+  "display": {
+    "icon": {
+      "item": "dc_m:red_spider_lily"
+    },
+    "title": {
+      "translate": "block.dc_m.red_spider_lily"
+    },
+    "description": {
+      "translate": "advancements.dc_m.red_spider_lily_tip"
+    },
+    "frame": "challenge",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "test_ad_2_0": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "parent": "dc_m:super_wood_ingot"
+}

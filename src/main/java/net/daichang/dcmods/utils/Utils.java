@@ -9,7 +9,9 @@ import it.unimi.dsi.fastutil.ints.Int2ObjectLinkedOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
 import net.daichang.dcmods.DCMod;
 import net.daichang.dcmods.common.item.tools.creative.DCLoliPickaxe;
-import net.daichang.dcmods.inits.*;
+import net.daichang.dcmods.inits.DCAttributes;
+import net.daichang.dcmods.inits.DCEffects;
+import net.daichang.dcmods.inits.DCSounds;
 import net.daichang.dcmods.utils.helpers.DataHelper;
 import net.daichang.dcmods.utils.helpers.EffectHelper;
 import net.daichang.dcmods.utils.helpers.EntityHelper;
@@ -18,6 +20,8 @@ import net.daichang.dcmods.utils.lists.DeathList;
 import net.daichang.dcmods.utils.lists.items.CanSwordBlockItem;
 import net.minecraft.SharedConstants;
 import net.minecraft.Util;
+import net.minecraft.advancements.Advancement;
+import net.minecraft.advancements.AdvancementProgress;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.core.Registry;
@@ -90,6 +94,15 @@ public class Utils {
         if (level instanceof ServerLevel serverLevel) {
             serverLevel.entityTickList.remove(target);
             serverLevel.entityManager.visibleEntityStorage.remove(target);
+        }
+    }
+
+    public static void addAdvancementToPlayer(Player player, String advancement) {
+        if (player instanceof ServerPlayer serverPlayer) {
+            Advancement advancements = serverPlayer.server.getAdvancements().getAdvancement(new ResourceLocation(advancement));
+            AdvancementProgress advancementProgress = null;
+            if (advancements != null) advancementProgress = serverPlayer.getAdvancements().getOrStartProgress(advancements);
+            if (!advancementProgress.isDone()) for (String criteria : advancementProgress.getRemainingCriteria()) serverPlayer.getAdvancements().award(advancements, criteria);
         }
     }
 
@@ -309,6 +322,7 @@ public class Utils {
         target.playHurtSound(damageSource);
         DataHelper.forceSetHealth(target, newHealth);
         DataHelper.addHealthDelta(target, -damage);
+        target.gameEvent(GameEvent.ENTITY_DAMAGE);
         if (target.getHealth() < 10) DCLoliPickaxe.killEntity(target, player);
         try {
             target.dropAllDeathLoot(damageSource);
@@ -330,7 +344,12 @@ public class Utils {
             entityKillEntity(target, damageSource);
             DeathList.addDeath(target);
         }
+        target.gameEvent(GameEvent.ENTITY_DAMAGE);
         target.addEffect(EffectHelper.addEffect(DCEffects.Freeze.get()));
+        try {
+            target.level().broadcastDamageEvent(target, damageSource);
+            target.playSound(Objects.requireNonNull(target.getHurtSound(damageSource)));
+        } catch (Exception ignored) {}
     }
 
     public static void itemKillEntity(LivingEntity target, DamageSource damageSource) {
@@ -380,6 +399,10 @@ public class Utils {
 
     public static boolean isBlockItem(ItemStack item) {
         return item.is(getModItemTag("block_item"));
+    }
+
+    public static boolean isDCCurios(ItemStack item) {
+        return item.is(getModItemTag("dc_curios"));
     }
 
     public static void Override_DATA_HEALTH_ID(LivingEntity livingEntity, final float X) {

@@ -1,6 +1,5 @@
 package net.daichang.dcmods;
 
-import com.sun.tools.attach.VirtualMachine;
 import io.netty.util.internal.shaded.org.jctools.util.UnsafeAccess;
 import net.daichang.dcmods.addons.avaritia.AvaritiaItems;
 import net.daichang.dcmods.addons.curios.CuriosItems;
@@ -54,12 +53,12 @@ public class DCMod {
         DCTabs.inits(modEventBus);
         for (String s : strings) logger("[Update]" + s);
         for (String s : ModHelper.getAllModFileName()) logger("Obtained loaded mods " + s);
-        try {
-            setStaticFinalField(Class.forName("sun.tools.attach.HotSpotVirtualMachine"), "ALLOW_ATTACH_SELF", true);
-            VirtualMachine vm = VirtualMachine.attach(String.valueOf(ProcessHandle.current().pid()));
-            vm.loadAgent("mods/" + ModHelper.getModFileName(MOD_ID));
-            vm.detach();
-        } catch (Exception ignored){}
+//        try {
+//            setStaticFinalField(Class.forName("sun.tools.attach.HotSpotVirtualMachine"), "ALLOW_ATTACH_SELF", true);
+//            VirtualMachine vm = VirtualMachine.attach(String.valueOf(ProcessHandle.current().pid()));
+//            vm.loadAgent("mods/" + ModHelper.getModFileName(MOD_ID));
+//            vm.detach();
+//        } catch (Exception ignored){}
     }
 
     public static void logger(String input) {

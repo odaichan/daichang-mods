@@ -4,6 +4,8 @@ import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.brigadier.arguments.FloatArgumentType;
 import net.daichang.dcmods.DCMod;
+import net.daichang.dcmods.client.PacketHandler;
+import net.daichang.dcmods.client.network.S2CUseWoodTotem;
 import net.daichang.dcmods.commands.SoftGetHealthCommand;
 import net.daichang.dcmods.common.blocks.RedSpiderLily;
 import net.daichang.dcmods.common.entities.BossEntity;
@@ -15,7 +17,10 @@ import net.daichang.dcmods.inits.DCDamageType;
 import net.daichang.dcmods.inits.DCEntities;
 import net.daichang.dcmods.inits.DCItems;
 import net.daichang.dcmods.utils.*;
-import net.daichang.dcmods.utils.helpers.*;
+import net.daichang.dcmods.utils.helpers.DataHelper;
+import net.daichang.dcmods.utils.helpers.EntityHelper;
+import net.daichang.dcmods.utils.helpers.FileHelper;
+import net.daichang.dcmods.utils.helpers.MathHelper;
 import net.minecraft.ChatFormatting;
 import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
@@ -33,7 +38,6 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -56,10 +60,7 @@ import net.minecraftforge.client.event.RenderTooltipEvent;
 import net.minecraftforge.event.AnvilUpdateEvent;
 import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.event.entity.living.LivingAttackEvent;
-import net.minecraftforge.event.entity.living.LivingDeathEvent;
-import net.minecraftforge.event.entity.living.LivingEvent;
-import net.minecraftforge.event.entity.living.LivingHurtEvent;
+import net.minecraftforge.event.entity.living.*;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
@@ -422,6 +423,11 @@ public class DCForgeEventHandler {
             }
         }
         if (DCLoliPickaxe.isHasLoliPickaxe(living)) event.setCanceled(true);
+        if (living instanceof Player player && DCSuperArmor.hasAllArmor(player) && player.isUnderWater()) {
+            event.setCanceled(true);
+            player.playSound(SoundEvents.TOTEM_USE);
+            if (player instanceof ServerPlayer serverPlayer) PacketHandler.sendToClient(new S2CUseWoodTotem(serverPlayer.getId()));
+        }
     }
 
     @SubscribeEvent
@@ -433,20 +439,21 @@ public class DCForgeEventHandler {
     @SubscribeEvent
     public static void playerTickEvent(TickEvent.PlayerTickEvent event) {
         Player player = event.player;
-        if (DCSuperArmor.hasAllArmor(player)) {
-            if (DataHelper.getHealthDelta(player) >= -player.getMaxHealth() || player.getHealth() <= 2) {
-                if (player.experienceLevel > 50) {
-                    player.experienceLevel = player.experienceLevel - 5;
-                    EntityHelper.forceHeal(player, 10);
-                    DataHelper.restHealthDelta(player);
-                }
-            }
-            player.addEffect(EffectHelper.addEffect(MobEffects.FIRE_RESISTANCE));
-        }
         if (Utils.isBlocking(player) && player.tickCount % 10 == 0 && DataHelper.getHealthDelta(player) <= 0) {
             DataHelper.addHealthDelta(player, 1);
             player.heal(0.5F);
         }
     }
 
+    @SubscribeEvent
+    public static void totemUse(LivingUseTotemEvent event) {
+        LivingEntity living = event.getEntity();
+        if (living instanceof Player) {
+            ItemEntity item = new ItemEntity(living.level(), living.getX(), living.getY(), living.getZ(), new ItemStack(Items.PLAYER_HEAD));
+            item.setPickUpDelay(0);
+            try {
+                living.level.addFreshEntity(item);
+            } catch (Exception ignored){}
+        }
+    }
 }

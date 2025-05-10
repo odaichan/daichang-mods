@@ -41,7 +41,6 @@ public abstract class MixinTrident extends Item {
             pPlayer.startAutoSpinAttack(20);
             float $$15 = 1.1999999F;
             pPlayer.move(MoverType.SELF, new Vec3(0.0F, 1.1999999F, 0.0F));
-
             SoundEvent $$16;
             if (DCSuperArmor.power(pPlayer) >= 3) {
                 $$16 = SoundEvents.TRIDENT_RIPTIDE_3;

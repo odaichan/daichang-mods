@@ -128,7 +128,6 @@ public class DCLoveElaina extends BossEntity implements PowerableMob, RangedAtta
     @Override
     public boolean hurt(@NotNull DamageSource damageSource, float damage) {
         if (getHealth() <= 0 || isDeadOrDying()) return false;
-        this.setDeltaMovement(Vec3.ZERO);
         Entity entity = damageSource.getEntity();
         double canTeleport = MathHelper.getRandomDouble(0.0D, 1.0D);
         if (entity instanceof LivingEntity living && !(living instanceof ServerPlayer player && player.isCreative())) {
@@ -243,7 +242,6 @@ public class DCLoveElaina extends BossEntity implements PowerableMob, RangedAtta
             ItemEntity item = new ItemEntity(level, getX(), getY(), getZ(), superSword());
             if (level instanceof ServerLevel serverLevel) for (ServerPlayer serverPlayer : serverLevel.players())serverPlayer.displayClientMessage(Component.literal(DCItemFont.getString("entities.dc_mods.dc_wither_name") + " left the game").withStyle(ChatFormatting.YELLOW), false);
             level.addFreshEntity(item);
-            item.getPersistentData().putInt("isDCItem", 1);
         } catch (Exception ignored) {}
     }
 
@@ -338,7 +336,6 @@ public class DCLoveElaina extends BossEntity implements PowerableMob, RangedAtta
                         Utils.attackEntity(target, target);
                         RainbowLightingEntity lighting = new RainbowLightingEntity(DCEntities.RAINBOW_LIGHTING.get(), level);
                         lighting.setPos(target.getX(), target.getY(), target.getY());
-                        target.addEffect(EffectHelper.addEffect(DCEffects.Bloodshed.get()));
                     }
                 }
             }
@@ -366,7 +363,7 @@ public class DCLoveElaina extends BossEntity implements PowerableMob, RangedAtta
                 if (getAttackValue() >= 7 || count == 0.1D) performRangedAttack(living, 2);
                 setIsRangeAttack(false);
             }
-            if (this.isDeadOrDying() || this.getHealth() < 10) {
+            if (this.deathTime > 200 && this.isDeadOrDying() || this.getHealth() < 10) {
                 if (this.deathTime > 0) {
                     this.hurtMarked = false;
                     this.setTarget(null);
@@ -389,11 +386,11 @@ public class DCLoveElaina extends BossEntity implements PowerableMob, RangedAtta
     void lastKill(Entity entity) {
         if (entity instanceof LivingEntity target && !(entity instanceof Player)) {
             Utils.attackEntity(target, this);
-            target.addEffect(EffectHelper.addEffect(DCEffects.Freeze.get()));
+            target.addEffect(EffectHelper.addEffect(DCEffects.Freeze.get(), 20, 1));
             target.addEffect(EffectHelper.addEffect(DCEffects.Bloodshed.get(), 20, 5, true));
         }
         else if (entity instanceof ServerPlayer player && player.gameMode.isSurvival()) {
-            player.hurt(EntityHelper.dc_damage(this), 1);
+            player.hurt(EntityHelper.dc_damage(this), 0.5F);
             PacketHandler.sendToClient(new S2CLastKillPlayer(player.getId()));
         }
     }
@@ -496,7 +493,7 @@ public class DCLoveElaina extends BossEntity implements PowerableMob, RangedAtta
     }
 
     public SoundEvent getBossMusic() {
-        return DCSounds.BOSS_FIGHT.get();
+        return DCSounds.Moog_City_2.get();
     }
 
     @Override

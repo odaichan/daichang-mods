@@ -47,21 +47,20 @@ public class SuperWoodRing extends Item implements ICurioItem {
     }
 
     @Override
+    public void appendHoverText(@NotNull ItemStack pStack, @Nullable Level pLevel, List<Component> pTooltipComponents, @NotNull TooltipFlag pIsAdvanced) {
+        pTooltipComponents.add(Component.translatable("tool_tip.dc_mods.wood_ring"));
+        super.appendHoverText(pStack, pLevel, pTooltipComponents, pIsAdvanced);
+    }
+
+    @Override
     public void initializeClient(Consumer<IClientItemExtensions> consumer) {
         consumer.accept(new IClientItemExtensions() {
-
             @Override
             public @NotNull Font getFont(ItemStack stack, FontContext context) {
                 return DCItemFont.getFont();
             }
         });
         super.initializeClient(consumer);
-    }
-
-    @Override
-    public void appendHoverText(@NotNull ItemStack pStack, @Nullable Level pLevel, List<Component> pTooltipComponents, @NotNull TooltipFlag pIsAdvanced) {
-        pTooltipComponents.add(Component.translatable("tool_tip.dc_mods.wood_ring"));
-        super.appendHoverText(pStack, pLevel, pTooltipComponents, pIsAdvanced);
     }
 
     @Override

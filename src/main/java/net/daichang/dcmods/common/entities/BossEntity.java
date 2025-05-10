@@ -15,6 +15,7 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 
 public class BossEntity extends Monster {
@@ -65,6 +66,7 @@ public class BossEntity extends Monster {
     public boolean hurt(DamageSource pSource, float pAmount) {
         if (pAmount > getMaxDamageHurt()) pAmount = getMaxDamageHurt();
         if (isUnsafeDamage(pSource)) return false;
+        this.setDeltaMovement(Vec3.ZERO);
         return super.hurt(pSource, pAmount);
     }
 

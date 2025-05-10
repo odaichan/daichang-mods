@@ -11,13 +11,13 @@ public class EffectHeal extends BaseEffect {
     }
     @Override
     public boolean isDurationEffectTick(int duration, int amplifier) {
-        return duration % 5 == 0;
+        return duration % 10 == 0;
     }
 
     @Override
     public void applyEffectTick(@NotNull LivingEntity p_19467_, int p_19468_) {
         super.applyEffectTick(p_19467_, p_19468_);
-        heal(p_19467_, p_19468_);
+        if (p_19467_.isAlive()) heal(p_19467_, p_19468_);
     }
 
     void heal(LivingEntity living, int level) {

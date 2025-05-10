@@ -87,6 +87,8 @@ public class DCItems {
 
     public static final RegistryObject<Item> WOOD_TOTEM;
 
+    public static final RegistryObject<Item> STEVE_TOKEN;
+
 
     public static final RegistryObject<Item> WOOD_HELMET;
     public static final RegistryObject<Item> WOOD_CHESTPLATE;
@@ -124,6 +126,8 @@ public class DCItems {
 
         //SPAWN EGG
         DC_WITHER_SPAWN = creativeItemRegister("dc_wither_spawn_egg", DCWitherSpawnEgg::new);
+
+        STEVE_TOKEN = normalItemRegister("steve_token", SteveTokenItem::new);
 
         DC_STEVE = creativeItemRegister("dc_steve_spawn_egg", DCSteveSpawnEgg::new);
 

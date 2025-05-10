@@ -52,12 +52,8 @@ public class DCTabs {
 
                         tabData.accept(DCItems.WOOD_TOTEM.get());
                         for (RegistryObject<Item> object : DCItems.dc_normal) tabData.accept(object.get());
-                        if (ModUtil.isCuriosLoad()) {
-                            tabData.accept(CuriosItems.WOOD_RING.get());
-                        }
-                        for (RegistryObject<Item> object : DCItems.armors) {
-                            tabData.accept(object.get());
-                        }
+                        if (ModUtil.isCuriosLoad()) for (RegistryObject<Item> object : CuriosItems.curios) tabData.accept(object.get());
+                        for (RegistryObject<Item> object : DCItems.armors) tabData.accept(object.get());
                         if (ModUtil.isAvaritiaLoad()) for (RegistryObject<Item> object : AvaritiaItems.list) tabData.accept(object.get());
                         for (RegistryObject<Item> object : DCDiscs.discs) tabData.accept(object.get());
                     }).build());
