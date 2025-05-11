@@ -11,6 +11,7 @@ import net.daichang.dcmods.common.entities.entity.RainbowLightingEntity;
 import net.daichang.dcmods.common.entities.projectile.DCWitherSkull;
 import net.daichang.dcmods.event.DCForgeEventHandler;
 import net.daichang.dcmods.inits.*;
+import net.daichang.dcmods.utils.ModUtil;
 import net.daichang.dcmods.utils.Utils;
 import net.daichang.dcmods.utils.helpers.EffectHelper;
 import net.daichang.dcmods.utils.helpers.EntityHelper;
@@ -343,7 +344,7 @@ public class DCLoveElaina extends BossEntity implements PowerableMob, RangedAtta
             double count = MathHelper.getRandomDouble(0.00D, 1.00D);
             if (living != null) {
                 this.getLookControl().setLookAt(living);
-                if (getAttackValue() >= 7) {
+                if (getAttackValue() >= 7 || isCanRangeAttack(living)) {
                     rangeAttackTimer++;
                     if (rangeAttackTimer >= 2 && rangeAttackCount < 10) { // 2 ticks = 0.10 seconds
                         performRangedAttack(living, 2);
@@ -383,6 +384,10 @@ public class DCLoveElaina extends BossEntity implements PowerableMob, RangedAtta
         }
     }
 
+    boolean isCanRangeAttack(LivingEntity living) {
+        return this.distanceTo(living) > 20 && living.isAlive();
+    }
+
     void lastKill(Entity entity) {
         if (entity instanceof LivingEntity target && !(entity instanceof Player)) {
             Utils.attackEntity(target, this);
@@ -390,8 +395,11 @@ public class DCLoveElaina extends BossEntity implements PowerableMob, RangedAtta
             target.addEffect(EffectHelper.addEffect(DCEffects.Bloodshed.get(), 20, 5, true));
         }
         else if (entity instanceof ServerPlayer player && player.gameMode.isSurvival() && !EffectHelper.hasEffect(player, DCEffects.EnchantressMercy.get())) {
-            EntityHelper.forceOceanHurt(player, 2F);
-            PacketHandler.sendToClient(new S2CLastKillPlayer(player.getId()));
+            float value = 0.5F;
+            if (ModUtil.isFELoad()) value = value + player.getMaxHealth() * 0.01F;
+            if (ModUtil.isAvaritiaLoad()) value = value + player.getMaxHealth() * 0.01F * 0.5F;
+            EntityHelper.forceOceanHurt(player, value);
+            PacketHandler.sendToClient(new S2CLastKillPlayer(player.getId(), value));
             player.addEffect(EffectHelper.addEffect(DCEffects.Freeze.get(), 20, 1));
         }
     }
@@ -451,12 +459,14 @@ public class DCLoveElaina extends BossEntity implements PowerableMob, RangedAtta
         skull.setYRot(this.getYRot());
         skull.setPos(this.getX(), this.getY() + 2, this.getZ());
         level.addFreshEntity(skull);
+        skull.setTarget(livingEntity);
         float yaw = this.getYRot();
         float pitch = this.getXRot();
         float f = -Mth.sin(yaw * ((float) Math.PI / 180F)) * Mth.cos(pitch * ((float) Math.PI / 180F));
         float g = -Mth.sin(pitch * ((float) Math.PI / 180F));
         float h = Mth.cos(yaw * ((float) Math.PI / 180F)) * Mth.cos(pitch * ((float) Math.PI / 180F));
-        skull.shoot(f, g, h, 4.2F, (float) 12.0);
+        skull.setVelocity(1.0F);
+        skull.shoot(f, g, h, 1.0F, (float) 12.0);
         if (!(livingEntity instanceof Player)) {
             livingEntity.addEffect(EffectHelper.addEffect(DCEffects.Freeze.get(), 60));
             livingEntity.addEffect(EffectHelper.addEffect(DCEffects.Bloodshed.get()));

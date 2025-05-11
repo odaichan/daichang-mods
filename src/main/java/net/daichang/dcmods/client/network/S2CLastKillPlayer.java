@@ -11,13 +11,15 @@ import java.util.function.Supplier;
 
 public class S2CLastKillPlayer {
     private final int entity;
+    private final float damage;
 
-    public S2CLastKillPlayer(int entity) {
+    public S2CLastKillPlayer(int entity, float damage) {
         this.entity = entity;
+        this.damage = damage;
     }
 
     public S2CLastKillPlayer(FriendlyByteBuf buffer) {
-        this(buffer.readInt());
+        this(buffer.readInt(), buffer.readFloat());
     }
 
     public void encode(FriendlyByteBuf buffer) {
@@ -29,7 +31,7 @@ public class S2CLastKillPlayer {
         context.enqueueWork(() -> {
             Entity entity1;
             if (Minecraft.getInstance().level != null && (entity1 = Minecraft.getInstance().level.getEntity(this.entity)) != null && entity1 instanceof LivingEntity living) {
-                EntityHelper.forceOceanHurt(living, 2);
+                EntityHelper.forceOceanHurt(living, damage);
                 EntityHelper.noHurtDuration(living);
                 living.playHurtSound(EntityHelper.dc_damage(entity1));
                 context.setPacketHandled(true);

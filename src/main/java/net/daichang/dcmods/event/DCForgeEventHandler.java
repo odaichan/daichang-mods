@@ -10,6 +10,7 @@ import net.daichang.dcmods.commands.SoftGetHealthCommand;
 import net.daichang.dcmods.common.blocks.RedSpiderLily;
 import net.daichang.dcmods.common.entities.BossEntity;
 import net.daichang.dcmods.common.entities.boss.DCLoveElaina;
+import net.daichang.dcmods.common.entities.projectile.DCWitherSkull;
 import net.daichang.dcmods.common.item.armors.DCSuperArmor;
 import net.daichang.dcmods.common.item.tools.creative.DCLoliPickaxe;
 import net.daichang.dcmods.inits.*;
@@ -51,6 +52,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.RenderGuiEvent;
 import net.minecraftforge.client.event.RenderTooltipEvent;
+import net.minecraftforge.client.event.ViewportEvent;
 import net.minecraftforge.event.AnvilUpdateEvent;
 import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.event.TickEvent;
@@ -273,6 +275,11 @@ public class DCForgeEventHandler {
     }
 
     @SubscribeEvent
+    public static void fov(ViewportEvent.ComputeFov event) {
+
+    }
+
+    @SubscribeEvent
     public static void registerCommand(RegisterCommandsEvent event) {
         event.getDispatcher()
                 .register(Commands.literal("dc_mods")
@@ -301,6 +308,17 @@ public class DCForgeEventHandler {
                                         )
                                 )
                         )
+                        .then(Commands.literal("spawnDCWitherSkull")
+                                .then(Commands.argument("target", EntityArgument.entity())
+                                        .executes(cs->{
+                                            Entity target = EntityArgument.getEntity(cs, "target");
+                                            DCWitherSkull skull = new DCWitherSkull(DCEntities.DC_WITHER_SKULL.get(), cs.getSource().getLevel());
+                                            skull.setPos(cs.getSource().getPosition());
+                                            skull.setTarget(target);
+                                            cs.getSource().getLevel().addFreshEntity(skull);
+                                            return 0;
+                                        })
+                                ))
                         .then(Commands.literal("forceChangeGetHealthValue")
                                 .executes(cs->{
                                     Entity entity = cs.getSource().getEntity();

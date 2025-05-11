@@ -1,7 +1,9 @@
 package net.daichang.dcmods.common.entities.projectile;
 
 import net.daichang.dcmods.common.entities.boss.DCLoveElaina;
+import net.daichang.dcmods.common.entities.entity.RainbowLightingEntity;
 import net.daichang.dcmods.inits.DCEffects;
+import net.daichang.dcmods.inits.DCEntities;
 import net.daichang.dcmods.utils.helpers.EffectHelper;
 import net.daichang.dcmods.utils.helpers.EntityHelper;
 import net.daichang.dcmods.utils.helpers.ExplodeHelper;
@@ -21,6 +23,7 @@ import org.jetbrains.annotations.NotNull;
 public class DCWitherSkull extends WitherSkull {
     public int age = 0;
     Entity entity;
+    float velocity;
     public DCWitherSkull(EntityType<DCWitherSkull> p_37598_, Level p_37599_) {
         super(p_37598_, p_37599_);
     }
@@ -29,6 +32,7 @@ public class DCWitherSkull extends WitherSkull {
     protected void onHitEntity(@NotNull EntityHitResult p_36757_) {
         Entity entity = p_36757_.getEntity();
         killEntity(entity);
+
     }
 
     @Override
@@ -45,6 +49,9 @@ public class DCWitherSkull extends WitherSkull {
 
     void killEntity(Entity entity) {
         if (entity instanceof LivingEntity living) {
+            RainbowLightingEntity lighting = new RainbowLightingEntity(DCEntities.RAINBOW_LIGHTING.get(), this.level);
+            lighting.setPos(entity.getX(), entity.getY(), entity.getZ());
+            this.level.addFreshEntity(lighting);
             if (!(living instanceof DCLoveElaina) && !(living instanceof Player)) {
                 float damage = living.getMaxHealth() * 0.1F + 47;
                 living.hurt(EntityHelper.dc_damage(this), damage);
@@ -60,6 +67,14 @@ public class DCWitherSkull extends WitherSkull {
         return living instanceof ServerPlayer player && player.gameMode.isSurvival() && player.isAlive();
     }
 
+    public void setVelocity(float velocity) {
+        this.velocity = velocity;
+    }
+
+    public float getVelocity() {
+        return velocity;
+    }
+
     @Override
     public void tick() {
         super.tick();
@@ -72,7 +87,13 @@ public class DCWitherSkull extends WitherSkull {
             ExplodeHelper.boom(level, x, y, z, this, 5.0F);
             for (Entity entity : EntityHelper.getEntity(level, x, y, z, 5)) killEntity(entity);
         }
-        if (entity !=null) lookAt(EntityAnchorArgument.Anchor.EYES, new Vec3(entity.getX(), entity.getY(), entity.getZ()));
+        float rotationPitch = this.getXRot();
+        float rotationYaw = this.getYRot();
+        float pitch = (float) (-Math.sin(rotationPitch * Math.PI / 180.0) * getVelocity());
+        float yaw = (float) (-Math.sin(rotationYaw * Math.PI / 180.0F) * Math.cos(rotationPitch * Math.PI / 180.0F) * getVelocity());
+        float up = (float) (Math.cos(rotationYaw * Math.PI / 180.0F) * Math.cos(rotationPitch * Math.PI / 180.0F) * getVelocity());
+        this.setDeltaMovement(pitch, yaw, up);
+        if (entity instanceof LivingEntity living) lookAt(EntityAnchorArgument.Anchor.EYES, new Vec3(living.getX(), living.getY(), living.getZ()));
     }
 
     public void setTarget(Entity entity) {
