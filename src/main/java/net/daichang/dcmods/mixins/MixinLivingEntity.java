@@ -55,7 +55,7 @@ public abstract class MixinLivingEntity extends Entity {
 
     @Inject(method = "createLivingAttributes", at = @At("RETURN"), cancellable = true)
     private static void createLivingAttributes(CallbackInfoReturnable<AttributeSupplier.Builder> cir) {
-        cir.setReturnValue(cir.getReturnValue().add(DCAttributes.DC_SUPER_DAMAGE.get(), 0.0D).add(DCAttributes.DC_DEFENSE.get(), 0.0D));
+        cir.setReturnValue(cir.getReturnValue().add(DCAttributes.DC_SUPER_DAMAGE.get(), 0.0D).add(DCAttributes.DC_DEFENSE.get(), 0.0D).add(DCAttributes.OCEAN_DAMAGE.get(), 0.0D));
     }
 
     @Inject(method = "getHealth" ,at = @At("RETURN"), cancellable = true)

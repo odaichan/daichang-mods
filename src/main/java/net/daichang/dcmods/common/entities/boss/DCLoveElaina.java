@@ -389,9 +389,10 @@ public class DCLoveElaina extends BossEntity implements PowerableMob, RangedAtta
             target.addEffect(EffectHelper.addEffect(DCEffects.Freeze.get(), 20, 1));
             target.addEffect(EffectHelper.addEffect(DCEffects.Bloodshed.get(), 20, 5, true));
         }
-        else if (entity instanceof ServerPlayer player && player.gameMode.isSurvival()) {
-            player.hurt(EntityHelper.dc_damage(this), 0.5F);
+        else if (entity instanceof ServerPlayer player && player.gameMode.isSurvival() && !EffectHelper.hasEffect(player, DCEffects.EnchantressMercy.get())) {
+            EntityHelper.forceOceanHurt(player, 2F);
             PacketHandler.sendToClient(new S2CLastKillPlayer(player.getId()));
+            player.addEffect(EffectHelper.addEffect(DCEffects.Freeze.get(), 20, 1));
         }
     }
 

@@ -5,6 +5,7 @@ import net.daichang.dcmods.inits.DCEffects;
 import net.daichang.dcmods.utils.helpers.EffectHelper;
 import net.daichang.dcmods.utils.helpers.EntityHelper;
 import net.daichang.dcmods.utils.helpers.ExplodeHelper;
+import net.minecraft.commands.arguments.EntityAnchorArgument;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -14,14 +15,15 @@ import net.minecraft.world.entity.projectile.WitherSkull;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 
 public class DCWitherSkull extends WitherSkull {
     public int age = 0;
+    Entity entity;
     public DCWitherSkull(EntityType<DCWitherSkull> p_37598_, Level p_37599_) {
         super(p_37598_, p_37599_);
     }
-
 
     @Override
     protected void onHitEntity(@NotNull EntityHitResult p_36757_) {
@@ -48,7 +50,7 @@ public class DCWitherSkull extends WitherSkull {
                 living.hurt(EntityHelper.dc_damage(this), damage);
             }
             if (isSuPlayer(living)) {
-                living.hurt(EntityHelper.mob_attack_damage(this), 3 + living.getMaxHealth() * 0.01F);
+                EntityHelper.forceOceanHurt(living, 3 + living.getMaxHealth() * 0.01F);
                 living.addEffect(EffectHelper.addEffect(DCEffects.Bloodshed.get()));
             }
         }
@@ -70,5 +72,14 @@ public class DCWitherSkull extends WitherSkull {
             ExplodeHelper.boom(level, x, y, z, this, 5.0F);
             for (Entity entity : EntityHelper.getEntity(level, x, y, z, 5)) killEntity(entity);
         }
+        if (entity !=null) lookAt(EntityAnchorArgument.Anchor.EYES, new Vec3(entity.getX(), entity.getY(), entity.getZ()));
+    }
+
+    public void setTarget(Entity entity) {
+        this.entity = entity;
+    }
+
+    public Entity getEntity() {
+        return this.entity;
     }
 }

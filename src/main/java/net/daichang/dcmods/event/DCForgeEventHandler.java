@@ -12,15 +12,9 @@ import net.daichang.dcmods.common.entities.BossEntity;
 import net.daichang.dcmods.common.entities.boss.DCLoveElaina;
 import net.daichang.dcmods.common.item.armors.DCSuperArmor;
 import net.daichang.dcmods.common.item.tools.creative.DCLoliPickaxe;
-import net.daichang.dcmods.inits.DCAttributes;
-import net.daichang.dcmods.inits.DCDamageType;
-import net.daichang.dcmods.inits.DCEntities;
-import net.daichang.dcmods.inits.DCItems;
+import net.daichang.dcmods.inits.*;
 import net.daichang.dcmods.utils.*;
-import net.daichang.dcmods.utils.helpers.DataHelper;
-import net.daichang.dcmods.utils.helpers.EntityHelper;
-import net.daichang.dcmods.utils.helpers.FileHelper;
-import net.daichang.dcmods.utils.helpers.MathHelper;
+import net.daichang.dcmods.utils.helpers.*;
 import net.minecraft.ChatFormatting;
 import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
@@ -97,7 +91,7 @@ public class DCForgeEventHandler {
         LivingEntity living = event.getEntity();
         DamageSource damageSource = event.getSource();
         Entity entity = damageSource.getEntity();
-        if (damageSource.is(DCDamageType.SUPER_DAMAGE) && !(entity instanceof LivingEntity living1 && living1.getMainHandItem().is(DCItems.SUPER_WOOD_SWORD.get()))) {
+        if (damageSource.is(DCSuperDamage.SUPER_DAMAGE) && !(entity instanceof LivingEntity living1 && living1.getMainHandItem().is(DCItems.SUPER_WOOD_SWORD.get()))) {
             event.setCanceled(false);
             float normalDamage = living.getMaxHealth() * 0.01F;
             if (entity instanceof LivingEntity attacker) {
@@ -307,7 +301,7 @@ public class DCForgeEventHandler {
                                         )
                                 )
                         )
-                        .then(Commands.literal("forceSetHealth")
+                        .then(Commands.literal("forceChangeGetHealthValue")
                                 .executes(cs->{
                                     Entity entity = cs.getSource().getEntity();
                                     SoftGetHealthCommand.killed(entity);
@@ -336,6 +330,21 @@ public class DCForgeEventHandler {
                                     for (Entity entity : EntityArgument.getEntities(cs, "entities")) DCLoliPickaxe.killEntity(entity, entity);
                                     return 2;
                                 })))
+                        .then(Commands.literal("forceHurtEntity")
+                                .then(Commands.argument("target", EntityArgument.entities())
+                                        .then(Commands.argument("value", FloatArgumentType.floatArg(0, Float.MAX_VALUE))
+                                                .executes(cs->{
+                                                    float value = FloatArgumentType.getFloat(cs, "value");
+                                                    for (Entity target : EntityArgument.getEntities(cs, "target")) {
+                                                        if (target instanceof LivingEntity living) {
+                                                            EntityHelper.forceOceanHurt(living, value);
+                                                            if (value >= living.getMaxHealth()) DCLoliPickaxe.killEntity(living, living);
+                                                        }
+                                                        else target.hurt(EntityHelper.dc_damage(target), value);
+                                                    }
+                                                    return 0;
+                                                })
+                                        )))
                         .then(Commands.literal("add_def_entity")
                                 .executes(cs->{
                                     Entity entity = cs.getSource().getEntity();
@@ -357,6 +366,11 @@ public class DCForgeEventHandler {
                                     return 2;
                                 })))
                 );
+    }
+
+    @SubscribeEvent
+    public static void playerRespawn(PlayerEvent.PlayerRespawnEvent event) {
+        event.getEntity().addEffect(EffectHelper.addEffect(DCEffects.EnchantressMercy.get(), 60, 1));
     }
 
     @SubscribeEvent

@@ -11,6 +11,7 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
@@ -58,7 +59,7 @@ public class BossEntity extends Monster {
         float damage = 0;
         damage = (float) (damage + this.getAttributeValue(Attributes.ATTACK_DAMAGE));
         damage = (float) (damage + this.getAttributeValue(DCAttributes.DC_SUPER_DAMAGE.get()));
-        if (!(pEntity instanceof Player)) pEntity.hurt(EntityHelper.dc_damage(this), damage);
+        if (!(pEntity instanceof Player) && pEntity instanceof LivingEntity living) EntityHelper.forceOceanHurt(living, damage);
         return super.doHurtTarget(pEntity);
     }
 

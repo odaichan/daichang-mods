@@ -31,7 +31,7 @@ public class ParticleHelper {
         double Z = player.getZ();
         double y = player.getY() + 0.1D;
         double r = sqrt(12);
-        SimpleParticleType type = ParticleTypes.ELECTRIC_SPARK.getType();
+        SimpleParticleType type = ParticleTypes.SOUL_FIRE_FLAME.getType();
 
         //二维空间内距离原点长度为r且角度为a的点p坐标是：r*(cosa,sina)
 

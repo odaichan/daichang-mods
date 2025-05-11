@@ -159,5 +159,13 @@
   "advancements.dc_m.heart_of_the_ocean": "海的儿女",
   "advancements.dc_m.heart_of_the_ocean_tip": "获得海洋之心",
   "item.dc_m.ocean_love": "< 海之慈爱 >",
-  "tool_tip.dc_m.ocean_love": "海洋认可了你....."
+  "tool_tip.dc_m.ocean_love": "海洋认可了你.....",
+  "attribute.dc_mods.ocean_damage": "海洋伤害",
+  "item.dc_m.ocean_scythe": "< 碧海噬魂钩 >",
+  "tool_tip.dc_m.ocean_tip_1": "继承了 < 七尺屠魔 > 的所有性质",
+  "tool_tip.dc_m.ocean_tip_2": "每十次攻击，为目标添加 流血 冻结 效果",
+  "tool_tip.dc_m.ocean_tip_3": "格挡时，快速恢复生命值",
+  "advancements.dc_m.ocean_scythe": "也不是完全没用",
+  "advancements.dc_m.ocean_scythe_tip": "获得 < 碧海噬魂钩 >",
+  "effect.dc_m.enchantress_mercy": "魔女的仁慈"
 }

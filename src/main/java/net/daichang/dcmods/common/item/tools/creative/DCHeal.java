@@ -72,11 +72,7 @@ public class DCHeal extends Item {
 
     @Override
     public boolean hurtEnemy(ItemStack pStack, LivingEntity pTarget, LivingEntity pAttacker) {
-        if (pTarget.isMultipartEntity()) {
-            heal(pTarget);
-            return true;
-        }
-
+        if (pTarget.isMultipartEntity()) heal(pTarget);
         return false;
     }
 
@@ -84,6 +80,6 @@ public class DCHeal extends Item {
     public boolean onLeftClickEntity(ItemStack stack, Player player, Entity entity) {
         if (entity.isMultipartEntity()) return false;
         if (entity instanceof LivingEntity living) heal(living);
-        return super.onLeftClickEntity(stack, player, entity);
+        return false;
     }
 }

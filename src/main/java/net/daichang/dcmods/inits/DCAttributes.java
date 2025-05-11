@@ -12,9 +12,11 @@ public class DCAttributes {
 
     public static final RegistryObject<Attribute> DC_SUPER_DAMAGE;
     public static final RegistryObject<Attribute> DC_DEFENSE;
+    public static final RegistryObject<Attribute> OCEAN_DAMAGE;
 
     static {
         DC_SUPER_DAMAGE = attribute.register("super_damage",  () -> new RangedAttribute("attribute.dc_mods.super_damage", 0, 0, Double.POSITIVE_INFINITY).setSyncable(true));
+        OCEAN_DAMAGE = attribute.register("ocean_damage",  () -> new RangedAttribute("attribute.dc_mods.ocean_damage", 0, 0, Double.POSITIVE_INFINITY).setSyncable(true));
         DC_DEFENSE = attribute.register("dc_defense",  () -> new RangedAttribute("attribute.dc_mods.dc_defense", 0, 0, Double.POSITIVE_INFINITY).setSyncable(true));
     }
 }

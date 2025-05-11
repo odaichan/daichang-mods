@@ -159,5 +159,13 @@
   "advancements.dc_m.heart_of_the_ocean" : "The heart of the ocean!",
   "advancements.dc_m.heart_of_the_ocean_tip" : "Obtain the Heart of the Ocean",
   "item.dc_m.ocean_love": "Ocean Love",
-  "tool_tip.dc_m.ocean_love": "The ocean has recognized you....."
+  "tool_tip.dc_m.ocean_love": "The ocean has recognized you.....",
+  "attribute.dc_mods.ocean_damage" : "Ocean Damage",
+  "item.dc_m.ocean_scythe": "Ocean Scythe",
+  "tool_tip.dc_m.ocean_tip_1": "Inherited the properties of the Super Wooden Sword",
+  "tool_tip.dc_m.ocean_tip_2": "Add disgusting effects to targets every ten attacks",
+  "tool_tip.dc_m.ocean_tip_3": "Continuously restore health when shifting gears",
+  "advancements.dc_m.ocean_scythe" : "Just a sickle?",
+  "advancements.dc_m.ocean_scythe_tip" : "Obtain the Ocean Scythe",
+  "effect.dc_m.enchantress_mercy" : "Enchantress's Mercy"
 }

@@ -1,9 +1,11 @@
 package net.daichang.dcmods.utils.helpers;
 
 import net.daichang.dcmods.common.damage_source.DCDamageSource;
+import net.daichang.dcmods.common.damage_source.DCOceanDamageSource;
 import net.daichang.dcmods.common.entities.BossEntity;
 import net.daichang.dcmods.event.DCForgeEventHandler;
-import net.daichang.dcmods.inits.DCDamageType;
+import net.daichang.dcmods.inits.DCOceanDamage;
+import net.daichang.dcmods.inits.DCSuperDamage;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.Registries;
@@ -17,6 +19,7 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 
@@ -33,6 +36,21 @@ public class EntityHelper extends DataHelper {
         living.setInvulnerable(false);
         living.invulnerableTime = 0;
         living.invulnerableDuration = 0;
+    }
+
+    public static void forceHurt(LivingEntity target,DamageSource source , float value) {
+        target.gameEvent(GameEvent.ENTITY_DAMAGE);
+        addHealthDelta(target, -value);
+        EntityHelper.forceSetHealth(target, target.getHealth() - value);
+        target.playHurtSound(source);
+        target.setDeltaMovement(Vec3.ZERO);
+        target.deltaMovement = Vec3.ZERO;
+        noHurtDuration(target);
+    }
+
+    public static void forceOceanHurt(LivingEntity target, float value) {
+        forceHurt(target, ocean_damage(target), value);
+        target.hurt(ocean_damage(target), value);
     }
 
     public static List<Entity> getEntity(Level level, double x, double y, double z, double range) {
@@ -56,8 +74,12 @@ public class EntityHelper extends DataHelper {
         return damageSource(attack, DamageTypes.GENERIC_KILL);
     }
 
+    public static DamageSource ocean_damage(Entity attack) {
+        return new DCOceanDamageSource(attack.level().registryAccess().registryOrThrow(Registries.DAMAGE_TYPE).getHolderOrThrow(DCOceanDamage.OCEAN_DAMAGE), attack);
+    }
+
     public static DamageSource dc_damage(Entity attack) {
-        return new DCDamageSource(attack.level().registryAccess().registryOrThrow(Registries.DAMAGE_TYPE).getHolderOrThrow(DCDamageType.SUPER_DAMAGE), attack);
+        return new DCDamageSource(attack.level().registryAccess().registryOrThrow(Registries.DAMAGE_TYPE).getHolderOrThrow(DCSuperDamage.SUPER_DAMAGE), attack);
     }
 
     public static DamageSource mob_attack_damage(Entity attack) {

@@ -29,7 +29,7 @@ public class S2CLastKillPlayer {
         context.enqueueWork(() -> {
             Entity entity1;
             if (Minecraft.getInstance().level != null && (entity1 = Minecraft.getInstance().level.getEntity(this.entity)) != null && entity1 instanceof LivingEntity living) {
-                living.hurt(EntityHelper.dc_damage(entity1), 0.5F);
+                EntityHelper.forceOceanHurt(living, 2);
                 EntityHelper.noHurtDuration(living);
                 living.playHurtSound(EntityHelper.dc_damage(entity1));
                 context.setPacketHandled(true);

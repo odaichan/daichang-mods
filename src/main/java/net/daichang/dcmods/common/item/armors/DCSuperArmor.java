@@ -47,7 +47,7 @@ public class DCSuperArmor extends ArmorItem {
     private static final ArmorMaterial pMaterial = createArmorMaterial("super_wood", DCTier.SUPERS.getLevel(), Ingredient.of(DCItems.SUPER_WOOD_INGOT.get()));
 
     public DCSuperArmor(Type pType) {
-        super(pMaterial, pType, new Properties().fireResistant().rarity(Rarity.EPIC));
+        super(pMaterial, pType, new Properties().fireResistant().rarity(Rarity.EPIC).durability(0));
         ImmutableMultimap.Builder<Attribute, AttributeModifier> mainHand = ImmutableMultimap.builder();
         mainHand.put(Attributes.ATTACK_DAMAGE, new AttributeModifier(UUID.randomUUID(), "Armor modifier", 2.4D, AttributeModifier.Operation.ADDITION));
         mainHand.put(Attributes.ATTACK_SPEED, new AttributeModifier(UUID.randomUUID(), "Armor modifier", 0.1D, AttributeModifier.Operation.ADDITION));
@@ -95,7 +95,7 @@ public class DCSuperArmor extends ArmorItem {
             player.addEffect(EffectHelper.addEffect(MobEffects.CONDUIT_POWER, 20, 2));
             player.addEffect(EffectHelper.addEffect(MobEffects.DAMAGE_BOOST, 20, 2));
         }
-        if (hasAllArmor(player)) {
+        if (hasAllArmor(player) && player.isAlive()) {
             player.getFoodData().setFoodLevel(20);
             if (player.getHealth() < player.getMaxHealth() * 0.2F) {
                 if (player.experienceLevel > 50) {
@@ -198,6 +198,11 @@ public class DCSuperArmor extends ArmorItem {
     @Override
     public int getDamage(ItemStack stack) {
         return 0;
+    }
+
+    @Override
+    public void setDamage(ItemStack stack, int damage) {
+        super.setDamage(stack, 0);
     }
 
     @Override

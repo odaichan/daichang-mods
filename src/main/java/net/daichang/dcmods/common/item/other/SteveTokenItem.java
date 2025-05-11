@@ -1,4 +1,4 @@
-package net.daichang.dcmods.common.item.tools;
+package net.daichang.dcmods.common.item.other;
 
 import net.daichang.dcmods.common.entities.boss.DCSteve;
 import net.daichang.dcmods.common.item.BaseSuperItem;
