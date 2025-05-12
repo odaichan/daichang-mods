@@ -7,7 +7,6 @@ import net.daichang.dcmods.inits.DCEntities;
 import net.daichang.dcmods.utils.helpers.EffectHelper;
 import net.daichang.dcmods.utils.helpers.EntityHelper;
 import net.daichang.dcmods.utils.helpers.ExplodeHelper;
-import net.minecraft.commands.arguments.EntityAnchorArgument;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -17,13 +16,10 @@ import net.minecraft.world.entity.projectile.WitherSkull;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
-import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 
 public class DCWitherSkull extends WitherSkull {
     public int age = 0;
-    Entity entity;
-    float velocity;
     public DCWitherSkull(EntityType<DCWitherSkull> p_37598_, Level p_37599_) {
         super(p_37598_, p_37599_);
     }
@@ -67,14 +63,6 @@ public class DCWitherSkull extends WitherSkull {
         return living instanceof ServerPlayer player && player.gameMode.isSurvival() && player.isAlive();
     }
 
-    public void setVelocity(float velocity) {
-        this.velocity = velocity;
-    }
-
-    public float getVelocity() {
-        return velocity;
-    }
-
     @Override
     public void tick() {
         super.tick();
@@ -87,20 +75,5 @@ public class DCWitherSkull extends WitherSkull {
             ExplodeHelper.boom(level, x, y, z, this, 5.0F);
             for (Entity entity : EntityHelper.getEntity(level, x, y, z, 5)) killEntity(entity);
         }
-        float rotationPitch = this.getXRot();
-        float rotationYaw = this.getYRot();
-        float pitch = (float) (-Math.sin(rotationPitch * Math.PI / 180.0) * getVelocity());
-        float yaw = (float) (-Math.sin(rotationYaw * Math.PI / 180.0F) * Math.cos(rotationPitch * Math.PI / 180.0F) * getVelocity());
-        float up = (float) (Math.cos(rotationYaw * Math.PI / 180.0F) * Math.cos(rotationPitch * Math.PI / 180.0F) * getVelocity());
-        this.setDeltaMovement(pitch, yaw, up);
-        if (entity instanceof LivingEntity living) lookAt(EntityAnchorArgument.Anchor.EYES, new Vec3(living.getX(), living.getY(), living.getZ()));
-    }
-
-    public void setTarget(Entity entity) {
-        this.entity = entity;
-    }
-
-    public Entity getEntity() {
-        return this.entity;
     }
 }

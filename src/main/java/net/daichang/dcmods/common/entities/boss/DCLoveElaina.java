@@ -3,11 +3,8 @@ package net.daichang.dcmods.common.entities.boss;
 import net.daichang.dcmods.client.PacketHandler;
 import net.daichang.dcmods.client.font.DCEntityFont;
 import net.daichang.dcmods.client.font.DCItemFont;
-import net.daichang.dcmods.client.network.S2CElainaPacket;
-import net.daichang.dcmods.client.network.S2CLastKillPlayer;
-import net.daichang.dcmods.client.network.S2CSonicBoomPacket;
+import net.daichang.dcmods.client.network.*;
 import net.daichang.dcmods.common.entities.BossEntity;
-import net.daichang.dcmods.common.entities.entity.RainbowLightingEntity;
 import net.daichang.dcmods.common.entities.projectile.DCWitherSkull;
 import net.daichang.dcmods.event.DCForgeEventHandler;
 import net.daichang.dcmods.inits.*;
@@ -19,6 +16,7 @@ import net.daichang.dcmods.utils.helpers.MathHelper;
 import net.daichang.dcmods.utils.helpers.ParticleHelper;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.Font;
+import net.minecraft.commands.arguments.EntityAnchorArgument;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -55,13 +53,12 @@ import net.minecraftforge.network.PlayMessages;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Collection;
-
 public class DCLoveElaina extends BossEntity implements PowerableMob, RangedAttackMob {
     public static EntityDataAccessor<Integer> ATTACK_COUNT;
     public static EntityDataAccessor<Boolean> IS_RANGE_ATTACK;
     private int rangeAttackLife = 0;
     private final Difficulty difficulty = level.getDifficulty();
+    private final int maxDeathTime = 2000;
 
     public final AnimationState idleAnimationState = new AnimationState();
     public final AnimationState attackAnimationState = new AnimationState();
@@ -74,17 +71,12 @@ public class DCLoveElaina extends BossEntity implements PowerableMob, RangedAtta
 
     public DCLoveElaina(EntityType<DCLoveElaina> p_31437_, Level p_31438_) {
         super(p_31437_, p_31438_);
-        this.xpReward = 1500;
+        this.xpReward = 200000;
     }
 
     public DCLoveElaina(PlayMessages.SpawnEntity spawnEntity, Level world) {
         super(DCEntities.DC_WITHER.get(), world);
-        this.xpReward = 1500;
-    }
-
-    @Override
-    public void readAdditionalSaveData(@NotNull CompoundTag p_21450_) {
-        super.readAdditionalSaveData(p_21450_);
+        this.xpReward = 200000;
     }
 
     @Override
@@ -93,7 +85,7 @@ public class DCLoveElaina extends BossEntity implements PowerableMob, RangedAtta
         this.goalSelector.addGoal(1, new MeleeAttackGoal(this, 1.0, true) {
             @Override
             protected double getAttackReachSqr(@NotNull LivingEntity entity) {
-                return 64.0D;
+                return 74.0D;
             }
 
             @Override
@@ -105,7 +97,7 @@ public class DCLoveElaina extends BossEntity implements PowerableMob, RangedAtta
         this.goalSelector.addGoal(1, new NearestAttackableTargetGoal<>(this, LivingEntity.class, true, false){
             @Override
             protected double getFollowDistance() {
-                return 64.0D;
+                return 74.0D;
             }
         });
         this.goalSelector.addGoal(2, new LookAtPlayerGoal(this, Player.class, 8.0F));
@@ -115,15 +107,6 @@ public class DCLoveElaina extends BossEntity implements PowerableMob, RangedAtta
     @Override
     protected void customServerAiStep() {
         super.customServerAiStep();
-        if (this.tickCount % 20 == 0) {
-            float value = 0;
-            switch (difficulty) {
-                case PEACEFUL, EASY -> value = 4;
-                case NORMAL -> value = 7;
-                case HARD -> value = 1145;
-            }
-            EntityHelper.forceHeal(this, value);
-        }
     }
 
     @Override
@@ -131,9 +114,7 @@ public class DCLoveElaina extends BossEntity implements PowerableMob, RangedAtta
         if (getHealth() <= 0 || isDeadOrDying()) return false;
         Entity entity = damageSource.getEntity();
         double canTeleport = MathHelper.getRandomDouble(0.0D, 1.0D);
-        if (entity instanceof LivingEntity living && !(living instanceof ServerPlayer player && player.isCreative())) {
-            this.setTarget(living);
-        }
+        if (entity instanceof LivingEntity living && !(living instanceof ServerPlayer player && player.isCreative())) this.setTarget(living);
         if (canTeleport == 0.2 && entity != null) doHurtTarget(entity);
         this.addAttackCount(1);
         return super.hurt(damageSource, damage);
@@ -147,14 +128,11 @@ public class DCLoveElaina extends BossEntity implements PowerableMob, RangedAtta
 
     @Override
     public void die(@NotNull DamageSource p_21014_) {
-        if (getHealth() <= 0) {
+        if (isDeadOrDying()) {
             super.die(p_21014_);
             DCForgeEventHandler.bossList.remove(this);
         }
     }
-
-    @Override
-    public void heal(float pHealAmount) {}
 
     @Override
     public boolean doHurtTarget(@NotNull Entity target) {
@@ -184,24 +162,31 @@ public class DCLoveElaina extends BossEntity implements PowerableMob, RangedAtta
 
     @Override
     public void tickDeath() {
-        if (getHealth() <= 0) {
-            ++this.deathTime;
-            isDeadAnimationState.startIfStopped(tickCount);
-            if (this.deathTime >= 2000) {
-                try {
-                    this.playSound(this.getDeathSound());
-                } catch (Exception ignored){}
-                DCForgeEventHandler.bossList.remove(this);
-                this.dropExperience();
-                this.die(this.damageSources().magic());
-                this.remove(RemovalReason.KILLED);
-                this.setRemoved(RemovalReason.KILLED);
-            }
+        ++this.deathTime;
+        isDeadAnimationState.startIfStopped(tickCount);
+        if (this.deathTime >= maxDeathTime + 100) {
+            try {
+                this.playSound(this.getDeathSound());
+            } catch (Exception ignored){}
+            DCForgeEventHandler.bossList.remove(this);
+            sendPlayerMsg(Component.translatable("chat.dc_m.elaina.elaina_die"));
+            this.dropExperience();
+            this.die(this.damageSources().magic());
+            this.remove(RemovalReason.KILLED);
+            this.setRemoved(RemovalReason.KILLED);
+            this.onRemovedFromWorld();
+            this.onClientRemoval();
         }
     }
 
     @Override
-    public SoundEvent getDeathSound() {
+    public void setRemoved(RemovalReason pRemovalReason) {
+        if (isDeadOrDying() || deathTime >= maxDeathTime) super.setRemoved(pRemovalReason);
+        DCForgeEventHandler.bossList.remove(this);
+    }
+
+    @Override
+    public @NotNull SoundEvent getDeathSound() {
         return SoundEvents.WITHER_DEATH;
     }
 
@@ -221,13 +206,13 @@ public class DCLoveElaina extends BossEntity implements PowerableMob, RangedAtta
 
     @Override
     public void onRemovedFromWorld() {
-        if (this.deathTime >= 1200) super.onRemovedFromWorld();
+        if (this.deathTime >= maxDeathTime) super.onRemovedFromWorld();
         DCForgeEventHandler.bossList.remove(this);
     }
 
     @Override
     public void onClientRemoval() {
-        if (this.deathTime >= 1200) super.onClientRemoval();
+        if (this.deathTime >= maxDeathTime) super.onClientRemoval();
         DCForgeEventHandler.bossList.remove(this);
     }
 
@@ -248,13 +233,12 @@ public class DCLoveElaina extends BossEntity implements PowerableMob, RangedAtta
 
     @Override
     public void remove(@NotNull RemovalReason p_276115_) {
-        if (this.deathTime >= 1200 && getHealth() <= 0) super.remove(p_276115_);
-        DCForgeEventHandler.bossList.remove(this);
+        if (this.deathTime >= maxDeathTime || isDeadOrDying()) super.remove(p_276115_);
     }
 
     @Override
     public @Nullable Component getCustomName() {
-        if (isDeadOrDying() || this.getHealth() <= 10) return Component.translatable("entities.dc_mods.dc_wither_name_tow");
+        if (isDeadOrDying()) return Component.translatable("entities.dc_mods.dc_wither_name_tow");
         return Component.translatable("entities.dc_mods.dc_wither_name");
     }
 
@@ -276,11 +260,6 @@ public class DCLoveElaina extends BossEntity implements PowerableMob, RangedAtta
         }
     }
 
-    @Override
-    public @NotNull Collection<ItemEntity> captureDrops(Collection<ItemEntity> value) {
-        return super.captureDrops(value);
-    }
-
     private int currentAttackAnimation = 0;
     private int animationDelay = 0;
     private int rangeAttackTimer = 0;
@@ -288,14 +267,7 @@ public class DCLoveElaina extends BossEntity implements PowerableMob, RangedAtta
 
     @Override
     public void tick() {
-        CompoundTag tag = this.getPersistentData();
-        Vec3 vec3 = this.getDeltaMovement();
-        if (vec3.y > 2) this.setDeltaMovement(vec3.x, 0, vec3.y);
         super.tick();
-        this.wasOnFire = false;
-        this.clearFire();
-        this.resetFallDistance();
-        this.fallDistance = 0;
         if (level().isClientSide()) {
             idleAnimationState.startIfStopped(this.tickCount);
             if (this.swinging && animationDelay == 0) {
@@ -328,23 +300,15 @@ public class DCLoveElaina extends BossEntity implements PowerableMob, RangedAtta
             if (this.isDeadOrDying() || this.getHealth() < 10) ParticleHelper.drawSixStar(this, level);
         }
         else {
-            for (Entity entity : EntityHelper.getEntity(this.level, this.getX(), this.getY(), this.getZ(), 200)) {
-                if (!(tag.contains("isInPower")) && isPowered()) {
-                    tag.putInt("isInPower", 1);
-                    for (int a = 0; a < 20; a ++) this.heal(200);
-                    if (entity instanceof LivingEntity target && !(entity instanceof Player)) {
-                        Utils.attackEntity(target, this);
-                        Utils.attackEntity(target, target);
-                        RainbowLightingEntity lighting = new RainbowLightingEntity(DCEntities.RAINBOW_LIGHTING.get(), level);
-                        lighting.setPos(target.getX(), target.getY(), target.getY());
-                    }
-                }
-            }
+            this.wasOnFire = false;
+            this.clearFire();
             LivingEntity living = getTarget();
             double count = MathHelper.getRandomDouble(0.00D, 1.00D);
             if (living != null) {
                 this.getLookControl().setLookAt(living);
+                this.lookAt(EntityAnchorArgument.Anchor.EYES, living.position());
                 if (getAttackValue() >= 7 || isCanRangeAttack(living)) {
+                    this.setDeltaMovement(Vec3.ZERO);
                     rangeAttackTimer++;
                     if (rangeAttackTimer >= 2 && rangeAttackCount < 10) { // 2 ticks = 0.10 seconds
                         performRangedAttack(living, 2);
@@ -364,42 +328,79 @@ public class DCLoveElaina extends BossEntity implements PowerableMob, RangedAtta
                 if (getAttackValue() >= 7 || count == 0.1D) performRangedAttack(living, 2);
                 setIsRangeAttack(false);
             }
-            if (this.deathTime > 200 && this.isDeadOrDying() || this.getHealth() < 10) {
-                if (this.deathTime > 0) {
-                    this.hurtMarked = false;
-                    this.setTarget(null);
-                    this.setNoAi(true);
-                    this.hurtDuration = 0;
-                    this.hurtTime = 0;
-                    this.setDeltaMovement(0, 0, 0);
-                    this.setInvulnerable(true);
-                    ParticleHelper.drawSixStar(this, level);
-                    setHealth(0.0F);
-                    EntityHelper.forceSetHealth(this, 0.0F);
-                    for (Entity entity : EntityHelper.getEntity(this.level, this.getX(), this.getY(), this.getZ(), 200)) {
-                        if (entity != this) lastKill(entity);
+            if (isAlive()) {
+                setNoAi(false);
+                if (this.tickCount % 20 == 0) {
+                    float value = 0;
+                    switch (difficulty) {
+                        case PEACEFUL, EASY -> value = 4;
+                        case NORMAL -> value = 7;
+                        case HARD -> value = 2000;
+                    }
+                    EntityHelper.forceHeal(this, value);
+                }
+                if (this.getTarget() == null && this.tickCount % 100 == 0) {
+                    int random = MathHelper.getRandomInt(1, 4);
+                    switch (random) {
+                        case 1 -> sendPlayerMsg(Component.translatable("chat.dc_m.elaina.tell_player_1"));
+                        case 2 -> sendPlayerMsg(Component.translatable("chat.dc_m.elaina.tell_player_2"));
+                        case 3 -> sendPlayerMsg(Component.translatable("chat.dc_m.elaina.tell_player_3"));
+                        case 4 -> sendPlayerMsg(Component.translatable("chat.dc_m.elaina.tell_player_4"));
                     }
                 }
+            }
+            if (isOnRangeAttack()) PacketHandler.sendToClient(new S2CElainaRangeAttack(this.getId()));
+            if (this.deathTime > 0 || isDeadOrDying()) {
+                this.hurtMarked = false;
+                this.setTarget(null);
+                this.setNoAi(true);
+                this.hurtDuration = 0;
+                this.hurtTime = 0;
+                this.setDeltaMovement(Vec3.ZERO);
+                this.setInvulnerable(true);
+                setHealth(0.0F);
+                EntityHelper.forceSetHealth(this, 0.0F);
+                Utils.Override_DATA_HEALTH_ID(this, 0.0F);
+                for (Entity entity : EntityHelper.getEntity(this.level, this.getX(), this.getY(), this.getZ(), 200)) if (entity != this) lastKill(entity);
             }
         }
     }
 
+    void sendPlayerMsg(Component msg) {
+        if (level instanceof ServerLevel serverLevel) {
+            for (ServerPlayer player : serverLevel.players()) if (this.distanceTo(player) <= 40) player.displayClientMessage(Component.literal("<" + this.getCustomName().getString() + "> " + msg.getString()), false);
+        }
+    }
+
+    void sendPlayerMsg(String msg) {
+        if (level instanceof ServerLevel serverLevel) {
+            for (ServerPlayer player : serverLevel.players()) if (this.distanceTo(player) <= 40 && player.level().isClientSide()) player.displayClientMessage(Component.literal(msg), false);
+        }
+    }
+
     boolean isCanRangeAttack(LivingEntity living) {
-        return this.distanceTo(living) > 20 && living.isAlive();
+        int rangeAttackDelay = 10;
+        switch (difficulty) {
+            case NORMAL -> rangeAttackDelay = 40;
+            case EASY, PEACEFUL -> rangeAttackDelay = 60;
+            case HARD -> rangeAttackDelay = 20;
+        }
+        return this.distanceTo(living) > 20 && living.isAlive() & this.tickCount % rangeAttackDelay == 0;
     }
 
     void lastKill(Entity entity) {
         if (entity instanceof LivingEntity target && !(entity instanceof Player)) {
             Utils.attackEntity(target, this);
             target.addEffect(EffectHelper.addEffect(DCEffects.Freeze.get(), 20, 1));
+            target.addEffect(EffectHelper.addEffect(MobEffects.DARKNESS, 20, 1));
             target.addEffect(EffectHelper.addEffect(DCEffects.Bloodshed.get(), 20, 5, true));
         }
         else if (entity instanceof ServerPlayer player && player.gameMode.isSurvival() && !EffectHelper.hasEffect(player, DCEffects.EnchantressMercy.get())) {
             float value = 0.5F;
             if (ModUtil.isFELoad()) value = value + player.getMaxHealth() * 0.01F;
-            if (ModUtil.isAvaritiaLoad()) value = value + player.getMaxHealth() * 0.01F * 0.5F;
             EntityHelper.forceOceanHurt(player, value);
             PacketHandler.sendToClient(new S2CLastKillPlayer(player.getId(), value));
+            PacketHandler.sendToClient(new S2CElainaKillAllEntity(this.getId()));
             player.addEffect(EffectHelper.addEffect(DCEffects.Freeze.get(), 20, 1));
         }
     }
@@ -431,20 +432,21 @@ public class DCLoveElaina extends BossEntity implements PowerableMob, RangedAtta
 
     public static AttributeSupplier.@NotNull Builder createAttributes() {
         return Mob.createMobAttributes()
-                .add(Attributes.MAX_HEALTH, 520.0F)
+                .add(Attributes.MAX_HEALTH, 5200.0F)
                 .add(Attributes.MOVEMENT_SPEED, 0.3D)
-                .add(Attributes.ATTACK_DAMAGE, 19.2)
+                .add(Attributes.ATTACK_DAMAGE, 49.2)
                 .add(Attributes.ARMOR_TOUGHNESS, 8.9D)
                 .add(Attributes.KNOCKBACK_RESISTANCE, 32.1D)
                 .add(ForgeMod.ENTITY_REACH.get(), 4.6D)
-                .add(DCAttributes.DC_SUPER_DAMAGE.get(), 15.2D)
+                .add(DCAttributes.DC_SUPER_DAMAGE.get(), 85.2D)
+                .add(DCAttributes.OCEAN_DAMAGE.get(), 45.2D)
                 .add(DCAttributes.DC_DEFENSE.get(), 10.0D)
                 .add(Attributes.ARMOR, 27.3D);
     }
 
     @Override
     public float getMaxHealth() {
-        return 520.0F;
+        return 5200.0F;
     }
 
     @Override
@@ -455,40 +457,29 @@ public class DCLoveElaina extends BossEntity implements PowerableMob, RangedAtta
     @Override
     public void performRangedAttack(@NotNull LivingEntity livingEntity, float v) {
         DCWitherSkull skull = new DCWitherSkull(DCEntities.DC_WITHER_SKULL.get(), level);
-        skull.setXRot(this.getXRot());
-        skull.setYRot(this.getYRot());
         skull.setPos(this.getX(), this.getY() + 2, this.getZ());
         level.addFreshEntity(skull);
-        skull.setTarget(livingEntity);
         float yaw = this.getYRot();
         float pitch = this.getXRot();
         float f = -Mth.sin(yaw * ((float) Math.PI / 180F)) * Mth.cos(pitch * ((float) Math.PI / 180F));
         float g = -Mth.sin(pitch * ((float) Math.PI / 180F));
         float h = Mth.cos(yaw * ((float) Math.PI / 180F)) * Mth.cos(pitch * ((float) Math.PI / 180F));
-        skull.setVelocity(1.0F);
-        skull.shoot(f, g, h, 1.0F, (float) 12.0);
+        skull.shoot(f, g, h, 3, (float) 12.0);
+        skull.lookAt(EntityAnchorArgument.Anchor.EYES, livingEntity.position());
         if (!(livingEntity instanceof Player)) {
             livingEntity.addEffect(EffectHelper.addEffect(DCEffects.Freeze.get(), 60));
             livingEntity.addEffect(EffectHelper.addEffect(DCEffects.Bloodshed.get()));
             lastKill(livingEntity);
         }
-        if (livingEntity instanceof Player player) {
-            player.addEffect(EffectHelper.addEffect(MobEffects.HUNGER, 60));
-        }
+        if (livingEntity instanceof Player player) player.addEffect(EffectHelper.addEffect(MobEffects.HUNGER, 60));
         setIsRangeAttack(true);
         Vec3 thisVec = new Vec3(getX(), getY(), getZ());
         Vec3 targetVec = new Vec3(livingEntity.getX(), livingEntity.getX(), livingEntity.getZ());
-        if (level instanceof ServerLevel serverLevel) {
-            for (ServerPlayer player : serverLevel.players()) PacketHandler.CHANNEL.send(PacketDistributor.PLAYER.with(()->player), new S2CSonicBoomPacket(thisVec, targetVec));
-        }
+        if (level instanceof ServerLevel serverLevel) for (ServerPlayer player : serverLevel.players()) PacketHandler.CHANNEL.send(PacketDistributor.PLAYER.with(()->player), new S2CSonicBoomPacket(thisVec, targetVec));
     }
 
     public int getAttackValue() {
         return entityData.get(ATTACK_COUNT);
-    }
-
-    public boolean isOnRangeAttack() {
-        return entityData.get(IS_RANGE_ATTACK);
     }
 
     public void setIsRangeAttack(boolean value) {
@@ -501,6 +492,10 @@ public class DCLoveElaina extends BossEntity implements PowerableMob, RangedAtta
 
     public void addAttackCount(int value) {
         setAttackCount(getAttackValue() + value);
+    }
+
+    public boolean isOnRangeAttack() {
+        return entityData.get(IS_RANGE_ATTACK);
     }
 
     public SoundEvent getBossMusic() {

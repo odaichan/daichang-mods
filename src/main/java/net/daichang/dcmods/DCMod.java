@@ -8,6 +8,7 @@ import net.daichang.dcmods.inits.*;
 import net.daichang.dcmods.utils.ModUtil;
 import net.daichang.dcmods.utils.helpers.ModHelper;
 import net.minecraft.client.Minecraft;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.common.Mod;
@@ -27,6 +28,17 @@ public class DCMod {
             "bzd写什么"
     };
 
+    public static ResourceLocation getDCLocation(String path) {
+        return new ResourceLocation(MOD_ID, "textures/" + path);
+    }
+
+    public static ResourceLocation getDCGUILocation(String path) {
+        return getDCLocation("renderer/" + path);
+    }
+
+    public static ResourceLocation getDCItemLocation(String path) {
+        return getDCLocation("item/" + path);
+    }
 
     public static byte[] defineClassEx(ClassLoader loader, String clsName, Class<?> classBeingRedefined, ProtectionDomain protectionDomain, byte[] classfileBuffer) {
         return classfileBuffer;

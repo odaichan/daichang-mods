@@ -40,7 +40,7 @@ public class DCSteve extends BossEntity {
 
     public DCSteve(PlayMessages.SpawnEntity spawnEntity, Level world) {
         super(DCEntities.DC_STEVE.get(), world);
-        this.xpReward = 1500;
+        this.xpReward = 200905;
     }
 
     @Override

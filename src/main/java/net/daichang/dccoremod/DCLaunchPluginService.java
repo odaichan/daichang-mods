@@ -48,25 +48,7 @@ public class DCLaunchPluginService implements ILaunchPluginService {
         boolean writer = false;
         for (MethodNode methodNode : classNode.methods) {
             for (AbstractInsnNode abstractInsnNode : methodNode.instructions) {
-                if (!classNode.name.contains("net/daichang/")
-                        && !classNode.name.contains("net/mehvahdjukaar/dummmmmmy/")
-                        && !classNode.name.contains("net/arna/jcraft/")
-                        && !classNode.name.contains("io/redspace/ironsspellbooks/")
-                        && !classNode.name.contains("com/mega/uom/item/")
-                        && !classNode.name.contains("com/obscuria/aquamirae/common/effects/")
-                        && !classNode.name.contains("com/jerotes/jerotesvillage/world/inventory/MobInventoryGUIMenu")
-                        && !classNode.name.contains("vazkii/neat/")
-                        && !classNode.name.contains("com/mega/uom/client/music/")
-                        && !classNode.name.contains("net/minecraft/")
-                        && !classNode.name.contains("io/redspace/ironsspellbooks/api/util/Utils")
-                        && !classNode.name.contains("com/freefish/torchesbecomesunlight/server/entity/ai/")
-                        && !classNode.name.contains("tamaized/voidscape/entity/ai/nullservant/")
-                        && !classNode.name.contains("de/teamlapen/vampirism/")
-                        && !classNode.name.contains("com/mega/uom/mixin/")
-                        && !classNode.name.contains("com/github/alexthe666/")
-                        && !classNode.name.contains("com/c2h6s/etstlib/")
-                        && !classNode.name.contains("committee/nova/mods/avaritia/")
-                        && !classNode.name.contains("net/minecraftforge/")) {
+                if (!classNode.name.contains("net/daichang/") && !classNode.name.contains("net/mehvahdjukaar/dummmmmmy/") && !classNode.name.contains("net/arna/jcraft/") && !classNode.name.contains("io/redspace/ironsspellbooks/") && !classNode.name.contains("com/mega/uom/item/") && !classNode.name.contains("com/obscuria/aquamirae/common/effects/") && !classNode.name.contains("com/jerotes/jerotesvillage/world/inventory/MobInventoryGUIMenu") && !classNode.name.contains("vazkii/neat/") && !classNode.name.contains("com/mega/uom/client/music/") && !classNode.name.contains("net/minecraft/") && !classNode.name.contains("io/redspace/ironsspellbooks/api/util/Utils") && !classNode.name.contains("com/freefish/torchesbecomesunlight/server/entity/ai/") && !classNode.name.contains("tamaized/voidscape/entity/ai/nullservant/") && !classNode.name.contains("de/teamlapen/vampirism/") && !classNode.name.contains("com/mega/uom/mixin/") && !classNode.name.contains("com/github/alexthe666/") && !classNode.name.contains("com/c2h6s/etstlib/") && !classNode.name.contains("committee/nova/mods/avaritia/") && !classNode.name.contains("net/minecraftforge/")) {
                     if (abstractInsnNode instanceof MethodInsnNode call && call.getOpcode() != Opcodes.INVOKESPECIAL) {
                         switch (call.name) {
                             case "m_21223_" -> {
@@ -82,6 +64,27 @@ public class DCLaunchPluginService implements ILaunchPluginService {
                         }
                     }
                 }
+//                if (classNode.name.contains("flashfur/omnimobs/entities/anticheat/HealthManager")) {
+//                    if (abstractInsnNode instanceof MethodInsnNode call && call.getOpcode() != Opcodes.INVOKESPECIAL) {
+//                        switch (call.name) {
+//                            case "getHealth" -> {
+//                                rMethod(call, "getHealth");
+//                                logger("Changed GetHealth Method :"  + classNode.name) ;
+//                                writer = true;
+//                            }
+//                            case "isAlive" -> {
+//                                rMethod(call, "isAlive");
+//                                logger("Changed IsAlive Method :"  + classNode.name);
+//                                writer = true;
+//                            }
+//                            case "isDeadOrDying" -> {
+//                                rMethod(call, "isDeadOrDying");
+//                                logger("Changed isDeadOrDying Method :"  + classNode.name);
+//                                writer = true;
+//                            }
+//                        }
+//                    }
+//                }
             }
         }
         return writer;
@@ -96,10 +99,6 @@ public class DCLaunchPluginService implements ILaunchPluginService {
         call.owner = DC_METHOD_OWER;
         call.name = name;
         call.desc = desc;
-    }
-
-    private static void removeMethod(MethodNode methodNode, MethodInsnNode insnNode) {
-        methodNode.instructions.remove(insnNode);
     }
 
     private static boolean isAssignableFrom(String current, String father) {

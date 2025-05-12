@@ -55,5 +55,4 @@ public class DCEntityFont extends Font {
         }
         return (int) x;
     }
-
 }

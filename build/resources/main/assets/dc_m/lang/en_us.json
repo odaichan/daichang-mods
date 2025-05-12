@@ -63,9 +63,9 @@
   "tooltip.dc_mods.remove_warn" : "Be cautious when using, it may cause the game to crash!",
   "tooltip.dc_mods.bow_1" : "When attacking entities, causing huge damage.",
   "tooltip.dc_mods.bow_shout" : "Launch 2 arrows at once",
-  "entities.dc_mods.dc_wither_name" : "World Administrator",
-  "entities.dc_mods.dc_wither_name_tow" : "World Administrator [Angry]",
-  "tooltip.dc_mods.spawn_mods_egg" : "Summon the World Administrator with this item",
+  "entities.dc_mods.dc_wither_name" : "Elaina",
+  "entities.dc_mods.dc_wither_name_tow" : "Elaina [Angry]",
+  "tooltip.dc_mods.spawn_mods_egg" : "Summon the DaiChang's Wife with this item",
   "chat.dc_mods.world_loading" : "Welcome to use [DaiChang's Random Creations]",
   "chat.dc_mods.core_loading" : "The current loading status of the Coremod:",
   "effect.dc_m.bloodshed" : "Bloodshed",
@@ -167,5 +167,10 @@
   "tool_tip.dc_m.ocean_tip_3": "Continuously restore health when shifting gears",
   "advancements.dc_m.ocean_scythe" : "Just a sickle?",
   "advancements.dc_m.ocean_scythe_tip" : "Obtain the Ocean Scythe",
-  "effect.dc_m.enchantress_mercy" : "Enchantress's Mercy"
+  "effect.dc_m.enchantress_mercy" : "Enchantress's Mercy",
+  "chat.dc_m.elaina.tell_player_1": "I am so beautiful, haha ヾ (≥ ▽≤*) o",
+  "chat.dc_m.elaina.tell_player_2": "(✿◡‿◡)",
+  "chat.dc_m.elaina.tell_player_3": "I'm so cute. (~ω~o)",
+  "chat.dc_m.elaina.tell_player_4": "Perhaps today is a suitable day to play at a friend's house?",
+  "chat.dc_m.elaina.elaina_die": "I hate you~(>_<。)＼"
 }

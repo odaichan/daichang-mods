@@ -13,6 +13,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.ai.goal.RandomStrollGoal;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
@@ -24,6 +25,12 @@ public class BossEntity extends Monster {
 
     public BossEntity(EntityType<? extends Monster> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
+    }
+
+    @Override
+    protected void registerGoals() {
+        super.registerGoals();
+        this.goalSelector.addGoal(2, new RandomStrollGoal(this, 1));
     }
 
     public ResourceLocation getBossBar() {
@@ -53,6 +60,7 @@ public class BossEntity extends Monster {
     public float getMaxDamageHurt() {
         return Float.MAX_VALUE;
     }
+
 
     @Override
     public boolean doHurtTarget(@NotNull Entity pEntity) {
@@ -100,6 +108,11 @@ public class BossEntity extends Monster {
     }
 
     @Override
+    public void heal(float pHealAmount) {
+        super.heal(pHealAmount);
+    }
+
+    @Override
     public void remove(RemovalReason pReason) {
         super.remove(pReason);
         DCForgeEventHandler.bossList.remove(this);
@@ -109,6 +122,8 @@ public class BossEntity extends Monster {
     public void tick() {
         super.tick();
         if (level().isClientSide()) BossMusic.playMusic(music ,this);
+        this.resetFallDistance();
+        this.fallDistance = 0;
     }
 
     @Override

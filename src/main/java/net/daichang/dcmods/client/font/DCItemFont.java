@@ -92,21 +92,6 @@ public class DCItemFont extends Font {
         return s.contains(getString("tooltip.dc_mods.dc_craft")) || s.contains(getString("tool_tip.dc_mods.7meter"));
     }
 
-    public static boolean isMinecraftName(String s) {
-        return s.contains(getString("attribute.name.generic.attack_damage"))
-                || s.contains(getString("attribute.name.generic.attack_speed"))
-                || s.contains(getString("attribute.name.generic.armor"))
-                || s.contains(getString("attribute.name.generic.armor_toughness"))
-                || s.contains(getString("attribute.name.generic.attack_knockback"))
-                || s.contains(getString("attribute.name.generic.flying_speed"))
-                || s.contains(getString("attribute.name.generic.knockback_resistance"))
-                || s.contains(getString("attribute.name.generic.follow_range"))
-                || s.contains(getString("attribute.name.generic.attack_speed"))
-                || s.contains(getString("attribute.name.generic.movement_speed"))
-                ;
-    }
-
-    //不知道应该写什么方法名
     public static boolean az(String s) {
         return s.contains(getString("tooltip.dc_mods.hurts"))
                 || s.contains(getString("tool_tip.dc_mods.wood_ring"))
@@ -117,49 +102,113 @@ public class DCItemFont extends Font {
                 || s.contains(getString("item.dc_m.super_wood_boots"));
     }
 
-    public int drawInBatch(@NotNull FormattedCharSequence formattedCharSequence, float x, float y, int rgb, boolean b1, @NotNull Matrix4f matrix4f, @NotNull MultiBufferSource multiBufferSource, @NotNull DisplayMode mode, int i, int i1) {
+    public int drawInBatch(@NotNull FormattedCharSequence formattedCharSequence, float x, float y, int rgb, boolean dropShadow, @NotNull Matrix4f matrix4f, @NotNull MultiBufferSource bufferSource, @NotNull DisplayMode mode, int i, int i1) {
         StringBuilder builder = new StringBuilder();
         formattedCharSequence.accept((p_13746_, p_13747_, p_13748_) -> {
             builder.appendCodePoint(p_13748_);
             return true;
         });
-        return renderFont(builder.toString(), x, y, rgb, b1, matrix4f, multiBufferSource, mode, i, i1, this.isBidirectional());
+        String s = builder.toString();
+        int c = rgb;
+        int darkerC = (c & 0x00FFFFFF) | (0x80000000 & c) >> 1;
+        if (isSuperItemName(s)) {
+            c = rgb & 0xFFFFA500;
+            super.drawInBatch(s, x, y, c, dropShadow, matrix4f, bufferSource, mode, i, i1);
+            super.drawInBatch(s, x + 0.55F, y + 0.55F, darkerC, dropShadow, matrix4f, bufferSource, mode, i, i1);
+            return (int) x;
+        }
+        if (isCreativeItem(s)) {
+            c = rgb & 0xFF87CEEB;
+            super.drawInBatch(s, x, y, c, dropShadow, matrix4f, bufferSource, mode, i, i1);
+            super.drawInBatch(s, x + 0.55F, y + 0.55F, darkerC, dropShadow, matrix4f, bufferSource, mode, i, i1);
+            return (int) x;
+        }
+        if (isSwordTip(s)) {
+            c = rgb & 0xFF40E0D0;
+            super.drawInBatch(s, x, y, c, dropShadow, matrix4f, bufferSource, mode, i, i1);
+            super.drawInBatch(s, x + 0.55F, y + 0.55F, darkerC, dropShadow, matrix4f, bufferSource, mode, i, i1);
+            return (int) x;
+        }
+        if (isCraftTip(s)) {
+            c = rgb & 0xFF004D40;
+            super.drawInBatch(s, x, y, c, dropShadow, matrix4f, bufferSource, mode, i, i1);
+            super.drawInBatch(s, x + 0.55F, y + 0.55F, darkerC, dropShadow, matrix4f, bufferSource, mode, i, i1);
+            return (int) x;
+        }
+        if (isCraftTip(s)) {
+            c = rgb & 0xFF004D40;
+            super.drawInBatch(s, x, y, c, dropShadow, matrix4f, bufferSource, mode, i, i1);
+            super.drawInBatch(s, x + 0.55F, y + 0.55F, darkerC, dropShadow, matrix4f, bufferSource, mode, i, i1);
+            return (int) x;
+        }
+        if (s.equals(getString("tooltip.dc_mods.is_strong")) || isWarnTip(s) || s.equals("Subscribe to DaiChang on Bilibili")) {
+            c = rgb & 0xFFFF0000;
+            super.drawInBatch(s, x, y, c, dropShadow, matrix4f, bufferSource, mode, i, i1);
+            super.drawInBatch(s, x + 0.55F, y + 0.55F, darkerC, dropShadow, matrix4f, bufferSource, mode, i, i1);
+            return (int) x;
+        }
+        if (s.equals(getString("tooltip.dc_mods.strong"))) {
+            c = rgb & 0xFFA9A9A9;
+            super.drawInBatch(s, x, y, c, dropShadow, matrix4f, bufferSource, mode, i, i1);
+            super.drawInBatch(s, x + 0.55F, y + 0.55F, darkerC, dropShadow, matrix4f, bufferSource, mode, i, i1);
+            return (int) x;
+        }
+        if (s.contains(getString("attribute.dc_mods.super_damage")) || s.contains(getString("attribute.dc_mods.dc_defense"))) {
+            c = rgb & 0x01ADD8E6;
+            super.drawInBatch(s, x, y, c, dropShadow, matrix4f, bufferSource, mode, i, i1);
+            super.drawInBatch(s, x + 0.55F, y + 0.55F, darkerC, dropShadow, matrix4f, bufferSource, mode, i, i1);
+            return (int) x;
+        }
+        if (s.contains(getString("modifier.dc_m.super_wood_ingot"))) {
+            c = rgb & 0x800080;
+            super.drawInBatch(s, x, y, c, dropShadow, matrix4f, bufferSource, mode, i, i1);
+            super.drawInBatch(s, x + 0.55F, y + 0.55F, darkerC, dropShadow, matrix4f, bufferSource, mode, i, i1);
+            return (int) x;
+        }
+        if (az(s)) {
+            c = rgb & 0xFFD8BFD8;
+            super.drawInBatch(s, x, y, c, dropShadow, matrix4f, bufferSource, mode, i, i1);
+            super.drawInBatch(s, x + 0.55F, y + 0.55F, darkerC, dropShadow, matrix4f, bufferSource, mode, i, i1);
+            return (int) x;
+        }
+        if (isDCEnchFont(s)) {
+            c = rgb & 0xFFF0F0F0;
+            super.drawInBatch(s, x, y, c, dropShadow, matrix4f, bufferSource, mode, i, i1);
+            super.drawInBatch(s, x + 0.55F, y + 0.55F, darkerC, dropShadow, matrix4f, bufferSource, mode, i, i1);
+            return (int) x;
+        }
+        if (isTabFont(s)) {
+            c = rgb & 0xFFFFD700;
+            super.drawInBatch(s, x, y, c, dropShadow, matrix4f, bufferSource, mode, i, i1);
+            super.drawInBatch(s, x + 0.55F, y + 0.55F, darkerC, dropShadow, matrix4f, bufferSource, mode, i, i1);
+            return (int) x;
+        }
+        if (isDaiChangTip(s)) {
+            c = rgb & 0xFFD700;
+            super.drawInBatch(s, x, y, c, dropShadow, matrix4f, bufferSource, mode, i, i1);
+            super.drawInBatch(s, x + 0.55F, y + 0.55F, darkerC, dropShadow, matrix4f, bufferSource, mode, i, i1);
+            return (int) x;
+        }
+        if (s.contains(getString("curios.slot"))) {
+            c = rgb & 0xFFADD8E6;
+            super.drawInBatch(s, x, y, c, dropShadow, matrix4f, bufferSource, mode, i, i1);
+            super.drawInBatch(s, x + 0.55F, y + 0.55F, darkerC, dropShadow, matrix4f, bufferSource, mode, i, i1);
+            return (int) x;
+        }
+        if (s.contains(getString("attribute.name.generic.max_health")) || s.contains(getString("tool_tip.dc_mods.default")) || s.contains(getString("tool_tip.dc_mods.ocean"))) {
+            c = rgb & 0xFFFF9999;
+            super.drawInBatch(s, x, y, c, dropShadow, matrix4f, bufferSource, mode, i, i1);
+            super.drawInBatch(s, x + 0.55F, y + 0.55F, darkerC, dropShadow, matrix4f, bufferSource, mode, i, i1);
+            return (int) x;
+        }
+        return super.drawInBatch(s, x, y, rgb, dropShadow, matrix4f, bufferSource, mode, i, i1);
     }
 
     public int drawInBatch(@NotNull String text, float x, float y, int rgb, boolean b, @NotNull Matrix4f matrix4f, @NotNull MultiBufferSource source, @NotNull DisplayMode mode, int i, int i1) {
-        return renderFont(text, x, y, rgb, b, matrix4f, source, mode, i, i1, this.isBidirectional());
+        return super.drawInBatch(text, x, y, rgb, b, matrix4f, source, mode, i, i1);
     }
 
     public int drawInBatch(@NotNull Component component, float x, float y, int rgb, boolean b, @NotNull Matrix4f matrix4f, @NotNull MultiBufferSource source, @NotNull DisplayMode mode, int i, int i1) {
-        return renderFont(component.getString(), x, y, rgb, b, matrix4f, source, mode, i, i1, this.isBidirectional());
-    }
-
-    public int renderFont(@NotNull String text, float x, float y, int rgb, boolean dropShadow, @NotNull Matrix4f matrix4f, @NotNull MultiBufferSource bufferSource, @NotNull DisplayMode mode, int i, int i1, boolean isText){
-        for (int index = 0; index < text.length(); index++) {
-            String s = String.valueOf(text.charAt(index));
-            int c;
-            if (isSuperItemName(text)) c = rgb & 0xFFFFA500;
-            else if (isCreativeItem(text)) c = rgb & 0xFF87CEEB;
-            else if (isSwordTip(text)) c = rgb &  0xFF40E0D0;
-            else if (isMinecraftName(text) || isCraftTip(s)) c = rgb & 0xFF004D40;
-            else if (text.equals(getString("tooltip.dc_mods.is_strong")) || isWarnTip(text) || text.equals("Subscribe to DaiChang on Bilibili")) c = rgb & 0xFFFF0000;
-            else if (text.equals(getString("tooltip.dc_mods.strong"))) c = rgb & 0xFFA9A9A9;
-            else if (text.contains(getString("attribute.dc_mods.super_damage")) || text.contains(getString("attribute.dc_mods.dc_defense"))) c = rgb & 0x01ADD8E6 ;
-            else if (text.contains(getString("modifier.dc_m.super_wood_ingot"))) c = rgb & 0x800080;
-            else if (az(text)) c = rgb & 0xFFD8BFD8;
-            else if (isDCEnchFont(text)) c = rgb & 0xFFF0F0F0;
-            else if (isTabFont(text)) c = rgb & 0xFFFFD700;
-            else if (isDaiChangTip(text)) c = rgb & 0xFFD700;
-            else if (text.contains(getString("curios.slot"))) c = rgb & 0xFFADD8E6;
-            else if (text.contains(getString("attribute.name.generic.max_health")) || text.contains(getString("tool_tip.dc_mods.default")) || text.contains(getString("tool_tip.dc_mods.ocean"))) c = rgb & 0xFFFF9999;
-            else  c = rgb;
-            int darkerC = (c & 0x00FFFFFF) | (0x80000000 & c) >> 1;
-            super.drawInBatch(s, x, y, c, dropShadow, matrix4f, bufferSource, mode, i, i1);//前景色
-            super.drawInBatch(s, x + 0.55F, y + 0.55F, darkerC, dropShadow, matrix4f, bufferSource, mode, i, i1);
-            if (text.startsWith("§o"))  matrix4f.rotate((float) Math.toRadians(10), 0, 1, 0);
-            if (text.startsWith("§l"))  matrix4f.scale(1.1F);
-            x += width(s);
-        }
-        return (int) x;
+        return super.drawInBatch(component, x, y, rgb, b, matrix4f, source, mode, i, i1);
     }
 }

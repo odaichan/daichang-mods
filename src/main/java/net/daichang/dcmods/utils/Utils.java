@@ -18,6 +18,8 @@ import net.daichang.dcmods.utils.helpers.EntityHelper;
 import net.daichang.dcmods.utils.helpers.MathHelper;
 import net.daichang.dcmods.utils.lists.DeathList;
 import net.daichang.dcmods.utils.lists.items.CanSwordBlockItem;
+import net.daichang.dcmods.utils.lists.items.CreativeItemList;
+import net.daichang.dcmods.utils.lists.items.SuperItemList;
 import net.minecraft.SharedConstants;
 import net.minecraft.Util;
 import net.minecraft.advancements.Advancement;
@@ -386,11 +388,11 @@ public class Utils {
     }
 
     public static boolean isCreativeItem(ItemStack item) {
-        return item.is(getModItemTag("creative_item"));
+        return item.is(getModItemTag("creative_item")) || CreativeItemList.getItem(item.getItem());
     }
 
     public static boolean isSuperTool(ItemStack item) {
-        return item.is(getModItemTag("super_tools"));
+        return item.is(getModItemTag("super_tools")) || SuperItemList.getItem(item.getItem());
     }
 
     public static boolean isNormalTool(ItemStack item) {

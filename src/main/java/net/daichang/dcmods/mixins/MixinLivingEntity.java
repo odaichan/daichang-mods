@@ -92,5 +92,4 @@ public abstract class MixinLivingEntity extends Entity {
     private void getSpeed(CallbackInfoReturnable<Float> cir) {
         if (EffectHelper.hasEffect(dc_mod$living, DCEffects.Speed.get())) cir.setReturnValue(cir.getReturnValue() + (1 + EffectHelper.getEffectLevel(dc_mod$living, DCEffects.Speed.get())));
     }
-
 }

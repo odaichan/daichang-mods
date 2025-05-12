@@ -83,7 +83,10 @@ public class PacketHandler {
     }
 
     public static void register() {
+        CHANNEL.messageBuilder(S2CElainaKillAllEntity.class, 2, NetworkDirection.PLAY_TO_CLIENT).encoder(S2CElainaKillAllEntity::encode).decoder(S2CElainaKillAllEntity::new).consumerMainThread(S2CElainaKillAllEntity::handle).add();
+        CHANNEL.messageBuilder(S2CElainaRangeAttack.class, 2, NetworkDirection.PLAY_TO_CLIENT).encoder(S2CElainaRangeAttack::encode).decoder(S2CElainaRangeAttack::new).consumerMainThread(S2CElainaRangeAttack::handle).add();
         CHANNEL.messageBuilder(S2CSyncSetFloatField.class, 6, NetworkDirection.PLAY_TO_CLIENT).encoder(S2CSyncSetFloatField::encode).decoder(S2CSyncSetFloatField::new).consumerMainThread(S2CSyncSetFloatField::handle).add();
+        CHANNEL.messageBuilder(S2CBlueScreenAttack.class, 2, NetworkDirection.PLAY_TO_CLIENT).encoder(S2CBlueScreenAttack::encode).decoder(S2CBlueScreenAttack::new).consumerMainThread(S2CBlueScreenAttack::handle).add();
         CHANNEL.messageBuilder(S2CSyncDamageFlash.class, 2, NetworkDirection.PLAY_TO_CLIENT).encoder(S2CSyncDamageFlash::encode).decoder(S2CSyncDamageFlash::new).consumerMainThread(S2CSyncDamageFlash::handle).add();
         CHANNEL.messageBuilder(S2CLastKillPlayer.class, 2, NetworkDirection.PLAY_TO_CLIENT).encoder(S2CLastKillPlayer::encode).decoder(S2CLastKillPlayer::new).consumerMainThread(S2CLastKillPlayer::handle).add();
         CHANNEL.messageBuilder(S2CUseWoodTotem.class, 2, NetworkDirection.PLAY_TO_CLIENT).encoder(S2CUseWoodTotem::encode).decoder(S2CUseWoodTotem::new).consumerMainThread(S2CUseWoodTotem::handle).add();

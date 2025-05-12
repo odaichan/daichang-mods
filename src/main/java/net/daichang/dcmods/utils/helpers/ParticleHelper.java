@@ -5,6 +5,7 @@ import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 
@@ -132,5 +133,84 @@ public class ParticleHelper {
             double p = i / (double) seg;
             return from.scale(1 - p).add(to.scale(p));
         });
+    }
+
+    public static void realStar(LivingEntity player, Level level) {
+        double playerX = player.getX();
+        double playerY = player.getY() + 1.8; // 大约在玩家腰部高度
+        double playerZ = player.getZ();
+        double yaw = player.getYRot(); // 玩家水平旋转角度 (角度制)
+        double yawRad = toRadians(yaw); // 玩家水平旋转角度 (弧度)
+        double radius = 3.0; // 半径
+        int edgeCount = 6; // 星形的顶点数 (六芒星)
+        SimpleParticleType particleType = ParticleTypes.SOUL_FIRE_FLAME;
+        double distanceFromPlayer = 1.0; // 图案距离玩家的距离
+        double particleSpacing = 0.05; // 粒子间距
+        double rotationSpeed = 0.0015; // 图案的旋转速度
+        int circleDetail = 120; // 圆形边框的粒子数量
+
+
+        // 中心点
+        double frontX = playerX + sin(yawRad) * distanceFromPlayer;
+        double frontZ = playerZ - cos(yawRad) * distanceFromPlayer;
+        double centerY = playerY; // 垂直中心点
+
+        //六芒星顶点
+        double[] starX = new double[edgeCount];
+        double[] starY = new double[edgeCount];
+        double[] starZ = new double[edgeCount];
+
+        double currentRotation = rs; // 当前内部旋转角度
+
+        // 用于旋转局部坐标到世界坐标
+        double cosYaw = cos(yawRad);
+        double sinYaw = sin(yawRad);
+
+        for (int i = 0; i < edgeCount; i++) {
+            double angle = (2 * Math.PI / edgeCount) * i + currentRotation; // 星形顶点的角度
+
+            // 计算在面向玩家的局部 UV 平面上的坐标
+            double planeU = radius * sin(angle); // 水平
+            double planeV = radius * cos(angle); // 垂直
+
+            // 将局部坐标变换到世界坐标，并叠加到中心点
+            // planeV 直接对应世界 Y 轴的偏移
+            // planeU 需要根据玩家朝向(yawRad)分解到世界 X 和 Z 轴
+            double deltaX = planeU * cosYaw; // U轴在世界X轴的投影
+            double deltaZ = planeU * sinYaw; // U轴在世界Z轴的投影
+
+            starX[i] = frontX + deltaX;
+            starY[i] = centerY + planeV; // Y 坐标直接用 V 分量
+            starZ[i] = frontZ + deltaZ;
+        }
+
+
+        for (int i = 0; i < edgeCount; i++) {
+            drawLine(particleSpacing,
+                    starX[i], starY[i], starZ[i],
+                    starX[(i + 2) % edgeCount], starY[(i + 2) % edgeCount], starZ[(i + 2) % edgeCount],
+                    particleType, level);
+        }
+
+        rs += rotationSpeed;
+
+        double angleStep = 2 * Math.PI / circleDetail; // 计算每个粒子之间的角度步长
+        for (int i = 0; i < circleDetail; i++) {
+            double angle = i * angleStep; // 圆上点的角度
+
+            // 计算在面向玩家的局部 UV 平面上的坐标
+            double planeU = radius * sin(angle); // 水平分量
+            double planeV = radius * cos(angle); // 垂直分量
+
+            // 将局部坐标变换到世界坐标，并叠加到中心点
+            double deltaX = planeU * cosYaw;
+            double deltaZ = planeU * sinYaw;
+
+            double particleX = frontX + deltaX;
+            double particleY = centerY + planeV;
+            double particleZ = frontZ + deltaZ;
+
+            level.addParticle(particleType, particleX, particleY, particleZ, 0, 0, 0);
+        }
     }
 }

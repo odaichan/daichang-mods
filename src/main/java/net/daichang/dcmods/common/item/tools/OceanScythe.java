@@ -15,6 +15,7 @@ import net.daichang.dcmods.utils.helpers.DataHelper;
 import net.daichang.dcmods.utils.helpers.EffectHelper;
 import net.daichang.dcmods.utils.helpers.EntityHelper;
 import net.daichang.dcmods.utils.lists.items.CanSwordBlockItem;
+import net.daichang.dcmods.utils.lists.items.SuperItemList;
 import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -67,6 +68,7 @@ public class OceanScythe extends DCTierItem {
         offHand.put(DCAttributes.OCEAN_DAMAGE.get(), new AttributeModifier(UUID.randomUUID(), "Item modifier", 88.7D, AttributeModifier.Operation.ADDITION));
         offHandModifiers = offHand.build();
         CanSwordBlockItem.addItem(this);
+        SuperItemList.addItem(this);
     }
 
     @Override
@@ -94,6 +96,13 @@ public class OceanScythe extends DCTierItem {
         DataHelper.restHealthDelta(pPlayer);
         pPlayer.startUsingItem(pUsedHand);
         return super.use(pLevel, pPlayer, pUsedHand);
+    }
+
+    @Override
+    public void onUseTick(Level pLevel, LivingEntity pLivingEntity, ItemStack pStack, int pRemainingUseDuration) {
+        EntityHelper.forceHeal(pLivingEntity, 20.0F);
+        DataHelper.restHealthDelta(pLivingEntity);
+        super.onUseTick(pLevel, pLivingEntity, pStack, pRemainingUseDuration);
     }
 
     @Override

@@ -58,9 +58,9 @@
   "item.dc_m.dc_arrow": "蒼穹裂星矢",
   "tooltip.dc_mods.bow_1": "攻击到实体时，造成巨额伤害；",
   "tooltip.dc_mods.bow_shout": "一次发射2根箭矢",
-  "entities.dc_mods.dc_wither_name": "世界管理者",
-  "entities.dc_mods.dc_wither_name_tow": "世界管理者[愤怒]",
-  "tooltip.dc_mods.spawn_mods_egg": "此物可召唤 世界管理者",
+  "entities.dc_mods.dc_wither_name": "伊雷娜",
+  "entities.dc_mods.dc_wither_name_tow": "伊雷娜[伤心]",
+  "tooltip.dc_mods.spawn_mods_egg": "此物可召唤 DaiChang's Wife",
   "item.dc_m.dc_wither_spawn_egg": "管理世界[封]",
   "chat.dc_mods.world_loading": "欢迎使用[带长的随意创作]",
   "chat.dc_mods.core_loading": "当前CoreMod加载情况:",
@@ -167,5 +167,10 @@
   "tool_tip.dc_m.ocean_tip_3": "格挡时，快速恢复生命值",
   "advancements.dc_m.ocean_scythe": "也不是完全没用",
   "advancements.dc_m.ocean_scythe_tip": "获得 < 碧海噬魂钩 >",
-  "effect.dc_m.enchantress_mercy": "魔女的仁慈"
+  "effect.dc_m.enchantress_mercy": "魔女的仁慈",
+  "chat.dc_m.elaina.tell_player_1": "嘻嘻,我真好看ヾ (≥ ▽≤*) o",
+  "chat.dc_m.elaina.tell_player_2": "(✿◡‿◡)",
+  "chat.dc_m.elaina.tell_player_3": "我真可爱 (~ω~o)",
+  "chat.dc_m.elaina.tell_player_4": "或许今天适合去朋友家串门?",
+  "chat.dc_m.elaina.elaina_die": "我恨你 (>_<。)"
 }

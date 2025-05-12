@@ -4,13 +4,10 @@ import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.brigadier.arguments.FloatArgumentType;
 import net.daichang.dcmods.DCMod;
-import net.daichang.dcmods.client.PacketHandler;
-import net.daichang.dcmods.client.network.S2CUseWoodTotem;
 import net.daichang.dcmods.commands.SoftGetHealthCommand;
 import net.daichang.dcmods.common.blocks.RedSpiderLily;
 import net.daichang.dcmods.common.entities.BossEntity;
 import net.daichang.dcmods.common.entities.boss.DCLoveElaina;
-import net.daichang.dcmods.common.entities.projectile.DCWitherSkull;
 import net.daichang.dcmods.common.item.armors.DCSuperArmor;
 import net.daichang.dcmods.common.item.tools.creative.DCLoliPickaxe;
 import net.daichang.dcmods.inits.*;
@@ -47,12 +44,10 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.RenderGuiEvent;
 import net.minecraftforge.client.event.RenderTooltipEvent;
-import net.minecraftforge.client.event.ViewportEvent;
 import net.minecraftforge.event.AnvilUpdateEvent;
 import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.event.TickEvent;
@@ -76,6 +71,21 @@ public class DCForgeEventHandler {
 
     private static final Map<BossEntity, Integer> prevBarWidthMap = new HashMap<>();
 
+    private static int rotate;
+
+    public static void setRotate(int value) {
+        rotate = value;
+    }
+
+    public static int getRotate() {
+        return rotate;
+    }
+
+    public static void addRotate(int value) {
+        setRotate(getRotate() + value);
+        if (getRotate() >= 360) setRotate(1);
+    }
+
     @SubscribeEvent
     public static void hurtEvent(@NotNull LivingHurtEvent event) {
         LivingEntity living = event.getEntity();
@@ -93,7 +103,7 @@ public class DCForgeEventHandler {
         LivingEntity living = event.getEntity();
         DamageSource damageSource = event.getSource();
         Entity entity = damageSource.getEntity();
-        if (damageSource.is(DCSuperDamage.SUPER_DAMAGE) && !(entity instanceof LivingEntity living1 && living1.getMainHandItem().is(DCItems.SUPER_WOOD_SWORD.get()))) {
+        if (damageSource.is(DCSuperDamage.SUPER_DAMAGE) && !(entity instanceof LivingEntity living1 && living1.getMainHandItem().is(DCItems.SUPER_WOOD_SWORD.get())) || damageSource.is(DCOceanDamage.OCEAN_DAMAGE)) {
             event.setCanceled(false);
             float normalDamage = living.getMaxHealth() * 0.01F;
             if (entity instanceof LivingEntity attacker) {
@@ -106,15 +116,16 @@ public class DCForgeEventHandler {
             EntityHelper.noHurtDuration(living);
             living.getEntityData().set(LivingEntity.DATA_HEALTH_ID, newHealth);
             living.setHealth(newHealth);
-            try {
-                if (!(living instanceof Player)) living.dropAllDeathLoot(damageSource);
-            } catch (Exception ignored){}
             DataHelper.addHealthDelta(living, -removedHealth);
-            if (event.getAmount() >= living.getMaxHealth() || living.getHealth() <= 0) living.gameEvent(GameEvent.ENTITY_DIE);
         }
         if (Utils.isBlocking(living)) {
             living.playSound(SoundEvents.SHIELD_BLOCK);
             event.setCanceled(true);
+        }
+        if (entity instanceof BossEntity boss) {
+            float value = (float) (boss.getAttributeValue(DCAttributes.DC_SUPER_DAMAGE.get()) + boss.getAttributeValue(DCAttributes.OCEAN_DAMAGE.get()) + boss.getAttributeValue(Attributes.ATTACK_DAMAGE));
+            EntityHelper.forceOceanHurt(living, value);
+            event.setCanceled(false);
         }
         if (DCLoliPickaxe.isHasLoliPickaxe(living)) event.setCanceled(true);
     }
@@ -239,7 +250,7 @@ public class DCForgeEventHandler {
 
     @OnlyIn(Dist.CLIENT)
     @SubscribeEvent
-    public static void renderTooltipEvent(RenderTooltipEvent.Color event) {
+    public static void renderTooltipEventColor(RenderTooltipEvent.Color event) {
         ItemStack stack = event.getItemStack();
         Item item = stack.getItem();
         float index = 0.5F;
@@ -274,10 +285,20 @@ public class DCForgeEventHandler {
         }
     }
 
-    @SubscribeEvent
-    public static void fov(ViewportEvent.ComputeFov event) {
-
-    }
+//    @OnlyIn(Dist.CLIENT)
+//    @SubscribeEvent
+//    public static void renderTooltipEventPre(RenderTooltipEvent.Pre event) {
+//        addRotate(1);
+//        ItemStack stack = event.getItemStack();
+//        GuiGraphics graphics = event.getGraphics();
+//        MultiBufferSource bufferSource = graphics.bufferSource();
+//        PoseStack pose = graphics.pose();
+//        Matrix4f matrix4f = pose.last().pose();
+//        if (Utils.isSuperTool(stack)) {
+//            graphics.blit(DCMod.getDCGUILocation("star.png"), event.getX(), event.getY(), 200, 200, 200, 200);
+//            matrix4f.rotateY(getRotate());
+//        }
+//    }
 
     @SubscribeEvent
     public static void registerCommand(RegisterCommandsEvent event) {
@@ -296,6 +317,14 @@ public class DCForgeEventHandler {
                                         )
                                 )
                         )
+                        .then(Commands.literal("dc_boss")
+                                .then(Commands.literal("clear_boss_bar")
+                                        .executes(cs -> {
+                                            DCForgeEventHandler.bossList.clear();
+                                            return 2;
+                                        })
+                                )
+                        )
                         .then(Commands.literal("setTarget")
                                 .then(Commands.argument("attacker", EntityArgument.entity())
                                         .then(Commands.argument("target", EntityArgument.entity())
@@ -308,18 +337,7 @@ public class DCForgeEventHandler {
                                         )
                                 )
                         )
-                        .then(Commands.literal("spawnDCWitherSkull")
-                                .then(Commands.argument("target", EntityArgument.entity())
-                                        .executes(cs->{
-                                            Entity target = EntityArgument.getEntity(cs, "target");
-                                            DCWitherSkull skull = new DCWitherSkull(DCEntities.DC_WITHER_SKULL.get(), cs.getSource().getLevel());
-                                            skull.setPos(cs.getSource().getPosition());
-                                            skull.setTarget(target);
-                                            cs.getSource().getLevel().addFreshEntity(skull);
-                                            return 0;
-                                        })
-                                ))
-                        .then(Commands.literal("forceChangeGetHealthValue")
+                        .then(Commands.literal("asmSetGetHealth")
                                 .executes(cs->{
                                     Entity entity = cs.getSource().getEntity();
                                     SoftGetHealthCommand.killed(entity);
@@ -405,9 +423,8 @@ public class DCForgeEventHandler {
             int size = tooltip.size();
             MutableComponent mutableComponent1 = Component.translatable("attribute.name.generic.attack_damage");
             MutableComponent mutableComponent2 = Component.translatable("attribute.name.generic.attack_speed");
-            String var10000 = "TREE3";
-            MutableComponent mutableComponent3 = Component.literal(ChatFormatting.GRAY + " +" + var10000 +  " " + mutableComponent1.getString());
-            MutableComponent mutableComponent4 = Component.literal(ChatFormatting.GRAY + " +" + var10000 +  " " + mutableComponent2.getString());
+            MutableComponent mutableComponent3 = Component.literal(ChatFormatting.GRAY + " +" + TextUtils.rainbow("(TREE)3").getString() +  " " + ChatFormatting.GRAY + mutableComponent1.getString());
+            MutableComponent mutableComponent4 = Component.literal(ChatFormatting.GRAY + " +" + TextUtils.rainbow("(TREE)3").getString() +  " " + ChatFormatting.GRAY + mutableComponent2.getString());
             for (int i = 0; i < size; i++) {
                 Component line = tooltip.get(i);
                 if (line.contains(mutableComponent1))
@@ -458,7 +475,6 @@ public class DCForgeEventHandler {
         if (living instanceof Player player && DCSuperArmor.hasAllArmor(player) && player.isUnderWater()) {
             event.setCanceled(true);
             player.playSound(SoundEvents.TOTEM_USE);
-            if (player instanceof ServerPlayer serverPlayer) PacketHandler.sendToClient(new S2CUseWoodTotem(serverPlayer.getId()));
         }
     }
 

@@ -96,6 +96,7 @@ public class DCItems {
     public static final RegistryObject<Item> WOOD_LEGGINGS;
     public static final RegistryObject<Item> WOOD_BOOTS;
     public static final RegistryObject<Item> HEART_OF_THE_OCEAN;
+    public static final RegistryObject<Item> ELIANIA_MODE;
     public static final RegistryObject<Item> OCEAN_SCYTHE;
 
     static {
@@ -144,5 +145,6 @@ public class DCItems {
         WOOD_BOOTS = armorRegister("super_wood_boots", DCSuperArmor.Boots::new);
         HEART_OF_THE_OCEAN = normalItemRegister("heart_of_the_ocean", HeartOfTheOcean::new);
         OCEAN_SCYTHE = normalItemRegister("ocean_scythe", OceanScythe::new);
+        ELIANIA_MODE = creativeItemRegister("elaina_mode_set", DCElainaMode::new);
     }
 }
