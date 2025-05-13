@@ -1,5 +1,6 @@
 net/daichang/dcmods/mixins/ItemRendererMixin minecraft f_265848_
 net/daichang/dcmods/mixins/MixinEntity deltaMovement f_19827_
+net/daichang/dcmods/mixins/MixinFont lineHeight f_92710_
 net/daichang/dcmods/mixins/MixinGameRenderer minecraft f_109059_
 net/daichang/dcmods/mixins/MixinGameRenderer postEffect f_109050_
 net/daichang/dcmods/mixins/renderer/GuiGraphicsMixin pose f_279612_
@@ -19,6 +20,8 @@ net/daichang/dcmods/mixins/sword_block/PlayerItemInHandLayerMixin itemInHandRend
 net/daichang/dcmods/mixins/sword_block/UseAnimMixin $VALUES $VALUES
 net/daichang/dcmods/mixins/ItemRendererMixin renderQuadList (Lcom/mojang/blaze3d/vertex/PoseStack;Lcom/mojang/blaze3d/vertex/VertexConsumer;Ljava/util/List;Lnet/minecraft/world/item/ItemStack;II)V m_115162_
 net/daichang/dcmods/mixins/MixinEntity setDeltaMovement (Lnet/minecraft/world/phys/Vec3;)V m_20256_
+net/daichang/dcmods/mixins/MixinFont width (Ljava/lang/String;)I m_92895_
+net/daichang/dcmods/mixins/MixinFont drawInBatch (Ljava/lang/String;FFIZLorg/joml/Matrix4f;Lnet/minecraft/client/renderer/MultiBufferSource;Lnet/minecraft/client/gui/Font$DisplayMode;II)I m_271703_
 net/daichang/dcmods/mixins/MixinGameRenderer loadEffect (Lnet/minecraft/resources/ResourceLocation;)V m_109128_
 net/daichang/dcmods/mixins/MixinGameRenderer shutdownEffect ()V m_109086_
 net/daichang/dcmods/mixins/MixinLivingEntity getMaxHealth ()F m_21233_

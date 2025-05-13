@@ -1,0 +1,23 @@
+{
+	"name": "链接页面",
+	"icon": "minecraft:paper",
+	"category": "patchouli:page_types/text",
+
+	"flag":"advancements_disabled",
+	"priority":false,
+	"secret":false,
+	"read_by_default":false,
+
+	"pages": [
+	{
+		"type": "text",
+		"text": "$(l)Note:$() 链接页面只是专门的文本页面，这意味着它们可以像文本页面一样工作，底部有额外的链接按钮。它们还具有文本页面的所有属性，您可以将它们用作条目的第一页"
+	},
+	{
+		"type": "link",
+		"url": "https://github.com/Vazkii/Patchouli/wiki",
+		"link_text": "Patchouli Wiki",
+		"text": "点击页面末尾的按钮打开Patchouli Wiki！"
+	}
+	]
+}

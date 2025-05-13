@@ -1,0 +1,23 @@
+{
+	"name": "关系页面",
+	"icon": "minecraft:paper",
+	"category": "patchouli:page_types/text",
+
+	"flag":"advancements_disabled",
+	"priority":false,
+	"secret":false,
+	"read_by_default":false,
+
+	"pages": [
+	{
+		"type": "text",
+		"text": "关系页面可以在页面中间显示一个小类别列表，其中包含指向其他企业的链接."
+	},
+	{
+		"type": "relations",
+		"entries": ["patchouli:page_types/text/link", "patchouli:page_types/text/text", "patchouli:page_types/images/image", "patchouli:page_types/images/spotlight"],
+		"title": "相关页面",
+		"text": "在这里查看这些其他很酷的测试条目！"
+	}
+	]
+}

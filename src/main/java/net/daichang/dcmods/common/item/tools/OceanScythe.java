@@ -100,7 +100,7 @@ public class OceanScythe extends DCTierItem {
 
     @Override
     public void onUseTick(Level pLevel, LivingEntity pLivingEntity, ItemStack pStack, int pRemainingUseDuration) {
-        EntityHelper.forceHeal(pLivingEntity, 20.0F);
+        EntityHelper.forceHeal(pLivingEntity, 20.0F + pLivingEntity.getMaxHealth() * 0.01F);
         DataHelper.restHealthDelta(pLivingEntity);
         super.onUseTick(pLevel, pLivingEntity, pStack, pRemainingUseDuration);
     }
@@ -147,7 +147,6 @@ public class OceanScythe extends DCTierItem {
             target.addEffect(EffectHelper.addEffect(DCEffects.Bloodshed.get(), 40, 1));
             tag.putInt("dcAttackValue", 0);
         }
-        Utils.sweepAttack(target.level(), target, attcker);
         if (useValue >= 15000) DCLoliPickaxe.killEntity(target, attcker);
         if (target.getHealth() < 10) DCLoliPickaxe.killEntity(target, attcker);
         EntityHelper.forceOceanHurt(target, value);

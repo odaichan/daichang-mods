@@ -1,0 +1,33 @@
+{
+  "sortnum": 1,
+  "name": "超级木制工具",
+  "icon": "dc_m:super_wood_sword",
+  "category": "dc_m:tools",
+  "pages": [
+    {
+      "type": "spotlight",
+      "item": "dc_m:super_wood_sword",
+      "text": "格挡时会快速恢复生命值，且格挡大部分伤害"
+    },
+    {
+      "type": "spotlight",
+      "item": "dc_m:super_wood_pickaxe",
+      "text": "比较好用的镐子"
+    },
+    {
+      "type": "spotlight",
+      "item": "dc_m:super_wood_axe",
+      "text": "额外的30点伤害无视大部分防御(只要没取消受伤)"
+    },
+    {
+      "type": "spotlight",
+      "item": "dc_m:super_wood_shovel",
+      "text": "铲子是比较普通的，但并不是完全没用"
+    },
+    {
+      "type": "spotlight",
+      "item": "dc_m:super_wood_hoe",
+      "text": "虽然看起来很没用，但它是制作某装备的必需品"
+    }
+  ]
+}

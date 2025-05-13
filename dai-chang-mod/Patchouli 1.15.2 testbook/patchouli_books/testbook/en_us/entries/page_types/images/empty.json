@@ -1,0 +1,21 @@
+{
+	"name": "空页面",
+	"icon": "minecraft:paper",
+	"category": "patchouli:page_types/images",
+
+	"flag":"advancements_disabled",
+	"priority":false,
+	"secret":false,
+	"read_by_default":false,
+
+	"pages": [
+	{
+		"type": "text",
+		"text": "空的页面就是空的，绘制页面填充符，即使之后没有更多的页面。我不知道没有人会想要它，所以为什么不呢？"
+	},
+	{
+		"type": "empty",
+		"draw_filler": true
+	}
+	]
+}

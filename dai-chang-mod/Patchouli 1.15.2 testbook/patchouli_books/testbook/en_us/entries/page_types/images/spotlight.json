@@ -1,0 +1,24 @@
+{
+	"name": "聚光灯页面",
+	"icon": "minecraft:paper",
+	"category": "patchouli:page_types/images",
+
+	"flag":"advancements_disabled",
+	"priority":false,
+	"secret":false,
+	"read_by_default":false,
+
+	"pages": [
+	{
+		"type": "text",
+		"text": "聚光灯页面可以以更宏伟的方式展示单个项目。"
+	},
+	{
+		"type": "spotlight",
+		"item": "minecraft:diamond_sword",
+		"title": "钻石剑",
+		"link_recipe":false,
+		"text": "这是钻石剑的聚光灯。这是一个非常酷的项目！"
+	}
+	]
+}

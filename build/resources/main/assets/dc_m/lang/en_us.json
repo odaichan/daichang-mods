@@ -172,5 +172,13 @@
   "chat.dc_m.elaina.tell_player_2": "(✿◡‿◡)",
   "chat.dc_m.elaina.tell_player_3": "I'm so cute. (~ω~o)",
   "chat.dc_m.elaina.tell_player_4": "Perhaps today is a suitable day to play at a friend's house?",
-  "chat.dc_m.elaina.elaina_die": "I hate you~(>_<。)＼"
+  "chat.dc_m.elaina.elaina_die": "I hate you~(>_<。)＼",
+  "book.daichang.name" : "Management Manual",
+  "book.daichang.book.landing_text" : "A small manual written by DaiChang, hoping to help you",
+  "book.daichang.categories.entity" : "Entity",
+  "book.daichang.categories.entity.description" : "Some entities in this mod",
+  "book.daichang.categories.item" : "Material",
+  "book.daichang.categories.item.description" : "Some materials of this Mod",
+  "book.daichang.categories.tools_armor" : "Tools and Equipment",
+  "book.daichang.categories.tools_armor.description" : "Tools and equipment in this Mod"
 }

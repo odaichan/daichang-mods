@@ -122,11 +122,11 @@ public class DCForgeEventHandler {
             living.playSound(SoundEvents.SHIELD_BLOCK);
             event.setCanceled(true);
         }
-        if (entity instanceof BossEntity boss) {
-            float value = (float) (boss.getAttributeValue(DCAttributes.DC_SUPER_DAMAGE.get()) + boss.getAttributeValue(DCAttributes.OCEAN_DAMAGE.get()) + boss.getAttributeValue(Attributes.ATTACK_DAMAGE));
-            EntityHelper.forceOceanHurt(living, value);
-            event.setCanceled(false);
-        }
+//        if (entity instanceof BossEntity boss) {
+//            float value = (float) (boss.getAttributeValue(DCAttributes.DC_SUPER_DAMAGE.get()) + boss.getAttributeValue(DCAttributes.OCEAN_DAMAGE.get()) + boss.getAttributeValue(Attributes.ATTACK_DAMAGE));
+//            EntityHelper.forceOceanHurt(living, value);
+//            event.setCanceled(false);
+//        }
         if (DCLoliPickaxe.isHasLoliPickaxe(living)) event.setCanceled(true);
     }
 
@@ -137,9 +137,9 @@ public class DCForgeEventHandler {
         BlockPos pos = e.getPos();
         if (player.getMainHandItem().getItem() == DCItems.DESTROY_BLOCK.get() || player.getMainHandItem().getItem() == DCItems.LoliPickaxe.get()){
             ItemEntity item = new ItemEntity(level, pos.getX(), pos.getY(), pos.getZ(), (new ItemStack(level.getBlockState(pos).getBlock())));
-            level.addFreshEntity(item);
             item.setPickUpDelay(0);
             level.setBlock(pos, Blocks.AIR.defaultBlockState(), 0);
+            level.addFreshEntity(item);
         }
     }
 
@@ -282,6 +282,11 @@ public class DCForgeEventHandler {
         else if (ModUtil.isDCLoad() && FontUtil.isCanRenderFont(stack)) {
             event.setBorderStart(c);
             event.setBorderEnd(c);
+        }
+        else if (item == DCItems.OCEAN_SCYTHE.get()) {
+            event.setBackground(Color.CYAN.getRGB());
+            event.setBackgroundStart(Color.CYAN.getRGB());
+            event.setBackgroundEnd(Color.BLUE.getRGB());
         }
     }
 

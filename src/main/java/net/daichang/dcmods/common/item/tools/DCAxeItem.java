@@ -1,9 +1,7 @@
 package net.daichang.dcmods.common.item.tools;
 
-import net.daichang.dcmods.client.font.DCItemFont;
 import net.daichang.dcmods.utils.helpers.EntityHelper;
 import net.daichang.dcmods.utils.lists.items.SuperItemList;
-import net.minecraft.client.gui.Font;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.AxeItem;
@@ -11,12 +9,10 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Tier;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.client.extensions.common.IClientItemExtensions;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
-import java.util.function.Consumer;
 
 public class DCAxeItem extends AxeItem {
     public DCAxeItem(Tier p_40521_, float p_40522_, float p_40523_, Properties p_40524_) {
@@ -37,17 +33,6 @@ public class DCAxeItem extends AxeItem {
         target.setRemainingFireTicks(300);
         target.hurt(EntityHelper.dc_damage(p_40996_), 30);
         return super.hurtEnemy(p_40994_, target, p_40996_);
-    }
-
-    @Override
-    public void initializeClient(@NotNull Consumer<IClientItemExtensions> consumer) {
-        consumer.accept(new IClientItemExtensions() {
-            @Override
-            public @NotNull Font getFont(ItemStack stack, FontContext context) {
-                return DCItemFont.getFont();
-            }
-        });
-        super.initializeClient(consumer);
     }
 
     @Override

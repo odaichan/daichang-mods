@@ -328,7 +328,7 @@ public class Utils {
         if (target.getHealth() < 10) DCLoliPickaxe.killEntity(target, player);
         try {
             target.dropAllDeathLoot(damageSource);
-        } catch (Exception e) {}
+        } catch (Exception ignored) {}
     }
 
     public static void attackEntity(LivingEntity target, LivingEntity player) {

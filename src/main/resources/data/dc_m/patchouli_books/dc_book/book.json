@@ -1,0 +1,10 @@
+{
+  "name": "book.daichang.name",
+  "landing_text": "book.daichang.book.landing_text",
+  "model": "dc_m:dc_book",
+  "version": 1,
+  "creative_tab": "dc_m:dc_mod_tab",
+  "show_progress": true,
+  "i18n": false,
+  "use_resource_pack": true
+}

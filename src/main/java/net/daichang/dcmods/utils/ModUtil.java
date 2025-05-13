@@ -43,6 +43,10 @@ public class ModUtil extends ModHelper {
         return isModLoading("fantasy_ending");
     }
 
+    public static boolean isOmniMobLoad() {
+        return isModLoading("omnimobs");
+    }
+
     //帕秋莉手册(用于做教程)
     public static boolean isPatchouliLoad() {
         return isModLoading("patchouli");

@@ -174,15 +174,9 @@ public class DCLoveElaina extends BossEntity implements PowerableMob, RangedAtta
             this.die(this.damageSources().magic());
             this.remove(RemovalReason.KILLED);
             this.setRemoved(RemovalReason.KILLED);
-            this.onRemovedFromWorld();
             this.onClientRemoval();
+            this.onRemovedFromWorld();
         }
-    }
-
-    @Override
-    public void setRemoved(RemovalReason pRemovalReason) {
-        if (isDeadOrDying() || deathTime >= maxDeathTime) super.setRemoved(pRemovalReason);
-        DCForgeEventHandler.bossList.remove(this);
     }
 
     @Override
@@ -202,18 +196,6 @@ public class DCLoveElaina extends BossEntity implements PowerableMob, RangedAtta
         stack.enchant(Enchantments.INFINITY_ARROWS, 3);
         stack.getOrCreateTag().putInt("dc_attking", Integer.MAX_VALUE);
         return stack;
-    }
-
-    @Override
-    public void onRemovedFromWorld() {
-        if (this.deathTime >= maxDeathTime) super.onRemovedFromWorld();
-        DCForgeEventHandler.bossList.remove(this);
-    }
-
-    @Override
-    public void onClientRemoval() {
-        if (this.deathTime >= maxDeathTime) super.onClientRemoval();
-        DCForgeEventHandler.bossList.remove(this);
     }
 
     @Override
@@ -466,7 +448,7 @@ public class DCLoveElaina extends BossEntity implements PowerableMob, RangedAtta
         float h = Mth.cos(yaw * ((float) Math.PI / 180F)) * Mth.cos(pitch * ((float) Math.PI / 180F));
         skull.shoot(f, g, h, 3, (float) 12.0);
         skull.lookAt(EntityAnchorArgument.Anchor.EYES, livingEntity.position());
-        if (!(livingEntity instanceof Player)) {
+        if (!(livingEntity instanceof Player) && !isCanRangeAttack(this)) {
             livingEntity.addEffect(EffectHelper.addEffect(DCEffects.Freeze.get(), 60));
             livingEntity.addEffect(EffectHelper.addEffect(DCEffects.Bloodshed.get()));
             lastKill(livingEntity);

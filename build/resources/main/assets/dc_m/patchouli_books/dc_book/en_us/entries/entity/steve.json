@@ -1,0 +1,23 @@
+{
+  "sortnum": 1,
+  "name": "Steve",
+  "icon": "dc_m:dc_steve_spawn_egg",
+  "category": "dc_m:entity",
+  "pages": [
+    {
+      "type": "entity",
+      "entity": "dc_m:steve",
+      "scale": 1.0,
+      "offset": 0.0,
+      "rotate": true,
+      "default_rotation": -45,
+      "title": "Steve",
+      "text": "史蒂夫并不强，仅有50点血，但其会掉落一种非常重要的道具，可用于合成装备"
+    },
+    {
+      "type": "spotlight",
+      "item": "dc_m:steve_token",
+      "text": "史蒂夫可通过 史蒂夫令牌 召唤$(br2)史蒂夫召唤后，物品进入60秒冷却，不会消耗"
+    }
+  ]
+}

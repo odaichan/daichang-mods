@@ -1,0 +1,24 @@
+{
+	"name": "自定义图像",
+	"icon": "minecraft:paper",
+	"category": "patchouli:page_types/images",
+
+	"flag":"advancements_disabled",
+	"priority":false,
+	"secret":false,
+	"read_by_default":false,
+
+	"pages": [
+	{
+		"type": "text",
+		"text": "自定义图像需要资源加载器模块。然而，目前还没有第三方模组可用。$(br2)目前，此示例图像页面中使用了Minecraft vanilla的图像。"
+	},
+	{
+		"type": "image",
+		"images":["minecraft:textures/gui/presets/isles.png"],
+		"title" : "Title of image",
+		"border":true,
+		"text": "此处使用的图像理想尺寸应为256x256"
+	}
+	]
+}

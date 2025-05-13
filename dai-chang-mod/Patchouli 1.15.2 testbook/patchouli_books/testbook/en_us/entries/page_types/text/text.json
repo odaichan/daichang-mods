@@ -1,0 +1,29 @@
+{
+	"name": "文本和列表",
+	"icon": "minecraft:paper",
+	"category": "patchouli:page_types/text",
+
+	"flag":"advancements_disabled",
+	"priority":false,
+	"secret":false,
+	"read_by_default":false,
+
+	"pages": [
+	{
+		"type": "text",
+		"text": "这是一个基本的文本块。格式规则允许文本变成 $(l)Bold$() 或者 $(o)Italic$().也可以放一个 $(m)Strikethrough$() 在文本中。$(br2)格式还允许将链接放入书中。这些链接要么是 $(l:page_types/page02)Internal$(), 表示它们链接到其他页面，或 $(l:https://github.com/Vazkii/Patchouli/wiki)external$(), 表示它们链接到网站."
+	},
+	{
+		"type": "text",
+		"text": "你需要具体说明你在每页上放了什么，否则文本会从屏幕底部掉下来，看起来很乱"
+	},
+	{
+		"type": "text",
+		"text": "如果你需要将文本组织成项目符号列表，你可以在这里完成。$(br2)$(li)这是一份清单。$(li2)这是一个嵌套列表。$(li3)... 这是另一个嵌套列表。$(br2)您还可以通过让书打印出玩家的名字来增加一点个人风格。$(br2)$(o)\"你好, $(playername)!\"$()"
+	},
+	{
+		"type": "text",
+		"text": "$(l)那颜色呢？$()$(br)有三种方法可以为文本着色。第一种选择是使用代码0-f从标准的16种颜色中进行选择。第二种选择是使用十六进制代码，如#ff0000，来选择特定的颜色。或者，您可以使用RGB代码 #f00进行颜色选择。$(br2)$(li)$(c)此红色文本是使用默认代码选择的。$()$(li)$(#ff0000)此红色文本是使用十六进制代码选择的。$()$(li)$(#f00)此红色文本是使用RGB代码选择的。$()"
+	}
+	]
+}

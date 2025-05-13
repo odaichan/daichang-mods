@@ -172,5 +172,13 @@
   "chat.dc_m.elaina.tell_player_2": "(✿◡‿◡)",
   "chat.dc_m.elaina.tell_player_3": "我真可爱 (~ω~o)",
   "chat.dc_m.elaina.tell_player_4": "或许今天适合去朋友家串门?",
-  "chat.dc_m.elaina.elaina_die": "我恨你 (>_<。)"
+  "chat.dc_m.elaina.elaina_die": "我恨你 (>_<。)",
+  "book.daichang.name": "管理手册",
+  "book.daichang.book.landing_text": "由带长编写的小手册，希望能帮到你",
+  "book.daichang.categories.entity": "实体",
+  "book.daichang.categories.entity.description": "此mod中的一些实体",
+  "book.daichang.categories.item": "材料",
+  "book.daichang.categories.item.description": "此mod中的一些材料",
+  "book.daichang.categories.tools_armor": "工具与装备",
+  "book.daichang.categories.tools_armor.description": "本mod中的一些工具与装备"
 }

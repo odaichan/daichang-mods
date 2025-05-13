@@ -1,0 +1,21 @@
+{
+	"name": "Page 1",
+	"icon": "minecraft:paper",
+	"category": "page_types",
+
+	"flag":"advancements_disabled",
+	"priority":false,
+	"secret":false,
+	"read_by_default":false,
+
+	"pages": [
+	{
+		"type": "text",
+		"text": "这是一组示例页面，涵盖了Patchouli的默认页面类型。此页面位于名为page_types的类别中."
+	},
+	{
+		"type": "text",
+		"text": "默认页面类型的大多数页面都组织成子类别"
+	}
+	]
+}

@@ -1,0 +1,33 @@
+{
+  "sortnum": 1,
+  "name": "海洋套装",
+  "icon": "dc_m:ocean_scythe",
+  "category": "dc_m:tools",
+  "pages": [
+    {
+      "type": "spotlight",
+      "item": "dc_m:super_wood_helmet",
+      "text": "四件套：在水中时，获得 力量 海之眷顾 效果， 在受到 伊雷娜 的尾杀时 免疫尾杀带来的负面效果"
+    },
+    {
+      "type": "spotlight",
+      "item": "dc_m:super_wood_chestplate",
+      "text": "四件套：在水中时，获得 力量 海之眷顾 效果， 在受到 伊雷娜 的尾杀时 免疫尾杀带来的负面效果"
+    },
+    {
+      "type": "spotlight",
+      "item": "dc_m:super_wood_leggings",
+      "text": "四件套：在水中时，获得 力量 海之眷顾 效果， 在受到 伊雷娜 的尾杀时 免疫尾杀带来的负面效果"
+    },
+    {
+      "type": "spotlight",
+      "item": "dc_m:super_wood_boots",
+      "text": "四件套：在水中时，获得 力量 海之眷顾 效果， 在受到 伊雷娜 的尾杀时 免疫尾杀带来的负面效果"
+    },
+    {
+      "type": "spotlight",
+      "item": "dc_m:ocean_scythe",
+      "text": "继承了某武器的大部分效果"
+    }
+  ]
+}

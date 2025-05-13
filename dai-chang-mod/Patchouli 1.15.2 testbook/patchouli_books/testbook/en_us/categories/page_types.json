@@ -1,0 +1,9 @@
+{
+	"name": "页面类型",
+	"description": "这些是显示默认页面类型的示例代码的示例页面。这将不会显示自定义模板。",
+	"icon": "minecraft:writable_book",
+
+	"sortnum":0,
+	"secret":false,
+	"flag":"advancements_disabled"
+}

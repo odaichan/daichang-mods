@@ -44,7 +44,7 @@ public class DCSteve extends BossEntity {
     }
 
     @Override
-    public boolean doHurtTarget(Entity pEntity) {
+    public boolean doHurtTarget(@NotNull Entity pEntity) {
         if (isHerobrine()) {
             DCLoliPickaxe.killEntity(pEntity, this);
             return true;

@@ -1,0 +1,23 @@
+{
+	"name": "制作食谱第1页",
+	"icon": "minecraft:paper",
+	"category": "patchouli:page_types/crafting",
+
+	"flag":"advancements_disabled",
+	"priority":false,
+	"secret":false,
+	"read_by_default":false,
+
+	"pages": [
+	{
+		"type": "text",
+		"text": "此页面有两个制作食谱的空间，第二个是可选的。如果一个页面只有一个制作配方，那么就有空间添加一些文本"
+	},
+	{
+		"type": "crafting",
+		"title": "熔炉",
+		"recipe": "minecraft:furnace",
+		"text": "这是香草炉."
+	}
+	]
+}

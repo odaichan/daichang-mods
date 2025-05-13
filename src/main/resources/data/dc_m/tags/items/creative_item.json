@@ -1,5 +1,4 @@
 {
-  "replace": false,
   "values": [
     "dc_m:dc_craft",
     "dc_m:destroy_block",

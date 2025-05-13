@@ -9660,6 +9660,10 @@ net/daichang/dcmods/mixins/ItemRendererMixin net/daichang/dcmods/mixins/ItemRend
 net/daichang/dcmods/mixins/MixinEntity net/daichang/dcmods/mixins/MixinEntity
 	deltaMovement f_19827_
 	setDeltaMovement (Lnet/minecraft/world/phys/Vec3;)V m_20256_
+net/daichang/dcmods/mixins/MixinFont net/daichang/dcmods/mixins/MixinFont
+	lineHeight f_92710_
+	drawInBatch (Ljava/lang/String;FFIZLorg/joml/Matrix4f;Lnet/minecraft/client/renderer/MultiBufferSource;Lnet/minecraft/client/gui/Font$DisplayMode;II)I m_271703_
+	width (Ljava/lang/String;)I m_92895_
 net/daichang/dcmods/mixins/MixinGameRenderer net/daichang/dcmods/mixins/MixinGameRenderer
 	minecraft f_109059_
 	postEffect f_109050_

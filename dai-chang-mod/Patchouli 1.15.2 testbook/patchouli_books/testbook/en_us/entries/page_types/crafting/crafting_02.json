@@ -1,0 +1,23 @@
+{
+	"name": "制作食谱第2页",
+	"icon": "minecraft:paper",
+	"category": "patchouli:page_types/crafting",
+
+	"flag":"advancements_disabled",
+	"priority":false,
+	"secret":false,
+	"read_by_default":false,
+
+	"pages": [
+	{
+		"type": "text",
+		"text": "制作食谱页面可以在一个页面中显示两个不同的食谱！$(br2)或者，您可以显示一个食谱和一些文本."
+	},
+	{
+		"type": "crafting",
+		"title": "熔炉",
+		"recipe": "minecraft:diamond_pickaxe",
+		"recipe2": "minecraft:diamond_axe"
+	}
+	]
+}

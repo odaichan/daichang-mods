@@ -5,6 +5,7 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
 import net.daichang.dcmods.client.font.DCItemFont;
 import net.daichang.dcmods.utils.Utils;
+import net.minecraft.Util;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
@@ -35,10 +36,10 @@ public abstract class MixinItemEntityRenderer extends EntityRenderer<ItemEntity>
     private void render(ItemEntity itemE, float p_115037_, float f2, PoseStack poseStack, MultiBufferSource bufferSource, int p_115041_, CallbackInfo ci) {
         ItemStack item = itemE.getItem();
         if (Utils.isCreativeItem(item)) {
-            float f = ((float)100 + f2 - 1.0F) / 20.0F * 1.6F;
+            float f = ((float) Util.getMillis() + f2 - 1.0F) / 20.0F * 1.6F;
             f = Mth.sqrt(f);
             if (f > 1.0F) f = 1.0F;
-            float $$14 = ((float)100 + f2) / 200.0F;
+            float $$14 = ((float)Util.getMillis() + f2) / 200.0F;
             float $$15 = Math.min($$14 > 0.8F ? ($$14 - 0.8F) / 0.2F : 0.0F, 1.0F);
             RandomSource $$16 = RandomSource.create(432L);
             VertexConsumer $$17 = bufferSource.getBuffer(RenderType.lightning());

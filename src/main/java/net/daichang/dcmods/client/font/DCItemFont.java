@@ -1,18 +1,24 @@
 package net.daichang.dcmods.client.font;
 
+import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.font.FontManager;
 import net.minecraft.client.gui.font.FontSet;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.FormattedCharSequence;
+import net.minecraft.util.RandomSource;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Matrix4f;
 
 import java.util.function.Function;
 
 public class DCItemFont extends Font {
+    public static RandomSource randomSource = RandomSource.create(Util.getMillis());
+    public FontManager  fontManager = Minecraft.getInstance().fontManager;
+
     public DCItemFont(Function<ResourceLocation, FontSet> p_243253_, boolean p_243245_) {
         super(p_243253_, p_243245_);
     }
@@ -81,6 +87,14 @@ public class DCItemFont extends Font {
                 || s.contains(getString("item.dc_m.super_wood_totem"));
     }
 
+
+
+    public static boolean isOceanTip(String s) {
+        return s.equals(getString("tool_tip.dc_m.ocean_tip_1"))
+                || s.equals(getString("tool_tip.dc_m.ocean_tip_2"))
+                || s.equals(getString("tool_tip.dc_m.ocean_tip_3"));
+    }
+
     public static boolean isCreativeItem(String s) {
         return s.contains(getString("item.dc_m.dc_craft"))
                 || s.contains(getString("item.dc_m.data_set"))
@@ -125,12 +139,6 @@ public class DCItemFont extends Font {
         }
         if (isSwordTip(s)) {
             c = rgb & 0xFF40E0D0;
-            super.drawInBatch(s, x, y, c, dropShadow, matrix4f, bufferSource, mode, i, i1);
-            super.drawInBatch(s, x + 0.55F, y + 0.55F, darkerC, dropShadow, matrix4f, bufferSource, mode, i, i1);
-            return (int) x;
-        }
-        if (isCraftTip(s)) {
-            c = rgb & 0xFF004D40;
             super.drawInBatch(s, x, y, c, dropShadow, matrix4f, bufferSource, mode, i, i1);
             super.drawInBatch(s, x + 0.55F, y + 0.55F, darkerC, dropShadow, matrix4f, bufferSource, mode, i, i1);
             return (int) x;
@@ -195,13 +203,13 @@ public class DCItemFont extends Font {
             super.drawInBatch(s, x + 0.55F, y + 0.55F, darkerC, dropShadow, matrix4f, bufferSource, mode, i, i1);
             return (int) x;
         }
-        if (s.contains(getString("attribute.name.generic.max_health")) || s.contains(getString("tool_tip.dc_mods.default")) || s.contains(getString("tool_tip.dc_mods.ocean"))) {
+        if (s.contains(getString("tool_tip.dc_mods.default")) || s.contains(getString("tool_tip.dc_mods.ocean"))) {
             c = rgb & 0xFFFF9999;
             super.drawInBatch(s, x, y, c, dropShadow, matrix4f, bufferSource, mode, i, i1);
             super.drawInBatch(s, x + 0.55F, y + 0.55F, darkerC, dropShadow, matrix4f, bufferSource, mode, i, i1);
             return (int) x;
         }
-        return super.drawInBatch(s, x, y, rgb, dropShadow, matrix4f, bufferSource, mode, i, i1);
+        return super.drawInternal(formattedCharSequence, x, y, rgb, dropShadow, matrix4f, bufferSource, mode, i, i1);
     }
 
     public int drawInBatch(@NotNull String text, float x, float y, int rgb, boolean b, @NotNull Matrix4f matrix4f, @NotNull MultiBufferSource source, @NotNull DisplayMode mode, int i, int i1) {

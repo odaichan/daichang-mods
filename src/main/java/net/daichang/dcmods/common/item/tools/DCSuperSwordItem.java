@@ -2,7 +2,6 @@ package net.daichang.dcmods.common.item.tools;
 
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
-import net.daichang.dcmods.client.font.DCItemFont;
 import net.daichang.dcmods.inits.DCAttributes;
 import net.daichang.dcmods.utils.Utils;
 import net.daichang.dcmods.utils.helpers.DataHelper;
@@ -12,7 +11,6 @@ import net.daichang.dcmods.utils.helpers.MathHelper;
 import net.daichang.dcmods.utils.lists.items.CanSwordBlockItem;
 import net.daichang.dcmods.utils.lists.items.SuperItemList;
 import net.minecraft.Util;
-import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -29,7 +27,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Tier;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.client.extensions.common.IClientItemExtensions;
 import net.minecraftforge.common.ForgeMod;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
@@ -40,7 +37,6 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 import java.util.Random;
 import java.util.UUID;
-import java.util.function.Consumer;
 
 public class DCSuperSwordItem extends ISwordItem {
     public Multimap<Attribute, AttributeModifier> mainHandModifiers;
@@ -79,17 +75,6 @@ public class DCSuperSwordItem extends ISwordItem {
         if (pEquipmentSlot == EquipmentSlot.MAINHAND) return this.mainHandModifiers;
         if (pEquipmentSlot == EquipmentSlot.OFFHAND) return this.offHandModifiers;
         return super.getDefaultAttributeModifiers(pEquipmentSlot);
-    }
-
-    @Override
-    public void initializeClient(Consumer<IClientItemExtensions> consumer) {
-        consumer.accept(new IClientItemExtensions() {
-            @Override
-            public @NotNull Font getFont(ItemStack stack, FontContext context) {
-                return DCItemFont.getFont();
-            }
-        });
-        super.initializeClient(consumer);
     }
 
     @Override

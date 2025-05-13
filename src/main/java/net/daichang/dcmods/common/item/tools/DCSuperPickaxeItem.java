@@ -1,9 +1,7 @@
 package net.daichang.dcmods.common.item.tools;
 
-import net.daichang.dcmods.client.font.DCItemFont;
 import net.daichang.dcmods.utils.helpers.EntityHelper;
 import net.daichang.dcmods.utils.lists.items.SuperItemList;
-import net.minecraft.client.gui.Font;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.LivingEntity;
@@ -12,12 +10,9 @@ import net.minecraft.world.item.PickaxeItem;
 import net.minecraft.world.item.Tier;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.client.extensions.common.IClientItemExtensions;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
-import java.util.function.Consumer;
 
 public class DCSuperPickaxeItem extends PickaxeItem {
     public DCSuperPickaxeItem(Tier p_42961_, int p_42962_, float p_42963_, Properties p_42964_) {
@@ -43,16 +38,5 @@ public class DCSuperPickaxeItem extends PickaxeItem {
     @Override
     public boolean isFoil(ItemStack pStack) {
         return true;
-    }
-
-    @Override
-    public void initializeClient(@NotNull Consumer<IClientItemExtensions> consumer) {
-        consumer.accept(new IClientItemExtensions() {
-            @Override
-            public @NotNull Font getFont(ItemStack stack, FontContext context) {
-                return DCItemFont.getFont();
-            }
-        });
-        super.initializeClient(consumer);
     }
 }

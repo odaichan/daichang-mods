@@ -19,7 +19,6 @@
     "MixinItemEntityRenderer",
     "MixinLivingEntityRender",
     "MixinLocalPlayer",
-    "renderer.GuiGraphicsMixin",
     "sword_block.HumanoidModelMixin",
     "sword_block.ItemInHandRendererMixin",
     "sword_block.PlayerItemInHandLayerMixin"

@@ -1,0 +1,23 @@
+{
+	"name": "冶炼配方第一页",
+	"icon": "minecraft:paper",
+	"category": "patchouli:page_types/crafting",
+
+	"flag":"advancements_disabled",
+	"priority":false,
+	"secret":false,
+	"read_by_default":false,
+
+	"pages": [
+	{
+		"type": "text",
+		"text": "冶炼配方页面可以在一个页面上显示两个不同的冶炼配方，甚至可以容纳一些文本！$(br2)但是，如果您希望使用EnderIO的合金冶炼厂等模型中的冶炼配方，那么您可以创建一个模板，因为冶炼配方是为香草炉设计的"
+	},
+	{
+		"type": "smelting",
+		"recipe": "minecraft:baked_potato",
+		"title": "一种冶炼配方",
+		"text": "请注意，配方ID已更改为1.15.2"
+	}
+	]
+}

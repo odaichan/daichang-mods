@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="EntryPointsManager">
-    <list size="7">
+    <list size="8">
       <item index="0" class="java.lang.String" itemvalue="SubscribeEvent" />
       <item index="1" class="java.lang.String" itemvalue="javax.annotation.processing.SupportedAnnotationTypes" />
       <item index="2" class="java.lang.String" itemvalue="net.minecraftforge.api.distmarker.OnlyIn" />
@@ -9,6 +9,7 @@
       <item index="4" class="java.lang.String" itemvalue="org.spongepowered.asm.mixin.Final" />
       <item index="5" class="java.lang.String" itemvalue="org.spongepowered.asm.mixin.Mixin" />
       <item index="6" class="java.lang.String" itemvalue="org.spongepowered.asm.mixin.Shadow" />
+      <item index="7" class="java.lang.String" itemvalue="org.spongepowered.asm.mixin.Unique" />
     </list>
   </component>
   <component name="ExternalStorageConfigurationManager" enabled="true" />
