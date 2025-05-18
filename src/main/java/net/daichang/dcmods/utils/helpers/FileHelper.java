@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class FileHelper implements DCBaseLib {
-    static final String DEFAULT_FILE_PATH = path + "/dc_list.txt";
 
     public static void creativeFile(String filePath) {
         File file = new File(filePath);

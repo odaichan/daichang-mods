@@ -7,12 +7,12 @@
     {
       "type": "spotlight",
       "item": "dc_m:wood_ingot",
-      "text": "普通木制锭只是一种普通材料,无任何作用,只能用于过渡"
+      "text": "Wooden ingots are just a common material with no function and can only be used for transition"
     },
     {
       "type": "spotlight",
       "item": "dc_m:super_wood_ingot",
-      "text": "超级木制锭是较为强大的材料,其能制成多种工具,但因为较为笨重,无法做成护甲，但却能辅助海之心升级下界合金甲"
+      "text": "Super wooden ingots are powerful materials that can be used to make various tools, but due to their weight, they cannot be used to make armor. However, they can assist Sea Heart in upgrading to lower bound alloy armor"
     }
   ]
 }

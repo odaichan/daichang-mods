@@ -1,6 +1,7 @@
 package net.daichang.dcmods.common.item.other;
 
 import net.daichang.dcmods.common.entities.boss.DCSteve;
+import net.daichang.dcmods.common.entities.entity.RainbowLightingEntity;
 import net.daichang.dcmods.common.item.BaseSuperItem;
 import net.daichang.dcmods.inits.DCEntities;
 import net.minecraft.network.chat.Component;
@@ -25,7 +26,7 @@ public class SteveTokenItem extends BaseSuperItem {
     public void appendHoverText(ItemStack pStack, @Nullable Level pLevel, List<Component> pTooltipComponents, TooltipFlag pIsAdvanced) {
         super.appendHoverText(pStack, pLevel, pTooltipComponents, pIsAdvanced);
         pTooltipComponents.add(Component.translatable("tool_tip.dc_m.spawnd_entity"));
-        pTooltipComponents.add(Component.literal("SpawnEntity"));
+        pTooltipComponents.add(Component.literal("Steve"));
     }
 
     @Override
@@ -37,6 +38,9 @@ public class SteveTokenItem extends BaseSuperItem {
     public InteractionResultHolder<ItemStack> use(Level pLevel, Player pPlayer, InteractionHand pUsedHand) {
         DCSteve steve = new DCSteve(DCEntities.DC_STEVE.get(), pLevel);
         steve.setPos(pPlayer.getX(), pPlayer.getY(), pPlayer.getZ());
+        RainbowLightingEntity lighting = new RainbowLightingEntity(DCEntities.RAINBOW_LIGHTING.get(), pLevel);
+        lighting.setPos(pPlayer.getX(), pPlayer.getY(), pPlayer.getZ());
+        pLevel.addFreshEntity(lighting);
         pLevel.addFreshEntity(steve);
         pPlayer.cooldowns.addCooldown(this, 1200);
         pPlayer.playSound(SoundEvents.TOTEM_USE);

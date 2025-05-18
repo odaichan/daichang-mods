@@ -139,11 +139,11 @@ public class DCItems {
         WOOD_TOTEM = registry("super_wood_totem", SuperWoodTotem::new);
 
         //ARMOR
+        HEART_OF_THE_OCEAN = normalItemRegister("heart_of_the_ocean", HeartOfTheOcean::new);
         WOOD_HELMET = armorRegister("super_wood_helmet", DCSuperArmor.Helmet::new);
         WOOD_CHESTPLATE = armorRegister("super_wood_chestplate", DCSuperArmor.Chestplate::new);
         WOOD_LEGGINGS = armorRegister("super_wood_leggings", DCSuperArmor.Leggings::new);
         WOOD_BOOTS = armorRegister("super_wood_boots", DCSuperArmor.Boots::new);
-        HEART_OF_THE_OCEAN = normalItemRegister("heart_of_the_ocean", HeartOfTheOcean::new);
         OCEAN_SCYTHE = normalItemRegister("ocean_scythe", OceanScythe::new);
         ELIANIA_MODE = creativeItemRegister("elaina_mode_set", DCElainaMode::new);
     }

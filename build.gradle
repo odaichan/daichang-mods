@@ -214,9 +214,9 @@ tasks.named('jar', Jar).configure {
                     'Can-Retransform-Classes' : 'true',
                     "Implementation-Vendor"   : mod_authors,
                     "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ"),
-                    'Premain-Class': 'net.daichang.dcagent.DCAgent',
-                    'Agentmain-Class': 'net.daichang.dcagent.DCAgent',
-                    'Agent-Class': 'net.daichang.dcagent.DCAgent'
+                    'Premain-Class': 'net.daichang.dcmods.bytes.dcagent.DCAgent',
+                    'Agentmain-Class': 'net.daichang.dcmods.bytes.dcagent.DCAgent',
+                    'Agent-Class': 'net.daichang.dcmods.bytes.dcagent.DCAgent'
         ])
     }
 

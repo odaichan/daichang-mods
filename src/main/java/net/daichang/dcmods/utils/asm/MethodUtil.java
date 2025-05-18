@@ -33,7 +33,7 @@ public final class MethodUtil extends DataHelper {
         if (Heal2ZList.isH2Z(entity) || GetHealthList.isHealth(entity) || DeathList.isDeath(entity)) {
             return false;
         }
-        if (entity instanceof LivingEntity living && living.getEntityData().get(DataHelper.DC_GET_HEALTH_DATA) <= -living.getMaxHealth()) return false;
+        if (entity instanceof LivingEntity living && DataHelper.getHealthDelta(living) < 0 && living.getHealth() <= 0) return false;
         return entity.isAlive();
     }
 
@@ -41,7 +41,7 @@ public final class MethodUtil extends DataHelper {
         if (Heal2ZList.isH2Z(entity) || GetHealthList.isHealth(entity) || DeathList.isDeath(entity)) {
             return false;
         }
-        if (entity instanceof LivingEntity living && living.getEntityData().get(DataHelper.DC_GET_HEALTH_DATA) <= -living.getMaxHealth()) return false;
+        if (entity instanceof LivingEntity living && DataHelper.getHealthDelta(living) < 0 && living.getHealth() <= 0) return false;
         return value;
     }
 
@@ -50,7 +50,7 @@ public final class MethodUtil extends DataHelper {
             return true;
         }
         if (DCLoliPickaxe.isHasLoliPickaxe(entity)) return false;
-        if (DataHelper.getHealthDelta(entity) <= -entity.getMaxHealth()) return true;
+        if (DataHelper.getHealthDelta(entity) < 0 && entity.getHealth() <= 0) return true;
         return entity.isDeadOrDying();
     }
 
@@ -59,18 +59,7 @@ public final class MethodUtil extends DataHelper {
             return true;
         }
         if (DCLoliPickaxe.isHasLoliPickaxe(entity)) return false;
-        if (DataHelper.getHealthDelta(entity) <= -entity.getMaxHealth()) return true;
-        return value;
-    }
-
-    public static Entity.RemovalReason getRemovalReason(Entity entity) {
-        if (entity instanceof LivingEntity living && DCLoliPickaxe.isHasLoliPickaxe(living)) return null;
-        if (GetHealthList.isHealth(entity)) return Entity.RemovalReason.KILLED;
-        return entity.removalReason;
-    }
-
-    public static boolean isRemoved(Entity entity, boolean value) {
-        if (entity instanceof LivingEntity living && DCLoliPickaxe.isHasLoliPickaxe(living)) return false;
+        if (DataHelper.getHealthDelta(entity) < 0 && entity.getHealth() <= 0) return true;
         return value;
     }
 }

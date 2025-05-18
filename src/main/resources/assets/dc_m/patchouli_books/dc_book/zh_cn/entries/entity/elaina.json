@@ -1,0 +1,23 @@
+{
+  "sortnum": 1,
+  "name": "Elaina",
+  "icon": "dc_m:dc_wither_spawn_egg",
+  "category": "dc_m:entity",
+  "pages": [
+    {
+      "type": "entity",
+      "entity": "dc_m:elaina",
+      "scale": 1.0,
+      "offset": 0.0,
+      "rotate": true,
+      "default_rotation": -45,
+      "title": "Steve",
+      "text": "伊雷娜是个较强的中期生物，可掉落 匠魂妖造 整合包中期武器 满配七尺屠魔"
+    },
+    {
+      "type": "spotlight",
+      "item": "dc_m:red_spider_lily",
+      "text": "伊雷娜通过右键彼岸花召唤，召唤前提是背包中存在9个以上超级木制锭，不会被消耗"
+    }
+  ]
+}

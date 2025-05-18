@@ -47,14 +47,14 @@ public class OceanScythe extends DCTierItem {
     public Multimap<Attribute, AttributeModifier> mainHandModifiers;
     public Multimap<Attribute, AttributeModifier> offHandModifiers;
     public OceanScythe() {
-        super(DCTier.SUPERS, new Properties().stacksTo(1).rarity(Rarity.EPIC).fireResistant());
+        super(DCTier.OCEAN_HEART, new Properties().stacksTo(1).rarity(Rarity.EPIC).fireResistant());
         ImmutableMultimap.Builder<Attribute, AttributeModifier> mainHand = ImmutableMultimap.builder();
         ImmutableMultimap.Builder<Attribute, AttributeModifier> offHand = ImmutableMultimap.builder();
-        mainHand.put(Attributes.ATTACK_DAMAGE, new AttributeModifier(UUID.randomUUID(), "Weapon modifier", 98.2, AttributeModifier.Operation.ADDITION));
-        mainHand.put(Attributes.ATTACK_SPEED, new AttributeModifier(UUID.randomUUID(), "Weapon modifier", 4.2, AttributeModifier.Operation.ADDITION));
-        mainHand.put(DCAttributes.DC_SUPER_DAMAGE.get(), new AttributeModifier(UUID.randomUUID(), "Item modifier", 97.2D, AttributeModifier.Operation.ADDITION));
+        mainHand.put(Attributes.ATTACK_DAMAGE, new AttributeModifier(BASE_ATTACK_DAMAGE_UUID, "Weapon modifier", 98.2, AttributeModifier.Operation.ADDITION));
+        mainHand.put(Attributes.ATTACK_SPEED, new AttributeModifier(BASE_ATTACK_SPEED_UUID, "Weapon modifier", 1.6, AttributeModifier.Operation.ADDITION));
+        mainHand.put(DCAttributes.DC_SUPER_DAMAGE.get(), new AttributeModifier(BASE_ATTACK_DAMAGE_UUID, "Item modifier", 97.2D, AttributeModifier.Operation.ADDITION));
         mainHand.put(DCAttributes.DC_SUPER_DAMAGE.get(), new AttributeModifier(UUID.randomUUID(), "Item modifier", 0.82D, AttributeModifier.Operation.MULTIPLY_TOTAL));
-        mainHand.put(DCAttributes.OCEAN_DAMAGE.get(), new AttributeModifier(UUID.randomUUID(), "Item modifier", 97.2D, AttributeModifier.Operation.ADDITION));
+        mainHand.put(DCAttributes.OCEAN_DAMAGE.get(), new AttributeModifier(BASE_ATTACK_DAMAGE_UUID, "Item modifier", 97.2D, AttributeModifier.Operation.ADDITION));
         mainHand.put(DCAttributes.OCEAN_DAMAGE.get(), new AttributeModifier(UUID.randomUUID(), "Item modifier", 0.82D, AttributeModifier.Operation.MULTIPLY_TOTAL));
         mainHand.put(ForgeMod.ENTITY_REACH.get(), new AttributeModifier(UUID.randomUUID(), "Item modifier", 10, AttributeModifier.Operation.ADDITION));
         mainHand.put(ForgeMod.BLOCK_REACH.get(), new AttributeModifier(UUID.randomUUID(), "Item modifier", 2, AttributeModifier.Operation.ADDITION));

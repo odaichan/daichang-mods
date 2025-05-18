@@ -51,7 +51,7 @@ public class TextUtils {
     public static Component white(String text) {
         return color(text, 0xFFFFFF);
     }
-    public static String getString(Component text) {
-        return text.getString();
+    public static String getString(String text) {
+        return Component.translatable(text).getString();
     }
 }

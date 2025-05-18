@@ -47,6 +47,11 @@ public class ModUtil extends ModHelper {
         return isModLoading("omnimobs");
     }
 
+    //农夫乐事
+    public static boolean isFDLoad() {
+        return isModLoading("farmersdelight");
+    }
+
     //帕秋莉手册(用于做教程)
     public static boolean isPatchouliLoad() {
         return isModLoading("patchouli");

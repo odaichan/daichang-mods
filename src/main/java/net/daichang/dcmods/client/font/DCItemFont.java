@@ -53,7 +53,9 @@ public class DCItemFont extends Font {
                 || s.contains(getString("tooltip.dc_mods.shovel"))
                 || s.contains(getString("tooltip.dc_mods.hoe"))
                 || s.contains(getString("tooltip.dc_mods.bleed"))
-                || s.contains(getString("item.dc_m.boss_fight_disc"));
+                || s.contains(getString("item.dc_m.boss_fight_disc"))
+                || s.contains(getString("item.dc_m.stewed_heart_of_the_ocean"))
+                ;
     }
 
     public static boolean isDCEnchFont(String s) {
@@ -71,6 +73,7 @@ public class DCItemFont extends Font {
                 || s.contains(getString("tooltip.dc_mods.sword_boxing"))
                 ||  s.contains(getString("tooltip.dc_mods.tip_3"))
                 || s.contains(getString("tooltip.dc_mods.kill_entity"))
+                || s.contains(getString("material.dc_m.heart_of_the_ocean"))
                 ;
     }
 
@@ -84,14 +87,16 @@ public class DCItemFont extends Font {
                 || s.contains(getString("item.dc_m.dc_bow"))
                 || s.contains(getString("item.dc_m.dc_arrow"))
                 || s.contains(getString("item.dc_m.wood_ring"))
+                || s.contains(getString("item.dc_m.normal_wood_knives"))
+                || s.contains(getString("item.dc_m.super_wood_knives"))
                 || s.contains(getString("item.dc_m.super_wood_totem"));
     }
-
-
 
     public static boolean isOceanTip(String s) {
         return s.equals(getString("tool_tip.dc_m.ocean_tip_1"))
                 || s.equals(getString("tool_tip.dc_m.ocean_tip_2"))
+                || s.contains(getString("modifier.dc_m.heart_of_the_ocean.description"))
+                || s.contains(getString("modifier.dc_m.heart_of_the_ocean.flavor"))
                 || s.equals(getString("tool_tip.dc_m.ocean_tip_3"));
     }
 

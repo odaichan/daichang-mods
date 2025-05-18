@@ -8,19 +8,12 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import it.unimi.dsi.fastutil.ints.Int2ObjectLinkedOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
 import net.daichang.dcmods.DCMod;
-import net.daichang.dcmods.common.item.tools.creative.DCLoliPickaxe;
 import net.daichang.dcmods.inits.DCAttributes;
-import net.daichang.dcmods.inits.DCEffects;
-import net.daichang.dcmods.inits.DCSounds;
-import net.daichang.dcmods.utils.helpers.DataHelper;
-import net.daichang.dcmods.utils.helpers.EffectHelper;
 import net.daichang.dcmods.utils.helpers.EntityHelper;
-import net.daichang.dcmods.utils.helpers.MathHelper;
 import net.daichang.dcmods.utils.lists.DeathList;
 import net.daichang.dcmods.utils.lists.items.CanSwordBlockItem;
 import net.daichang.dcmods.utils.lists.items.CreativeItemList;
 import net.daichang.dcmods.utils.lists.items.SuperItemList;
-import net.minecraft.SharedConstants;
 import net.minecraft.Util;
 import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.AdvancementProgress;
@@ -31,7 +24,6 @@ import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.chat.Component;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.resources.ResourceLocation;
@@ -59,12 +51,10 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.dimension.LevelStem;
 import net.minecraft.world.level.entity.*;
 import net.minecraft.world.level.gameevent.DynamicGameEventListener;
-import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.level.storage.ServerLevelData;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.fml.util.ObfuscationReflectionHelper;
 import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.AccessibleObject;
@@ -289,7 +279,6 @@ public class Utils {
 
     public static void attackEntity(ItemStack stack, LivingEntity target, Player player) {
         DamageSource damageSource = EntityHelper.dc_damage(player);
-        target.level().broadcastDamageEvent(target, damageSource);
         final float normal = (float) player.getAttributeValue(Attributes.ATTACK_DAMAGE);
         final float dc_super_damage = (float) player.getAttributeValue(DCAttributes.DC_SUPER_DAMAGE.get());
         CompoundTag tag = stack.getTag();
@@ -302,33 +291,11 @@ public class Utils {
         if (dc_kill_count >= 12000) damage = damage + 20;
         if (dc_kill_count < Integer.MAX_VALUE) tag.putInt("dc_attking", tag.getInt("dc_attking") + 1);
         if (dc_kill_count < 0)  tag.putInt("dc_attking", 0);
-        float newHealth = target.getHealth() - damage;
-        target.setDeltaMovement(Vec3.ZERO);
-        target.hurt(damageSource, damage);
-        target.level().broadcastDamageEvent(target, damageSource);
         if (target.attributes.hasAttribute(Attributes.MAX_HEALTH)) Objects.requireNonNull(target.getAttribute(Attributes.MAX_HEALTH)).setBaseValue(target.getMaxHealth() - 10);
         Utils.sweepAttack(target.level(), player, target);
-        double f = MathHelper.getRandomDouble(0.00D, 1.00D);
-        if (f == 0.01D && dc_kill_count >= 5000) {
-            target.kill();
-            target.die(damageSource);
-            target.tickDeath();
-            target.isDeadOrDying();
-            target.setPose(Pose.DYING);
-            target.gameEvent(GameEvent.ENTITY_DIE);
-            if (player.level().isClientSide()) player.displayClientMessage(Component.translatable("chat.dc_mods.kill_entity"), false);
-        }
-        if (dc_kill_count >= 15000) DCLoliPickaxe.killEntity(target, player);
-        if (!(target instanceof Player) && target.getHealth() <= 0 || target.entityData.get(LivingEntity.DATA_HEALTH_ID) <= 0) itemKillEntity(target, damageSource);
-        target.level().broadcastDamageEvent(target, damageSource);
-        target.playHurtSound(damageSource);
-        DataHelper.forceSetHealth(target, newHealth);
-        DataHelper.addHealthDelta(target, -damage);
-        target.gameEvent(GameEvent.ENTITY_DAMAGE);
-        if (target.getHealth() < 10) DCLoliPickaxe.killEntity(target, player);
-        try {
-            target.dropAllDeathLoot(damageSource);
-        } catch (Exception ignored) {}
+        if (dc_kill_count >= 15000) dataHealthSet(target);
+        if (!(target instanceof Player) && target.getHealth() <= 0 || target.entityData.get(LivingEntity.DATA_HEALTH_ID) <= 0) dataHealthSet(target);
+        EntityHelper.forceHurt(target, damageSource, damage);
     }
 
     public static void attackEntity(LivingEntity target, LivingEntity player) {
@@ -338,33 +305,7 @@ public class Utils {
         if (player.attributes.hasAttribute(Attributes.ATTACK_DAMAGE)) normalDamage = (float) (player.getAttributeValue(Attributes.ATTACK_DAMAGE));
         if (player.attributes.hasAttribute(DCAttributes.DC_SUPER_DAMAGE.get())) dc_super_damage = (float) (player.getAttributeValue(DCAttributes.DC_SUPER_DAMAGE.get()));
         float damage = dc_super_damage + normalDamage + 30;
-        target.setDeltaMovement(Vec3.ZERO);
-        target.hurt(damageSource, damage);
-        target.getPersistentData().putBoolean("isByDCKill", true);
-        if (!(target instanceof Player)) if (target.getHealth() <= 0 || target.entityData.get(LivingEntity.DATA_HEALTH_ID) <= 0) itemKillEntity(target, damageSource);
-        if (target.getHealth() < 10) {
-            entityKillEntity(target, damageSource);
-            DeathList.addDeath(target);
-        }
-        target.gameEvent(GameEvent.ENTITY_DAMAGE);
-        target.addEffect(EffectHelper.addEffect(DCEffects.Freeze.get()));
-        try {
-            target.level().broadcastDamageEvent(target, damageSource);
-            target.playSound(Objects.requireNonNull(target.getHurtSound(damageSource)));
-        } catch (Exception ignored) {}
-    }
-
-    public static void itemKillEntity(LivingEntity target, DamageSource damageSource) {
-        entityKillEntity(target, damageSource);
-        DeathList.addDeath(target);
-    }
-
-    public static void entityKillEntity(LivingEntity target, DamageSource damageSource) {
-        target.hurt(damageSource, 233333);
-        target.die(damageSource);
-        target.setPose(Pose.DYING);
-        target.gameEvent(GameEvent.ENTITY_DIE);
-        target.kill();
+        EntityHelper.forceHurt(target, damageSource, damage);
     }
 
     public static UseAnim getUseAnim() {
@@ -380,7 +321,6 @@ public class Utils {
                     livingEntity.setDeltaMovement(Vec3.ZERO);
                 }
             }
-            livingEntity.playSound(DCSounds.DC_HIT_ENTITY.get());
             double d0 = -Mth.sin(player.getYRot() * ((float) Math.PI / 180F));
             double d1 = Mth.cos(player.getYRot() * ((float) Math.PI / 180F));
             if (level instanceof ServerLevel serverLevel) serverLevel.sendParticles(ParticleTypes.SWEEP_ATTACK, player.getX() + d0, player.getY(0.5D), player.getZ() + d1, 0, d0, 0.0D, d1, 0.0D);
@@ -388,23 +328,19 @@ public class Utils {
     }
 
     public static boolean isCreativeItem(ItemStack item) {
-        return item.is(getModItemTag("creative_item")) || CreativeItemList.getItem(item.getItem());
+        return item.is(getModItemTag("creative")) || CreativeItemList.getItem(item.getItem());
     }
 
     public static boolean isSuperTool(ItemStack item) {
-        return item.is(getModItemTag("super_tools")) || SuperItemList.getItem(item.getItem());
+        return item.is(getModItemTag("super_tool")) || SuperItemList.getItem(item.getItem());
     }
 
     public static boolean isNormalTool(ItemStack item) {
-        return item.is(getModItemTag("normal_item"));
+        return item.is(getModItemTag("normal"));
     }
 
     public static boolean isBlockItem(ItemStack item) {
         return item.is(getModItemTag("block_item"));
-    }
-
-    public static boolean isDCCurios(ItemStack item) {
-        return item.is(getModItemTag("dc_curios"));
     }
 
     public static void Override_DATA_HEALTH_ID(LivingEntity livingEntity, final float X) {
@@ -451,19 +387,5 @@ public class Utils {
         };
         copyProperties(SynchedEntityData.class, entity.entityData, data);
         entity.entityData = data;
-    }
-
-    public static <T, E> void fieldSetField(T instance, Class<? super T> cls, String fieldName, E val, String srg) {
-        String[] remap = new String[]{srg, fieldName};
-        String name = SharedConstants.IS_RUNNING_IN_IDE ? remap[1] : remap[0];
-        try {
-            ObfuscationReflectionHelper.setPrivateValue(cls, instance, val, name);
-        } catch (Exception ignored) {}
-    }
-
-    public static <E> Object getField(E instance, Class<? super E> cls, String fieldName, String srg) {
-        String[] remap = new String[]{srg, fieldName};
-        String name = SharedConstants.IS_RUNNING_IN_IDE ? remap[1] : remap[0];
-        return ObfuscationReflectionHelper.getPrivateValue(cls, instance, name);
     }
 }

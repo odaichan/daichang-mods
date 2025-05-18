@@ -1,21 +1,58 @@
 {
   "mappings": {
-    "net/daichang/dcmods/mixins/MixinGameRenderer": {
+    "net/daichang/dcmods/bytes/mixins/ItemRendererMixin": {
+      "renderModelLists": "Lnet/minecraft/client/renderer/entity/ItemRenderer;m_115189_(Lnet/minecraft/client/resources/model/BakedModel;Lnet/minecraft/world/item/ItemStack;IILcom/mojang/blaze3d/vertex/PoseStack;Lcom/mojang/blaze3d/vertex/VertexConsumer;)V",
+      "render": "Lnet/minecraft/client/renderer/entity/ItemRenderer;m_115143_(Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/item/ItemDisplayContext;ZLcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;IILnet/minecraft/client/resources/model/BakedModel;)V"
+    },
+    "net/daichang/dcmods/bytes/mixins/MixinEntity": {
+      "getDeltaMovement": "Lnet/minecraft/world/entity/Entity;m_20184_()Lnet/minecraft/world/phys/Vec3;",
+      "tick": "Lnet/minecraft/world/entity/Entity;m_8119_()V",
+      "kill": "Lnet/minecraft/world/entity/Entity;m_6074_()V",
+      "hurt": "Lnet/minecraft/world/entity/Entity;m_6469_(Lnet/minecraft/world/damagesource/DamageSource;F)Z"
+    },
+    "net/daichang/dcmods/bytes/mixins/renderer/GuiGraphicsMixin": {
+      "renderTooltipInternal": "Lnet/minecraft/client/gui/GuiGraphics;m_280497_(Lnet/minecraft/client/gui/Font;Ljava/util/List;IILnet/minecraft/client/gui/screens/inventory/tooltip/ClientTooltipPositioner;)V",
+      "Lcom/mojang/blaze3d/vertex/PoseStack;popPose()V": "Lcom/mojang/blaze3d/vertex/PoseStack;m_85849_()V"
+    },
+    "net/daichang/dcmods/bytes/mixins/MixinPlayer": {
+      "getSpeed": "Lnet/minecraft/world/entity/player/Player;m_6113_()F",
+      "tick": "Lnet/minecraft/world/entity/player/Player;m_8119_()V",
+      "hurt": "Lnet/minecraft/world/entity/player/Player;m_6469_(Lnet/minecraft/world/damagesource/DamageSource;F)Z"
+    },
+    "net/daichang/dcmods/bytes/mixins/MixinServerPlayer": {
+      "tick": "Lnet/minecraft/server/level/ServerPlayer;m_8119_()V",
+      "hurt": "Lnet/minecraft/server/level/ServerPlayer;m_6469_(Lnet/minecraft/world/damagesource/DamageSource;F)Z"
+    },
+    "net/daichang/dcmods/bytes/mixins/MixinLocalPlayer": {
+      "tick": "Lnet/minecraft/client/player/LocalPlayer;m_8119_()V",
+      "hurt": "Lnet/minecraft/client/player/LocalPlayer;m_6469_(Lnet/minecraft/world/damagesource/DamageSource;F)Z"
+    },
+    "net/daichang/dcmods/bytes/mixins/MixinTrident": {
+      "releaseUsing": "Lnet/minecraft/world/item/TridentItem;m_5551_(Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/level/Level;Lnet/minecraft/world/entity/LivingEntity;I)V"
+    },
+    "net/daichang/dcmods/bytes/mixins/sword_block/ItemInHandRendererMixin": {
+      "renderArmWithItem": "Lnet/minecraft/client/renderer/ItemInHandRenderer;m_109371_(Lnet/minecraft/client/player/AbstractClientPlayer;FFLnet/minecraft/world/InteractionHand;FLnet/minecraft/world/item/ItemStack;FLcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;I)V",
+      "Lnet/minecraft/world/item/ItemStack;getUseAnimation()Lnet/minecraft/world/item/UseAnim;": "Lnet/minecraft/world/item/ItemStack;m_41780_()Lnet/minecraft/world/item/UseAnim;"
+    },
+    "net/daichang/dcmods/bytes/mixins/MixinLivingEntityRender": {
+      "setupRotations": "Lnet/minecraft/client/renderer/entity/LivingEntityRenderer;m_7523_(Lnet/minecraft/world/entity/LivingEntity;Lcom/mojang/blaze3d/vertex/PoseStack;FFF)V"
+    },
+    "net/daichang/dcmods/bytes/mixins/MixinGameRenderer": {
       "loadEffect": "Lnet/minecraft/client/renderer/GameRenderer;m_109128_(Lnet/minecraft/resources/ResourceLocation;)V",
       "shutdownEffect": "Lnet/minecraft/client/renderer/GameRenderer;m_109086_()V",
       "tick": "Lnet/minecraft/client/renderer/GameRenderer;m_109148_()V"
     },
-    "net/daichang/dcmods/mixins/MixinTrident": {
-      "releaseUsing": "Lnet/minecraft/world/item/TridentItem;m_5551_(Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/level/Level;Lnet/minecraft/world/entity/LivingEntity;I)V"
+    "net/daichang/dcmods/bytes/mixins/sword_block/HumanoidModelMixin": {
+      "setupAnim(Lnet/minecraft/world/entity/LivingEntity;FFFFF)V": "Lnet/minecraft/client/model/HumanoidModel;m_6973_(Lnet/minecraft/world/entity/LivingEntity;FFFFF)V"
     },
-    "net/daichang/dcmods/mixins/MixinItemEntityRenderer": {
+    "net/daichang/dcmods/bytes/mixins/MixinItemEntityRenderer": {
       "render(Lnet/minecraft/world/entity/item/ItemEntity;FFLcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;I)V": "Lnet/minecraft/client/renderer/entity/ItemEntityRenderer;m_7392_(Lnet/minecraft/world/entity/item/ItemEntity;FFLcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;I)V"
     },
-    "net/daichang/dcmods/mixins/MixinLocalPlayer": {
-      "tick": "Lnet/minecraft/client/player/LocalPlayer;m_8119_()V",
-      "hurt": "Lnet/minecraft/client/player/LocalPlayer;m_6469_(Lnet/minecraft/world/damagesource/DamageSource;F)Z"
+    "net/daichang/dcmods/bytes/mixins/MixinFont": {
+      "drawInternal(Lnet/minecraft/util/FormattedCharSequence;FFIZLorg/joml/Matrix4f;Lnet/minecraft/client/renderer/MultiBufferSource;Lnet/minecraft/client/gui/Font$DisplayMode;II)I": "Lnet/minecraft/client/gui/Font;m_272085_(Lnet/minecraft/util/FormattedCharSequence;FFIZLorg/joml/Matrix4f;Lnet/minecraft/client/renderer/MultiBufferSource;Lnet/minecraft/client/gui/Font$DisplayMode;II)I",
+      "drawInBatch(Lnet/minecraft/util/FormattedCharSequence;FFIZLorg/joml/Matrix4f;Lnet/minecraft/client/renderer/MultiBufferSource;Lnet/minecraft/client/gui/Font$DisplayMode;II)I": "Lnet/minecraft/client/gui/Font;m_272191_(Lnet/minecraft/util/FormattedCharSequence;FFIZLorg/joml/Matrix4f;Lnet/minecraft/client/renderer/MultiBufferSource;Lnet/minecraft/client/gui/Font$DisplayMode;II)I"
     },
-    "net/daichang/dcmods/mixins/MixinLivingEntity": {
+    "net/daichang/dcmods/bytes/mixins/MixinLivingEntity": {
       "isAlive": "Lnet/minecraft/world/entity/LivingEntity;m_6084_()Z",
       "addAdditionalSaveData": "Lnet/minecraft/world/entity/LivingEntity;m_7380_(Lnet/minecraft/nbt/CompoundTag;)V",
       "defineSynchedData": "Lnet/minecraft/world/entity/LivingEntity;m_8097_()V",
@@ -27,65 +64,65 @@
       "getHealth": "Lnet/minecraft/world/entity/LivingEntity;m_21223_()F",
       "isDeadOrDying": "Lnet/minecraft/world/entity/LivingEntity;m_21224_()Z"
     },
-    "net/daichang/dcmods/mixins/MixinLivingEntityRender": {
-      "setupRotations": "Lnet/minecraft/client/renderer/entity/LivingEntityRenderer;m_7523_(Lnet/minecraft/world/entity/LivingEntity;Lcom/mojang/blaze3d/vertex/PoseStack;FFF)V"
-    },
-    "net/daichang/dcmods/mixins/renderer/GuiGraphicsMixin": {
-      "renderTooltipInternal": "Lnet/minecraft/client/gui/GuiGraphics;m_280497_(Lnet/minecraft/client/gui/Font;Ljava/util/List;IILnet/minecraft/client/gui/screens/inventory/tooltip/ClientTooltipPositioner;)V",
-      "Lcom/mojang/blaze3d/vertex/PoseStack;popPose()V": "Lcom/mojang/blaze3d/vertex/PoseStack;m_85849_()V"
-    },
-    "net/daichang/dcmods/mixins/MixinPlayer": {
-      "getSpeed": "Lnet/minecraft/world/entity/player/Player;m_6113_()F",
-      "tick": "Lnet/minecraft/world/entity/player/Player;m_8119_()V",
-      "hurt": "Lnet/minecraft/world/entity/player/Player;m_6469_(Lnet/minecraft/world/damagesource/DamageSource;F)Z"
-    },
-    "net/daichang/dcmods/mixins/MixinEntity": {
-      "getDeltaMovement": "Lnet/minecraft/world/entity/Entity;m_20184_()Lnet/minecraft/world/phys/Vec3;",
-      "tick": "Lnet/minecraft/world/entity/Entity;m_8119_()V",
-      "kill": "Lnet/minecraft/world/entity/Entity;m_6074_()V",
-      "hurt": "Lnet/minecraft/world/entity/Entity;m_6469_(Lnet/minecraft/world/damagesource/DamageSource;F)Z"
-    },
-    "net/daichang/dcmods/mixins/MixinFont": {
-      "drawInternal(Lnet/minecraft/util/FormattedCharSequence;FFIZLorg/joml/Matrix4f;Lnet/minecraft/client/renderer/MultiBufferSource;Lnet/minecraft/client/gui/Font$DisplayMode;II)I": "Lnet/minecraft/client/gui/Font;m_272085_(Lnet/minecraft/util/FormattedCharSequence;FFIZLorg/joml/Matrix4f;Lnet/minecraft/client/renderer/MultiBufferSource;Lnet/minecraft/client/gui/Font$DisplayMode;II)I",
-      "drawInBatch(Lnet/minecraft/util/FormattedCharSequence;FFIZLorg/joml/Matrix4f;Lnet/minecraft/client/renderer/MultiBufferSource;Lnet/minecraft/client/gui/Font$DisplayMode;II)I": "Lnet/minecraft/client/gui/Font;m_272191_(Lnet/minecraft/util/FormattedCharSequence;FFIZLorg/joml/Matrix4f;Lnet/minecraft/client/renderer/MultiBufferSource;Lnet/minecraft/client/gui/Font$DisplayMode;II)I"
-    },
-    "net/daichang/dcmods/mixins/ItemRendererMixin": {
-      "renderModelLists": "Lnet/minecraft/client/renderer/entity/ItemRenderer;m_115189_(Lnet/minecraft/client/resources/model/BakedModel;Lnet/minecraft/world/item/ItemStack;IILcom/mojang/blaze3d/vertex/PoseStack;Lcom/mojang/blaze3d/vertex/VertexConsumer;)V",
-      "render": "Lnet/minecraft/client/renderer/entity/ItemRenderer;m_115143_(Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/item/ItemDisplayContext;ZLcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;IILnet/minecraft/client/resources/model/BakedModel;)V"
-    },
-    "net/daichang/dcmods/mixins/sword_block/PlayerItemInHandLayerMixin": {
+    "net/daichang/dcmods/bytes/mixins/sword_block/PlayerItemInHandLayerMixin": {
       "renderArmWithItem": "Lnet/minecraft/client/renderer/entity/layers/PlayerItemInHandLayer;m_117184_(Lnet/minecraft/world/entity/LivingEntity;Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/item/ItemDisplayContext;Lnet/minecraft/world/entity/HumanoidArm;Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;I)V"
-    },
-    "net/daichang/dcmods/mixins/sword_block/HumanoidModelMixin": {
-      "setupAnim(Lnet/minecraft/world/entity/LivingEntity;FFFFF)V": "Lnet/minecraft/client/model/HumanoidModel;m_6973_(Lnet/minecraft/world/entity/LivingEntity;FFFFF)V"
-    },
-    "net/daichang/dcmods/mixins/sword_block/ItemInHandRendererMixin": {
-      "renderArmWithItem": "Lnet/minecraft/client/renderer/ItemInHandRenderer;m_109371_(Lnet/minecraft/client/player/AbstractClientPlayer;FFLnet/minecraft/world/InteractionHand;FLnet/minecraft/world/item/ItemStack;FLcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;I)V",
-      "Lnet/minecraft/world/item/ItemStack;getUseAnimation()Lnet/minecraft/world/item/UseAnim;": "Lnet/minecraft/world/item/ItemStack;m_41780_()Lnet/minecraft/world/item/UseAnim;"
-    },
-    "net/daichang/dcmods/mixins/MixinServerPlayer": {
-      "tick": "Lnet/minecraft/server/level/ServerPlayer;m_8119_()V",
-      "hurt": "Lnet/minecraft/server/level/ServerPlayer;m_6469_(Lnet/minecraft/world/damagesource/DamageSource;F)Z"
     }
   },
   "data": {
     "searge": {
-      "net/daichang/dcmods/mixins/MixinGameRenderer": {
+      "net/daichang/dcmods/bytes/mixins/ItemRendererMixin": {
+        "renderModelLists": "Lnet/minecraft/client/renderer/entity/ItemRenderer;m_115189_(Lnet/minecraft/client/resources/model/BakedModel;Lnet/minecraft/world/item/ItemStack;IILcom/mojang/blaze3d/vertex/PoseStack;Lcom/mojang/blaze3d/vertex/VertexConsumer;)V",
+        "render": "Lnet/minecraft/client/renderer/entity/ItemRenderer;m_115143_(Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/item/ItemDisplayContext;ZLcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;IILnet/minecraft/client/resources/model/BakedModel;)V"
+      },
+      "net/daichang/dcmods/bytes/mixins/MixinEntity": {
+        "getDeltaMovement": "Lnet/minecraft/world/entity/Entity;m_20184_()Lnet/minecraft/world/phys/Vec3;",
+        "tick": "Lnet/minecraft/world/entity/Entity;m_8119_()V",
+        "kill": "Lnet/minecraft/world/entity/Entity;m_6074_()V",
+        "hurt": "Lnet/minecraft/world/entity/Entity;m_6469_(Lnet/minecraft/world/damagesource/DamageSource;F)Z"
+      },
+      "net/daichang/dcmods/bytes/mixins/renderer/GuiGraphicsMixin": {
+        "renderTooltipInternal": "Lnet/minecraft/client/gui/GuiGraphics;m_280497_(Lnet/minecraft/client/gui/Font;Ljava/util/List;IILnet/minecraft/client/gui/screens/inventory/tooltip/ClientTooltipPositioner;)V",
+        "Lcom/mojang/blaze3d/vertex/PoseStack;popPose()V": "Lcom/mojang/blaze3d/vertex/PoseStack;m_85849_()V"
+      },
+      "net/daichang/dcmods/bytes/mixins/MixinPlayer": {
+        "getSpeed": "Lnet/minecraft/world/entity/player/Player;m_6113_()F",
+        "tick": "Lnet/minecraft/world/entity/player/Player;m_8119_()V",
+        "hurt": "Lnet/minecraft/world/entity/player/Player;m_6469_(Lnet/minecraft/world/damagesource/DamageSource;F)Z"
+      },
+      "net/daichang/dcmods/bytes/mixins/MixinServerPlayer": {
+        "tick": "Lnet/minecraft/server/level/ServerPlayer;m_8119_()V",
+        "hurt": "Lnet/minecraft/server/level/ServerPlayer;m_6469_(Lnet/minecraft/world/damagesource/DamageSource;F)Z"
+      },
+      "net/daichang/dcmods/bytes/mixins/MixinLocalPlayer": {
+        "tick": "Lnet/minecraft/client/player/LocalPlayer;m_8119_()V",
+        "hurt": "Lnet/minecraft/client/player/LocalPlayer;m_6469_(Lnet/minecraft/world/damagesource/DamageSource;F)Z"
+      },
+      "net/daichang/dcmods/bytes/mixins/MixinTrident": {
+        "releaseUsing": "Lnet/minecraft/world/item/TridentItem;m_5551_(Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/level/Level;Lnet/minecraft/world/entity/LivingEntity;I)V"
+      },
+      "net/daichang/dcmods/bytes/mixins/sword_block/ItemInHandRendererMixin": {
+        "renderArmWithItem": "Lnet/minecraft/client/renderer/ItemInHandRenderer;m_109371_(Lnet/minecraft/client/player/AbstractClientPlayer;FFLnet/minecraft/world/InteractionHand;FLnet/minecraft/world/item/ItemStack;FLcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;I)V",
+        "Lnet/minecraft/world/item/ItemStack;getUseAnimation()Lnet/minecraft/world/item/UseAnim;": "Lnet/minecraft/world/item/ItemStack;m_41780_()Lnet/minecraft/world/item/UseAnim;"
+      },
+      "net/daichang/dcmods/bytes/mixins/MixinLivingEntityRender": {
+        "setupRotations": "Lnet/minecraft/client/renderer/entity/LivingEntityRenderer;m_7523_(Lnet/minecraft/world/entity/LivingEntity;Lcom/mojang/blaze3d/vertex/PoseStack;FFF)V"
+      },
+      "net/daichang/dcmods/bytes/mixins/MixinGameRenderer": {
         "loadEffect": "Lnet/minecraft/client/renderer/GameRenderer;m_109128_(Lnet/minecraft/resources/ResourceLocation;)V",
         "shutdownEffect": "Lnet/minecraft/client/renderer/GameRenderer;m_109086_()V",
         "tick": "Lnet/minecraft/client/renderer/GameRenderer;m_109148_()V"
       },
-      "net/daichang/dcmods/mixins/MixinTrident": {
-        "releaseUsing": "Lnet/minecraft/world/item/TridentItem;m_5551_(Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/level/Level;Lnet/minecraft/world/entity/LivingEntity;I)V"
+      "net/daichang/dcmods/bytes/mixins/sword_block/HumanoidModelMixin": {
+        "setupAnim(Lnet/minecraft/world/entity/LivingEntity;FFFFF)V": "Lnet/minecraft/client/model/HumanoidModel;m_6973_(Lnet/minecraft/world/entity/LivingEntity;FFFFF)V"
       },
-      "net/daichang/dcmods/mixins/MixinItemEntityRenderer": {
+      "net/daichang/dcmods/bytes/mixins/MixinItemEntityRenderer": {
         "render(Lnet/minecraft/world/entity/item/ItemEntity;FFLcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;I)V": "Lnet/minecraft/client/renderer/entity/ItemEntityRenderer;m_7392_(Lnet/minecraft/world/entity/item/ItemEntity;FFLcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;I)V"
       },
-      "net/daichang/dcmods/mixins/MixinLocalPlayer": {
-        "tick": "Lnet/minecraft/client/player/LocalPlayer;m_8119_()V",
-        "hurt": "Lnet/minecraft/client/player/LocalPlayer;m_6469_(Lnet/minecraft/world/damagesource/DamageSource;F)Z"
+      "net/daichang/dcmods/bytes/mixins/MixinFont": {
+        "drawInternal(Lnet/minecraft/util/FormattedCharSequence;FFIZLorg/joml/Matrix4f;Lnet/minecraft/client/renderer/MultiBufferSource;Lnet/minecraft/client/gui/Font$DisplayMode;II)I": "Lnet/minecraft/client/gui/Font;m_272085_(Lnet/minecraft/util/FormattedCharSequence;FFIZLorg/joml/Matrix4f;Lnet/minecraft/client/renderer/MultiBufferSource;Lnet/minecraft/client/gui/Font$DisplayMode;II)I",
+        "drawInBatch(Lnet/minecraft/util/FormattedCharSequence;FFIZLorg/joml/Matrix4f;Lnet/minecraft/client/renderer/MultiBufferSource;Lnet/minecraft/client/gui/Font$DisplayMode;II)I": "Lnet/minecraft/client/gui/Font;m_272191_(Lnet/minecraft/util/FormattedCharSequence;FFIZLorg/joml/Matrix4f;Lnet/minecraft/client/renderer/MultiBufferSource;Lnet/minecraft/client/gui/Font$DisplayMode;II)I"
       },
-      "net/daichang/dcmods/mixins/MixinLivingEntity": {
+      "net/daichang/dcmods/bytes/mixins/MixinLivingEntity": {
         "isAlive": "Lnet/minecraft/world/entity/LivingEntity;m_6084_()Z",
         "addAdditionalSaveData": "Lnet/minecraft/world/entity/LivingEntity;m_7380_(Lnet/minecraft/nbt/CompoundTag;)V",
         "defineSynchedData": "Lnet/minecraft/world/entity/LivingEntity;m_8097_()V",
@@ -97,45 +134,8 @@
         "getHealth": "Lnet/minecraft/world/entity/LivingEntity;m_21223_()F",
         "isDeadOrDying": "Lnet/minecraft/world/entity/LivingEntity;m_21224_()Z"
       },
-      "net/daichang/dcmods/mixins/MixinLivingEntityRender": {
-        "setupRotations": "Lnet/minecraft/client/renderer/entity/LivingEntityRenderer;m_7523_(Lnet/minecraft/world/entity/LivingEntity;Lcom/mojang/blaze3d/vertex/PoseStack;FFF)V"
-      },
-      "net/daichang/dcmods/mixins/renderer/GuiGraphicsMixin": {
-        "renderTooltipInternal": "Lnet/minecraft/client/gui/GuiGraphics;m_280497_(Lnet/minecraft/client/gui/Font;Ljava/util/List;IILnet/minecraft/client/gui/screens/inventory/tooltip/ClientTooltipPositioner;)V",
-        "Lcom/mojang/blaze3d/vertex/PoseStack;popPose()V": "Lcom/mojang/blaze3d/vertex/PoseStack;m_85849_()V"
-      },
-      "net/daichang/dcmods/mixins/MixinPlayer": {
-        "getSpeed": "Lnet/minecraft/world/entity/player/Player;m_6113_()F",
-        "tick": "Lnet/minecraft/world/entity/player/Player;m_8119_()V",
-        "hurt": "Lnet/minecraft/world/entity/player/Player;m_6469_(Lnet/minecraft/world/damagesource/DamageSource;F)Z"
-      },
-      "net/daichang/dcmods/mixins/MixinEntity": {
-        "getDeltaMovement": "Lnet/minecraft/world/entity/Entity;m_20184_()Lnet/minecraft/world/phys/Vec3;",
-        "tick": "Lnet/minecraft/world/entity/Entity;m_8119_()V",
-        "kill": "Lnet/minecraft/world/entity/Entity;m_6074_()V",
-        "hurt": "Lnet/minecraft/world/entity/Entity;m_6469_(Lnet/minecraft/world/damagesource/DamageSource;F)Z"
-      },
-      "net/daichang/dcmods/mixins/MixinFont": {
-        "drawInternal(Lnet/minecraft/util/FormattedCharSequence;FFIZLorg/joml/Matrix4f;Lnet/minecraft/client/renderer/MultiBufferSource;Lnet/minecraft/client/gui/Font$DisplayMode;II)I": "Lnet/minecraft/client/gui/Font;m_272085_(Lnet/minecraft/util/FormattedCharSequence;FFIZLorg/joml/Matrix4f;Lnet/minecraft/client/renderer/MultiBufferSource;Lnet/minecraft/client/gui/Font$DisplayMode;II)I",
-        "drawInBatch(Lnet/minecraft/util/FormattedCharSequence;FFIZLorg/joml/Matrix4f;Lnet/minecraft/client/renderer/MultiBufferSource;Lnet/minecraft/client/gui/Font$DisplayMode;II)I": "Lnet/minecraft/client/gui/Font;m_272191_(Lnet/minecraft/util/FormattedCharSequence;FFIZLorg/joml/Matrix4f;Lnet/minecraft/client/renderer/MultiBufferSource;Lnet/minecraft/client/gui/Font$DisplayMode;II)I"
-      },
-      "net/daichang/dcmods/mixins/ItemRendererMixin": {
-        "renderModelLists": "Lnet/minecraft/client/renderer/entity/ItemRenderer;m_115189_(Lnet/minecraft/client/resources/model/BakedModel;Lnet/minecraft/world/item/ItemStack;IILcom/mojang/blaze3d/vertex/PoseStack;Lcom/mojang/blaze3d/vertex/VertexConsumer;)V",
-        "render": "Lnet/minecraft/client/renderer/entity/ItemRenderer;m_115143_(Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/item/ItemDisplayContext;ZLcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;IILnet/minecraft/client/resources/model/BakedModel;)V"
-      },
-      "net/daichang/dcmods/mixins/sword_block/PlayerItemInHandLayerMixin": {
+      "net/daichang/dcmods/bytes/mixins/sword_block/PlayerItemInHandLayerMixin": {
         "renderArmWithItem": "Lnet/minecraft/client/renderer/entity/layers/PlayerItemInHandLayer;m_117184_(Lnet/minecraft/world/entity/LivingEntity;Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/item/ItemDisplayContext;Lnet/minecraft/world/entity/HumanoidArm;Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;I)V"
-      },
-      "net/daichang/dcmods/mixins/sword_block/HumanoidModelMixin": {
-        "setupAnim(Lnet/minecraft/world/entity/LivingEntity;FFFFF)V": "Lnet/minecraft/client/model/HumanoidModel;m_6973_(Lnet/minecraft/world/entity/LivingEntity;FFFFF)V"
-      },
-      "net/daichang/dcmods/mixins/sword_block/ItemInHandRendererMixin": {
-        "renderArmWithItem": "Lnet/minecraft/client/renderer/ItemInHandRenderer;m_109371_(Lnet/minecraft/client/player/AbstractClientPlayer;FFLnet/minecraft/world/InteractionHand;FLnet/minecraft/world/item/ItemStack;FLcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;I)V",
-        "Lnet/minecraft/world/item/ItemStack;getUseAnimation()Lnet/minecraft/world/item/UseAnim;": "Lnet/minecraft/world/item/ItemStack;m_41780_()Lnet/minecraft/world/item/UseAnim;"
-      },
-      "net/daichang/dcmods/mixins/MixinServerPlayer": {
-        "tick": "Lnet/minecraft/server/level/ServerPlayer;m_8119_()V",
-        "hurt": "Lnet/minecraft/server/level/ServerPlayer;m_6469_(Lnet/minecraft/world/damagesource/DamageSource;F)Z"
       }
     }
   }

@@ -3,6 +3,7 @@ package net.daichang.dcmods.event;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.brigadier.arguments.FloatArgumentType;
+import net.daichang.dcmods.Config;
 import net.daichang.dcmods.DCMod;
 import net.daichang.dcmods.commands.SoftGetHealthCommand;
 import net.daichang.dcmods.common.blocks.RedSpiderLily;
@@ -33,7 +34,6 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
@@ -88,45 +88,23 @@ public class DCForgeEventHandler {
 
     @SubscribeEvent
     public static void hurtEvent(@NotNull LivingHurtEvent event) {
-        LivingEntity living = event.getEntity();
-        if (Utils.isBlocking(living)) {
-            living.playSound(SoundEvents.SHIELD_BLOCK);
+        DamageSource source = event.getSource();
+        LivingEntity attack = event.getEntity();
+        LivingEntity hurtEntity = event.getEntity();
+        if (Utils.isBlocking(hurtEntity)) {
+            hurtEntity.playSound(SoundEvents.SHIELD_BLOCK);
             event.setCanceled(true);
         }
-        if (DCLoliPickaxe.isHasLoliPickaxe(living)) event.setCanceled(true);
-        if (living.attributes.hasAttribute(DCAttributes.DC_SUPER_DAMAGE.get())) event.setAmount((float) (event.getAmount() + living.getAttribute(DCAttributes.DC_SUPER_DAMAGE.get()).getValue()));
-        if (living.attributes.hasAttribute(DCAttributes.DC_DEFENSE.get())) event.setAmount((float) (event.getAmount() - living.getAttribute(DCAttributes.DC_SUPER_DAMAGE.get()).getValue() * 0.5F));
+        if (DCLoliPickaxe.isHasLoliPickaxe(hurtEntity)) event.setCanceled(true);
     }
 
     @SubscribeEvent
     public static void leftClickEntity(@NotNull LivingAttackEvent event) {
         LivingEntity living = event.getEntity();
-        DamageSource damageSource = event.getSource();
-        Entity entity = damageSource.getEntity();
-        if (damageSource.is(DCSuperDamage.SUPER_DAMAGE) && !(entity instanceof LivingEntity living1 && living1.getMainHandItem().is(DCItems.SUPER_WOOD_SWORD.get())) || damageSource.is(DCOceanDamage.OCEAN_DAMAGE)) {
-            event.setCanceled(false);
-            float normalDamage = living.getMaxHealth() * 0.01F;
-            if (entity instanceof LivingEntity attacker) {
-                if (attacker.attributes.hasAttribute(Attributes.ATTACK_DAMAGE)) normalDamage = normalDamage +  (float) attacker.getAttribute(Attributes.ATTACK_DAMAGE).getValue();
-                if (attacker.attributes.hasAttribute(DCAttributes.DC_SUPER_DAMAGE.get())) normalDamage = normalDamage + (float) attacker.getAttribute(DCAttributes.DC_SUPER_DAMAGE.get()).getValue();
-            }
-            float removedHealth = event.getAmount() + normalDamage;
-            float newHealth =  living.getHealth() - removedHealth;
-            EntityHelper.forceSetHealth(living, newHealth);
-            EntityHelper.noHurtDuration(living);
-            living.getEntityData().set(LivingEntity.DATA_HEALTH_ID, newHealth);
-            living.setHealth(newHealth);
-            DataHelper.addHealthDelta(living, -removedHealth);
-        }
         if (Utils.isBlocking(living)) {
             living.playSound(SoundEvents.SHIELD_BLOCK);
             event.setCanceled(true);
         }
-//        if (entity instanceof BossEntity boss) {
-//            float value = (float) (boss.getAttributeValue(DCAttributes.DC_SUPER_DAMAGE.get()) + boss.getAttributeValue(DCAttributes.OCEAN_DAMAGE.get()) + boss.getAttributeValue(Attributes.ATTACK_DAMAGE));
-//            EntityHelper.forceOceanHurt(living, value);
-//            event.setCanceled(false);
-//        }
         if (DCLoliPickaxe.isHasLoliPickaxe(living)) event.setCanceled(true);
     }
 
@@ -259,34 +237,33 @@ public class DCForgeEventHandler {
         float saturation = 1.0F;
         float brightness = 1.0F;
         int c = Color.HSBtoRGB((((hue * 720.0F + index) % 720.0F >= 360.0F) ? (720.0F - (hue * 720.0F + index) % 720.0F) : ((hue * 720.0F + index) % 720.0F)) / 256.0F, saturation, brightness);
-        if (Utils.isSuperTool(stack)){
-            event.setBorderStart(c);
-            event.setBorderEnd(c);
-        }
-        else if (Utils.isCreativeItem(stack)) {
-            event.setBorderStart(Color.CYAN.getRGB());
-            event.setBorderEnd(Color.CYAN.getRGB());
-        }
-        else if (Utils.isNormalTool(stack)) {
-            event.setBorderStart(Color.WHITE.getRGB());
-            event.setBorderEnd(Color.WHITE.getRGB());
-        }
-        else if (item.equals(DCItems.DC_ENTITY_REMOVE.get())) {
-            event.setBorderStart(new Random().nextInt());
-            event.setBorderEnd(new Random().nextInt());
-        }
-        else if (Utils.isBlockItem(stack)) {
-            event.setBorderStart(Color.BLUE.getRGB());
-            event.setBorderStart(Color.BLUE.getRGB());
-        }
-        else if (ModUtil.isDCLoad() && FontUtil.isCanRenderFont(stack)) {
-            event.setBorderStart(c);
-            event.setBorderEnd(c);
-        }
-        else if (item == DCItems.OCEAN_SCYTHE.get()) {
-            event.setBackground(Color.CYAN.getRGB());
-            event.setBackgroundStart(Color.CYAN.getRGB());
-            event.setBackgroundEnd(Color.BLUE.getRGB());
+        if (Config.Client.tool_tip_render.get()) {
+            if (Utils.isSuperTool(stack)){
+                event.setBorderStart(c);
+                event.setBorderEnd(c);
+                event.setBackgroundEnd(Color.WHITE.getRGB());
+                event.setBackgroundStart(Color.LIGHT_GRAY.getRGB());
+            }
+            else if (Utils.isCreativeItem(stack)) {
+                event.setBorderStart(Color.CYAN.getRGB());
+                event.setBorderEnd(Color.CYAN.getRGB());
+            }
+            else if (Utils.isNormalTool(stack)) {
+                event.setBorderStart(Color.WHITE.getRGB());
+                event.setBorderEnd(Color.WHITE.getRGB());
+            }
+            else if (item.equals(DCItems.DC_ENTITY_REMOVE.get())) {
+                event.setBorderStart(new Random(Util.getMillis()).nextInt(0, 255));
+                event.setBorderEnd(new Random(Util.getMillis()).nextInt(0,255));
+            }
+            else if (Utils.isBlockItem(stack)) {
+                event.setBorderStart(Color.BLUE.getRGB());
+                event.setBorderStart(Color.BLUE.getRGB());
+            }
+            else if (ModUtil.isDCLoad() && FontUtil.isCanRenderFont(stack)) {
+                event.setBorderStart(c);
+                event.setBorderEnd(c);
+            }
         }
     }
 
@@ -364,10 +341,10 @@ public class DCForgeEventHandler {
                                             double x = p.getX();
                                             double y = p.getY();
                                             double z = p.getY();
-                                            for (Entity entity : EntityHelper.getEntity(cs.getSource().getLevel(),x,y,z, FloatArgumentType.getFloat(cs, "radius"))) if (entity != p)  DCLoliPickaxe.killEntity(entity, entity);
+                                            for (Entity entity : EntityHelper.getEntity(cs.getSource().getLevel(),x,y,z, FloatArgumentType.getFloat(cs, "radius") * 10)) if (entity != p)  DCLoliPickaxe.killEntity(entity, entity);
                                             return 4;
                                         }))
-                                .then(Commands.argument("entities", EntityArgument.entity()).executes(cs->{
+                                .then(Commands.argument("entities", EntityArgument.entities()).executes(cs->{
                                     for (Entity entity : EntityArgument.getEntities(cs, "entities")) DCLoliPickaxe.killEntity(entity, entity);
                                     return 2;
                                 })))
@@ -411,7 +388,7 @@ public class DCForgeEventHandler {
 
     @SubscribeEvent
     public static void playerRespawn(PlayerEvent.PlayerRespawnEvent event) {
-        event.getEntity().addEffect(EffectHelper.addEffect(DCEffects.EnchantressMercy.get(), 60, 1));
+        event.getEntity().addEffect(EffectHelper.addEffect(DCEffects.EnchantressMercy.get(), 80, 1));
     }
 
     @SubscribeEvent
@@ -449,7 +426,6 @@ public class DCForgeEventHandler {
     public static void livingDeathEvent(LivingDeathEvent event) {
         LivingEntity living = event.getEntity();
         Level level = living.level();
-        DamageSource source = event.getSource();
         Item mainHand = living.getMainHandItem().getItem();
         Item offHand = living.getOffhandItem().getItem();
         double x = living.getX();
@@ -467,10 +443,9 @@ public class DCForgeEventHandler {
                 Minecraft.getInstance().gameRenderer.displayItemActivation(new ItemStack(DCItems.WOOD_TOTEM.get()));
             }
         }
-        if (living.getType() == EntityType.TROPICAL_FISH) {
+        if (living.getType() == EntityType.TROPICAL_FISH && Config.Server.ocean_heart.get()) {
             double random = MathHelper.getRandomDouble(0.00D, 1.00D);
-            if (random == 0.01D && !living.getPersistentData().getBoolean("isDropDCOnce")) {
-                living.getPersistentData().putBoolean("isDropDCOnce", false);
+            if (random == 0.01D) {
                 ItemEntity item = new ItemEntity(living.level(), x, y, z, new ItemStack(DCItems.HEART_OF_THE_OCEAN.get()));
                 item.setPickUpDelay(0);
                 level.addFreshEntity(item);
@@ -493,7 +468,7 @@ public class DCForgeEventHandler {
     public static void playerTickEvent(TickEvent.PlayerTickEvent event) {
         Player player = event.player;
         if (Utils.isBlocking(player) && player.tickCount % 10 == 0 && DataHelper.getHealthDelta(player) <= 0) {
-            DataHelper.addHealthDelta(player, 1);
+            DataHelper.addHealthDelta(player, Config.Server.heal_count.get());
             player.heal(0.5F);
         }
     }

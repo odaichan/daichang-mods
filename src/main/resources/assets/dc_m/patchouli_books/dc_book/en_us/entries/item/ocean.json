@@ -7,11 +7,11 @@
     {
       "type": "spotlight",
       "item": "dc_m:heart_of_the_ocean",
-      "text": "海洋之心$(br2)它是一种较为强大的材料,在水中时,它会发挥它最大的力量,仿佛你是海的子女"
+      "text": "Heart of the Ocean$(br2)It is a relatively powerful material that exerts its maximum power in water, as if you were a child of the sea"
     },
     {
       "type": "text",
-      "text": "海洋之心$(br2)它是无合成配方的,杀死热带鱼有概率掉落,击杀 Steve 100%掉落。$(br2)它可用于升级下界合金甲"
+      "text": "Heart of the Ocean(br2)It has no synthetic formula, there is a chance to drop when killing tropical fish, and 100% drop when killing Steve。$(br2)It can be used to upgrade a certain armor"
     }
   ]
 }

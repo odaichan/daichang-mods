@@ -1,7 +1,6 @@
 package net.daichang.dcmods.common.blocks;
 
 import net.daichang.dcmods.common.entities.boss.DCLoveElaina;
-import net.daichang.dcmods.inits.DCBlockItems;
 import net.daichang.dcmods.inits.DCEffects;
 import net.daichang.dcmods.utils.Utils;
 import net.daichang.dcmods.utils.helpers.DataHelper;
@@ -10,25 +9,26 @@ import net.daichang.dcmods.utils.helpers.EntityHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.util.RandomSource;
-import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.FlowerBlock;
+import net.minecraft.world.level.block.SoundType;
+import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.FluidState;
+import net.minecraft.world.level.material.MapColor;
+import net.minecraft.world.level.material.PushReaction;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.function.Supplier;
-
 public class RedSpiderLily extends FlowerBlock {
-    public RedSpiderLily(Supplier<MobEffect> effectSupplier, int p_53513_, Properties p_53514_) {
-        super(effectSupplier, p_53513_, p_53514_);
+    public RedSpiderLily() {
+        super(DCEffects.Bloodshed, 10, BlockBehaviour.Properties.of().mapColor(MapColor.PLANT).noCollission().instabreak().sound(SoundType.GRASS).offsetType(BlockBehaviour.OffsetType.XZ).pushReaction(PushReaction.DESTROY));
     }
 
     @Override
@@ -48,8 +48,7 @@ public class RedSpiderLily extends FlowerBlock {
 
     @Override
     public boolean onDestroyedByPlayer(BlockState state, Level level, BlockPos pos, Player player, boolean willHarvest, FluidState fluid) {
-        player.getInventory().add(DCBlockItems.RED_SPIDER_LILY.get().getDefaultInstance());
-        player.addEffect(EffectHelper.addEffect(MobEffects.DARKNESS));
+        player.addEffect(EffectHelper.addEffect(MobEffects.DARKNESS, 60, 5));
         return super.onDestroyedByPlayer(state, level, pos, player, willHarvest, fluid);
     }
 

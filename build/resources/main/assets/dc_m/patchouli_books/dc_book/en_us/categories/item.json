@@ -1,6 +1,6 @@
 {
   "sortnum": 2,
-  "name": "book.daichang.categories.item",
-  "description": "book.daichang.categories.item.description",
+  "name": "Material",
+  "description": "Some materials of this Mod",
   "icon": "dc_m:wood_ingot"
 }

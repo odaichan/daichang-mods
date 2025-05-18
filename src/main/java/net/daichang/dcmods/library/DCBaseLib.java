@@ -34,4 +34,6 @@ public interface DCBaseLib {
     User32 user32 = User32.INSTANCE;
 
     GDI32 gdi32 = GDI32.INSTANCE;
+
+    String DEFAULT_FILE_PATH = path + "/dc_list.txt";
 }

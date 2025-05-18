@@ -12,12 +12,12 @@
       "rotate": true,
       "default_rotation": -45,
       "title": "Steve",
-      "text": "伊雷娜是个较强的中期生物，可掉落 匠魂妖造 整合包中期武器 满配七尺屠魔"
+      "text": "Elaina is a strong creature that can drop powerful weapons such as Super Wood Sword"
     },
     {
       "type": "spotlight",
       "item": "dc_m:red_spider_lily",
-      "text": "伊雷娜通过右键彼岸花召唤，召唤前提是背包中存在9个以上超级木制锭，不会被消耗"
+      "text": "Elaina summons by right clicking on the other shore flower, provided that there are 9 or more super wooden ingots in the backpack that will not be consumed"
     }
   ]
 }

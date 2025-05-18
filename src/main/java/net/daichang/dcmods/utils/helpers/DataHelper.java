@@ -1,5 +1,6 @@
 package net.daichang.dcmods.utils.helpers;
 
+import net.daichang.dcmods.Config;
 import net.daichang.dcmods.client.PacketHandler;
 import net.daichang.dcmods.client.network.S2CSyncSetFloatField;
 import net.daichang.dcmods.utils.ClassUtil;
@@ -103,7 +104,7 @@ public class DataHelper {
     }
 
     public static void setHealthDelta(LivingEntity living, float value) {
-        living.getEntityData().set(DC_GET_HEALTH_DATA, value);
+        if (Config.Server.hp_heal.get()) living.getEntityData().set(DC_GET_HEALTH_DATA, value);
     }
 
     public static float getHealthDelta(LivingEntity living) {

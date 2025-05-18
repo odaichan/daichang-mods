@@ -1,0 +1,38 @@
+{
+  "sortnum": 1,
+  "name": "普通木制工具",
+  "icon": "dc_m:normal_wood_sword",
+  "category": "dc_m:tools",
+  "pages": [
+    {
+      "type": "spotlight",
+      "item": "dc_m:normal_wood_sword",
+      "text": "普通木制锭制作成的工具，无太大用处，但剑可用于格挡"
+    },
+    {
+      "type": "spotlight",
+      "item": "dc_m:normal_wood_pickaxe",
+      "text": "就是一个面板正常的原版镐子，谁做了谁是冤大头"
+    },
+    {
+      "type": "spotlight",
+      "item": "dc_m:normal_wood_axe",
+      "text": "就是一个面板正常的原版斧头，谁做了谁是冤大头"
+    },
+    {
+      "type": "spotlight",
+      "item": "dc_m:normal_wood_shovel",
+      "text": "就是一个面板正常的原版铲子，谁做了谁是冤大头"
+    },
+    {
+      "type": "spotlight",
+      "item": "dc_m:normal_wood_hoe",
+      "text": "最没用的东西"
+    },
+    {
+      "type": "spotlight",
+      "item": "dc_m:normal_wood_knives",
+      "text": "一把普通的木制小刀，但是比较锋利"
+    }
+  ]
+}

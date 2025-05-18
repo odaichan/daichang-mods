@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "key": {
+    "A": {
+      "item": "minecraft:book"
+    },
+    "B": {
+      "item" : "minecraft:iron_ingot"
+    }
+  },
+  "pattern": [
+    "B",
+    "A",
+    "B"
+  ],
+  "result": {
+    "type" : "minecraft:item_nbt",
+    "item": "patchouli:guide_book",
+    "nbt" : {
+      "patchouli:book" : "dc_m:dc_book"
+    }
+  },
+  "show_notification": true
+}

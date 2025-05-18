@@ -1,7 +1,7 @@
 {
   "required": true,
   "minVersion": "0.8",
-  "package": "net.daichang.dcmods.mixins",
+  "package": "net.daichang.dcmods.bytes.mixins",
   "compatibilityLevel": "JAVA_8",
   "refmap": "dc_m.refmap.json",
   "mixins": [

@@ -1,0 +1,32 @@
+{
+  "default": [
+    {
+      "name": "dc_m:heart_of_the_ocean",
+      "level": 6
+    },
+    {
+      "name" : "tconstruct:shiny",
+      "level" : 1
+    },
+    {
+      "level": 2,
+      "name": "tconstruct:reinforced"
+    },
+    {
+      "level": 5,
+      "name": "tconstruct:enhanced"
+    },
+    {
+      "level": 1,
+      "name": "tconstruct:soulbound"
+    },
+    {
+      "level": 3,
+      "name": "tconstruct:sharpness"
+    },
+    {
+      "level": 2,
+      "name": "tconstruct:experienced"
+    }
+  ]
+}

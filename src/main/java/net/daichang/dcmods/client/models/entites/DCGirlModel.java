@@ -66,8 +66,6 @@ public class DCGirlModel<T extends Entity> extends EntityModel<T> {
 	public void setupAnim(@NotNull T entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
 		this.Head.yRot = netHeadYaw / (180F / (float) Math.PI);
 		this.Head.xRot = headPitch / (180F / (float) Math.PI);
-
-
 		if (entity instanceof DCLoveElaina living) {
 			if (living.getTarget() != null) this.Head.yRot += 0.2618F * 0.2F;
 			if (living.deathTime > 0 || living.isDeadOrDying()) {

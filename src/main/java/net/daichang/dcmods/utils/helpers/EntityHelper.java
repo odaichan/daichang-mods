@@ -40,11 +40,14 @@ public class EntityHelper extends DataHelper {
 
     public static void forceHurt(LivingEntity target,DamageSource source , float value) {
         target.gameEvent(GameEvent.ENTITY_DAMAGE);
-        addHealthDelta(target, -value);
         EntityHelper.forceSetHealth(target, target.getHealth() - value);
-        target.playHurtSound(source);
         target.setDeltaMovement(Vec3.ZERO);
         target.deltaMovement = Vec3.ZERO;
+        target.hurt(source, value);
+        try {
+            target.playHurtSound(source);
+            target.level().broadcastDamageEvent(target, source);
+        } catch (Exception ignored) {}
         noHurtDuration(target);
     }
 

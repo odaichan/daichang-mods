@@ -10,6 +10,7 @@ import java.util.function.Supplier;
 public enum DCTier implements Tier {
     NORMAL(4, 2031, 17.0F, 4.0F, 15, () -> Ingredient.of(DCItems.WOOD_INGOT.get())),
     DC_INGOT(37, 12842, 129.0F, 42.0F, 98, () -> Ingredient.of(DCItems.DC_CRAFT.get())),
+    OCEAN_HEART(78, 56443, 467.0F, 98.4F, 25, () -> Ingredient.of(DCItems.HEART_OF_THE_OCEAN.get())),
     SUPERS(9, 4982, 47.3F, 7.0F, 20, ()-> Ingredient.of(DCItems.SUPER_WOOD_INGOT.get()));
 
     private final int level;

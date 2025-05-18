@@ -1,0 +1,9 @@
+{
+  "type": "tconstruct:material",
+  "ingredient": {
+    "item": "dc_m:heart_of_the_ocean"
+  },
+  "value": 1,
+  "needed": 1,
+  "material": "dc_m:heart_of_the_ocean"
+}

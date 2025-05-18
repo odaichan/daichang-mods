@@ -6,7 +6,7 @@ import slimeknights.tconstruct.library.tools.helper.ModifierUtil;
 
 public class FontUtil {
     public static boolean isCanRenderFont(ItemStack item) {
-        return ModifierUtil.getModifierLevel(item, ModifierRegister.DC_SUPER_WOOD_INGOT.getId()) > 0;
+        return ModifierUtil.getModifierLevel(item, ModifierRegister.DC_SUPER_WOOD_INGOT.getId()) > 0 || ModifierUtil.getModifierLevel(item, ModifierRegister.OCEAN_HEART.getId()) > 0;
     }
 
     public static boolean isCanSwordBlock(ItemStack stack) {

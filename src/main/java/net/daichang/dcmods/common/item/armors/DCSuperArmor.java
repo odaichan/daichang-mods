@@ -44,40 +44,41 @@ import java.util.function.Consumer;
 
 public class DCSuperArmor extends ArmorItem {
     public Multimap<Attribute, AttributeModifier> modifiers;
-    private static final ArmorMaterial pMaterial = createArmorMaterial("super_wood", DCTier.SUPERS.getLevel(), Ingredient.of(DCItems.SUPER_WOOD_INGOT.get()));
+    private static final String NAME = "Armor Modifier";
+    private static final ArmorMaterial pMaterial = createArmorMaterial("super_wood", DCTier.OCEAN_HEART.getLevel(), Ingredient.of(DCItems.HEART_OF_THE_OCEAN.get()));
 
     public DCSuperArmor(Type pType) {
         super(pMaterial, pType, new Properties().fireResistant().rarity(Rarity.EPIC).durability(0));
         ImmutableMultimap.Builder<Attribute, AttributeModifier> mainHand = ImmutableMultimap.builder();
-        mainHand.put(Attributes.ATTACK_DAMAGE, new AttributeModifier(UUID.randomUUID(), "Armor modifier", 2.4D, AttributeModifier.Operation.ADDITION));
-        mainHand.put(Attributes.ATTACK_SPEED, new AttributeModifier(UUID.randomUUID(), "Armor modifier", 0.1D, AttributeModifier.Operation.ADDITION));
-        mainHand.put(ForgeMod.SWIM_SPEED.get(), new AttributeModifier(UUID.randomUUID(), "Armor modifier", 0.1D, AttributeModifier.Operation.ADDITION));
-        mainHand.put(Attributes.ARMOR, new AttributeModifier(UUID.randomUUID(), "Armor modifier", 7.3D, AttributeModifier.Operation.ADDITION));
-        mainHand.put(Attributes.ARMOR_TOUGHNESS, new AttributeModifier(UUID.randomUUID(), "Armor modifier", 4.3D, AttributeModifier.Operation.ADDITION));
-        mainHand.put(Attributes.MAX_HEALTH, new AttributeModifier(UUID.randomUUID(), "Armor modifier", 7.8D, AttributeModifier.Operation.ADDITION));
-        mainHand.put(Attributes.MAX_HEALTH, new AttributeModifier(UUID.randomUUID(), "Armor modifier", 0.052D, AttributeModifier.Operation.MULTIPLY_TOTAL));
-        mainHand.put(Attributes.KNOCKBACK_RESISTANCE, new AttributeModifier(UUID.randomUUID(), "Armor modifier", 4.3D, AttributeModifier.Operation.ADDITION));
-        mainHand.put(Attributes.KNOCKBACK_RESISTANCE, new AttributeModifier(UUID.randomUUID(), "Armor modifier", 0.1D, AttributeModifier.Operation.MULTIPLY_TOTAL));
-        mainHand.put(ForgeMod.ENTITY_REACH.get(), new AttributeModifier(UUID.randomUUID(), "Armor modifier", 0.23D, AttributeModifier.Operation.MULTIPLY_TOTAL));
-        mainHand.put(DCAttributes.DC_SUPER_DAMAGE.get(), new AttributeModifier(UUID.randomUUID(), "Armor modifier", 5.2D, AttributeModifier.Operation.ADDITION));
-        mainHand.put(ForgeMod.BLOCK_REACH.get(), new AttributeModifier(UUID.randomUUID(), "Armor modifier", 0.23D, AttributeModifier.Operation.MULTIPLY_TOTAL));
-        mainHand.put(DCAttributes.DC_SUPER_DAMAGE.get(), new AttributeModifier(UUID.randomUUID(), "Armor modifier", 0.52D, AttributeModifier.Operation.MULTIPLY_TOTAL));
-        mainHand.put(DCAttributes.DC_DEFENSE.get(), new AttributeModifier(UUID.randomUUID(), "Armor modifier", 5.2D, AttributeModifier.Operation.ADDITION));
-        mainHand.put(DCAttributes.DC_DEFENSE.get(), new AttributeModifier(UUID.randomUUID(), "Armor modifier", 0.52D, AttributeModifier.Operation.MULTIPLY_TOTAL));
+        mainHand.put(Attributes.ATTACK_DAMAGE, new AttributeModifier(UUID.randomUUID(), NAME, 2.4D, AttributeModifier.Operation.ADDITION));
+        mainHand.put(Attributes.ATTACK_SPEED, new AttributeModifier(UUID.randomUUID(), NAME, 0.1D, AttributeModifier.Operation.ADDITION));
+        mainHand.put(ForgeMod.SWIM_SPEED.get(), new AttributeModifier(UUID.randomUUID(), NAME, 0.1D, AttributeModifier.Operation.ADDITION));
+        mainHand.put(Attributes.ARMOR, new AttributeModifier(UUID.randomUUID(), NAME, 7.3D, AttributeModifier.Operation.ADDITION));
+        mainHand.put(Attributes.ARMOR_TOUGHNESS, new AttributeModifier(UUID.randomUUID(), NAME, 4.3D, AttributeModifier.Operation.ADDITION));
+        mainHand.put(Attributes.MAX_HEALTH, new AttributeModifier(UUID.randomUUID(), NAME, 7.8D, AttributeModifier.Operation.ADDITION));
+        mainHand.put(Attributes.MAX_HEALTH, new AttributeModifier(UUID.randomUUID(), NAME, 0.052D, AttributeModifier.Operation.MULTIPLY_TOTAL));
+        mainHand.put(Attributes.KNOCKBACK_RESISTANCE, new AttributeModifier(UUID.randomUUID(), NAME, 4.3D, AttributeModifier.Operation.ADDITION));
+        mainHand.put(Attributes.KNOCKBACK_RESISTANCE, new AttributeModifier(UUID.randomUUID(), NAME, 0.1D, AttributeModifier.Operation.MULTIPLY_TOTAL));
+        mainHand.put(ForgeMod.ENTITY_REACH.get(), new AttributeModifier(UUID.randomUUID(), NAME, 0.23D, AttributeModifier.Operation.MULTIPLY_TOTAL));
+        mainHand.put(DCAttributes.DC_SUPER_DAMAGE.get(), new AttributeModifier(UUID.randomUUID(), NAME, 5.2D, AttributeModifier.Operation.ADDITION));
+        mainHand.put(ForgeMod.BLOCK_REACH.get(), new AttributeModifier(UUID.randomUUID(), NAME, 0.23D, AttributeModifier.Operation.MULTIPLY_TOTAL));
+        mainHand.put(DCAttributes.DC_SUPER_DAMAGE.get(), new AttributeModifier(UUID.randomUUID(), NAME, 0.52D, AttributeModifier.Operation.MULTIPLY_TOTAL));
+        mainHand.put(DCAttributes.DC_DEFENSE.get(), new AttributeModifier(UUID.randomUUID(), NAME, 5.2D, AttributeModifier.Operation.ADDITION));
+        mainHand.put(DCAttributes.DC_DEFENSE.get(), new AttributeModifier(UUID.randomUUID(), NAME, 0.52D, AttributeModifier.Operation.MULTIPLY_TOTAL));
         if (ModUtil.isIronSpellbokksLoad()) {
-            mainHand.put(AttributeRegistry.MAX_MANA.get(), new AttributeModifier(UUID.randomUUID(), "Armor modifier", 520.13D, AttributeModifier.Operation.ADDITION));
-            mainHand.put(AttributeRegistry.MAX_MANA.get(), new AttributeModifier(UUID.randomUUID(), "Armor modifier", 0.52D, AttributeModifier.Operation.MULTIPLY_TOTAL));
-            mainHand.put(AttributeRegistry.MANA_REGEN.get(), new AttributeModifier(UUID.randomUUID(), "Armor modifier", 30.4D, AttributeModifier.Operation.ADDITION));
-            mainHand.put(AttributeRegistry.MANA_REGEN.get(), new AttributeModifier(UUID.randomUUID(), "Armor modifier", 1.14D, AttributeModifier.Operation.MULTIPLY_TOTAL));
-            mainHand.put(AttributeRegistry.COOLDOWN_REDUCTION.get(), new AttributeModifier(UUID.randomUUID(), "Armor modifier", 0.14D, AttributeModifier.Operation.MULTIPLY_TOTAL));
-            mainHand.put(AttributeRegistry.SPELL_POWER.get(), new AttributeModifier(UUID.randomUUID(), "Armor modifier", 0.74D, AttributeModifier.Operation.MULTIPLY_TOTAL));
-            mainHand.put(AttributeRegistry.SPELL_RESIST.get(), new AttributeModifier(UUID.randomUUID(), "Armor modifier", 0.20D, AttributeModifier.Operation.MULTIPLY_TOTAL));
+            mainHand.put(AttributeRegistry.MAX_MANA.get(), new AttributeModifier(UUID.randomUUID(), NAME, 520.13D, AttributeModifier.Operation.ADDITION));
+            mainHand.put(AttributeRegistry.MAX_MANA.get(), new AttributeModifier(UUID.randomUUID(), NAME, 0.52D, AttributeModifier.Operation.MULTIPLY_TOTAL));
+            mainHand.put(AttributeRegistry.MANA_REGEN.get(), new AttributeModifier(UUID.randomUUID(), NAME, 30.4D, AttributeModifier.Operation.ADDITION));
+            mainHand.put(AttributeRegistry.MANA_REGEN.get(), new AttributeModifier(UUID.randomUUID(), NAME, 1.14D, AttributeModifier.Operation.MULTIPLY_TOTAL));
+            mainHand.put(AttributeRegistry.COOLDOWN_REDUCTION.get(), new AttributeModifier(UUID.randomUUID(), NAME, 0.14D, AttributeModifier.Operation.MULTIPLY_TOTAL));
+            mainHand.put(AttributeRegistry.SPELL_POWER.get(), new AttributeModifier(UUID.randomUUID(), NAME, 0.74D, AttributeModifier.Operation.MULTIPLY_TOTAL));
+            mainHand.put(AttributeRegistry.SPELL_RESIST.get(), new AttributeModifier(UUID.randomUUID(), NAME, 0.20D, AttributeModifier.Operation.MULTIPLY_TOTAL));
         }
         if (ModUtil.isFELoad()) {
-            mainHand.put(ModAttributes.FANTASY_ENDING_DAMAGE.get(), new AttributeModifier(UUID.randomUUID(), "Armor modifier", 0.52D, AttributeModifier.Operation.MULTIPLY_TOTAL));
-            mainHand.put(ModAttributes.FANTASY_ENDING_DAMAGE_RESISTANCE.get(), new AttributeModifier(UUID.randomUUID(), "Armor modifier", 0.52D, AttributeModifier.Operation.MULTIPLY_TOTAL));
-            mainHand.put(ModAttributes.FANTASY_SPELL_POWER.get(), new AttributeModifier(UUID.randomUUID(), "Armor modifier", 0.52D, AttributeModifier.Operation.MULTIPLY_TOTAL));
-            mainHand.put(ModAttributes.EVASION.get(), new AttributeModifier(UUID.randomUUID(), "Armor modifier", 0.20D, AttributeModifier.Operation.MULTIPLY_TOTAL));
+            mainHand.put(ModAttributes.FANTASY_ENDING_DAMAGE.get(), new AttributeModifier(UUID.randomUUID(), NAME, 0.52D, AttributeModifier.Operation.MULTIPLY_TOTAL));
+            mainHand.put(ModAttributes.FANTASY_ENDING_DAMAGE_RESISTANCE.get(), new AttributeModifier(UUID.randomUUID(), NAME, 0.52D, AttributeModifier.Operation.MULTIPLY_TOTAL));
+            mainHand.put(ModAttributes.FANTASY_SPELL_POWER.get(), new AttributeModifier(UUID.randomUUID(), NAME, 0.52D, AttributeModifier.Operation.MULTIPLY_TOTAL));
+            mainHand.put(ModAttributes.EVASION.get(), new AttributeModifier(UUID.randomUUID(), NAME, 0.20D, AttributeModifier.Operation.MULTIPLY_TOTAL));
         }
         modifiers = mainHand.build();
     }

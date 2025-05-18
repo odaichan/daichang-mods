@@ -48,7 +48,7 @@ public class DCSuperSwordItem extends ISwordItem {
         ImmutableMultimap.Builder<Attribute, AttributeModifier> offHand = ImmutableMultimap.builder();
         mainHand.put(Attributes.ATTACK_DAMAGE, new AttributeModifier(BASE_ATTACK_DAMAGE_UUID, "Weapon modifier", this.attackDamage, AttributeModifier.Operation.ADDITION));
         mainHand.put(Attributes.ATTACK_SPEED, new AttributeModifier(BASE_ATTACK_SPEED_UUID, "Weapon modifier", pAttackSpeedModifier, AttributeModifier.Operation.ADDITION));
-        mainHand.put(DCAttributes.DC_SUPER_DAMAGE.get(), new AttributeModifier(UUID.randomUUID(), "Item modifier", super_damage, AttributeModifier.Operation.ADDITION));
+        mainHand.put(DCAttributes.DC_SUPER_DAMAGE.get(), new AttributeModifier(BASE_ATTACK_DAMAGE_UUID, "Item modifier", super_damage, AttributeModifier.Operation.ADDITION));
         mainHand.put(DCAttributes.DC_SUPER_DAMAGE.get(), new AttributeModifier(UUID.randomUUID(), "Item modifier", 0.52D, AttributeModifier.Operation.MULTIPLY_TOTAL));
         mainHand.put(ForgeMod.ENTITY_REACH.get(), new AttributeModifier(UUID.randomUUID(), "Item modifier", 7, AttributeModifier.Operation.ADDITION));
         mainHandModifiers = mainHand.build();

@@ -6,7 +6,6 @@ import net.daichang.dcmods.common.entities.BossEntity;
 import net.daichang.dcmods.inits.DCItems;
 import net.daichang.dcmods.inits.DCSounds;
 import net.daichang.dcmods.utils.Utils;
-import net.daichang.dcmods.utils.helpers.DataHelper;
 import net.daichang.dcmods.utils.helpers.EntityHelper;
 import net.daichang.dcmods.utils.lists.GetHealthList;
 import net.daichang.dcmods.utils.lists.items.CreativeItemList;
@@ -32,7 +31,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
-import java.util.Objects;
 
 public class DCLoliPickaxe extends Item {
     public Multimap<Attribute, AttributeModifier> mainHandModifiers;
@@ -83,13 +81,11 @@ public class DCLoliPickaxe extends Item {
             Utils.Override_DATA_HEALTH_ID(living, 0.0F);
             EntityHelper.forceSetHealth(living, 0.0F);
             living.gameEvent(GameEvent.ENTITY_DIE);
-            living.playSound(Objects.requireNonNull(living.getDeathSound()));
             living.die(source);
             if (!living.getPersistentData().contains("dc_death") && !(living instanceof Player) && !(living instanceof BossEntity)) {
                 living.getPersistentData().putInt("dc_death", 0);
                 GetHealthList.addHealth(living);
             }
-            DataHelper.addHealthDelta(living, -living.getMaxHealth() - 1);
         }
     }
 

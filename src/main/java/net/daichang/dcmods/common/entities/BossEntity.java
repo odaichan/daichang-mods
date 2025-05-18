@@ -1,5 +1,6 @@
 package net.daichang.dcmods.common.entities;
 
+import net.daichang.dcmods.Config;
 import net.daichang.dcmods.event.DCForgeEventHandler;
 import net.daichang.dcmods.inits.DCAttributes;
 import net.daichang.dcmods.utils.helpers.EntityHelper;
@@ -64,10 +65,12 @@ public class BossEntity extends Monster {
 
     @Override
     public boolean doHurtTarget(@NotNull Entity pEntity) {
-        float damage = 0;
-        damage = (float) (damage + this.getAttributeValue(Attributes.ATTACK_DAMAGE));
-        damage = (float) (damage + this.getAttributeValue(DCAttributes.DC_SUPER_DAMAGE.get()));
-        if (!(pEntity instanceof Player) && pEntity instanceof LivingEntity living) EntityHelper.forceOceanHurt(living, damage);
+        if (Config.Server.boss_super_hurt.get()) {
+            float damage = 0;
+            damage = (float) (damage + this.getAttributeValue(Attributes.ATTACK_DAMAGE));
+            damage = (float) (damage + this.getAttributeValue(DCAttributes.DC_SUPER_DAMAGE.get()));
+            if (!(pEntity instanceof Player) && pEntity instanceof LivingEntity living) EntityHelper.forceOceanHurt(living, damage);
+        }
         return super.doHurtTarget(pEntity);
     }
 
@@ -121,7 +124,7 @@ public class BossEntity extends Monster {
     @Override
     public void tick() {
         super.tick();
-        if (level().isClientSide()) BossMusic.playMusic(music ,this);
+        if (level().isClientSide() && Config.Client.boss_music.get()) BossMusic.playMusic(music ,this);
         this.resetFallDistance();
         this.fallDistance = 0;
     }

@@ -1,6 +1,6 @@
 {
   "sortnum": 1,
-  "name": "book.daichang.categories.entity",
-  "description": "book.daichang.categories.entity.description",
+  "name": "Entity",
+  "description": "Some entities in this mod",
   "icon": "dc_m:heart_of_the_ocean"
 }
