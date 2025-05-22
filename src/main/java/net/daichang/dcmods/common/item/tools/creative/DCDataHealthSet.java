@@ -1,8 +1,7 @@
 package net.daichang.dcmods.common.item.tools.creative;
 
 import net.daichang.dcmods.client.font.DCItemFont;
-import net.daichang.dcmods.utils.lists.Heal2ZList;
-import net.daichang.dcmods.utils.Utils;
+import net.daichang.dcmods.utils.helpers.DataHelper;
 import net.daichang.dcmods.utils.lists.items.CreativeItemList;
 import net.minecraft.client.gui.Font;
 import net.minecraft.network.chat.Component;
@@ -28,18 +27,13 @@ public class DCDataHealthSet extends Item {
 
     @Override
     public boolean hurtEnemy(ItemStack p_41395_, LivingEntity target, LivingEntity p_41397_) {
-//        Utils.dataHealthSet(target);
-        Heal2ZList.addUUID(target);
-        target.getPersistentData().putInt("dc_death", 0);
-        Utils.dataHealthSet(target);
+        DataHelper.setIsDead(target, true);
         return super.hurtEnemy(p_41395_, target, p_41397_);
     }
 
     @Override
     public boolean onLeftClickEntity(ItemStack stack, Player player, Entity target) {
-        Heal2ZList.addUUID(target);
-        target.getPersistentData().putInt("dc_death", 0);
-        Utils.dataHealthSet(target);
+        if (target instanceof LivingEntity living) DataHelper.setIsDead(living, true);
         return super.onLeftClickEntity(stack, player, target);
     }
 

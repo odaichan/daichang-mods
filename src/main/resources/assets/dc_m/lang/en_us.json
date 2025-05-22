@@ -188,5 +188,8 @@
   "tconstruct.dc_m.tool_tip.ocean_heart": "When you are curious about the secrets in the ocean",
   "tconstruct.dc_m.tool_tip.ocean_heart_1": "the ocean has already noticed you",
   "config.dc_mods.ocean_heart_get": "Ease Ocean Heart Get",
-  "config.dc_mods.prohibition_of_treatment": "Prohibition of treatment"
+  "config.dc_mods.prohibition_of_treatment": "Prohibition of treatment",
+  "entity.dc_m.loli" : "Loli",
+  "tool_tip.dc_m.spwan_entity": "Generated entity:",
+  "tool_tip.iaxe_item": "When attacking targets with armor value, deal additional damage"
 }

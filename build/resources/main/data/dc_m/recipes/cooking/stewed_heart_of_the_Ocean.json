@@ -1,0 +1,17 @@
+{
+  "type": "farmersdelight:cooking",
+  "cookingtime": 200,
+  "experience": 1.0,
+  "ingredients": [
+    {
+      "item": "dc_m:heart_of_the_ocean"
+    },
+    {
+      "item": "minecraft:potato"
+    }
+  ],
+  "recipe_book_tab": "meals",
+  "result": {
+    "item": "dc_m:stewed_heart_of_the_ocean"
+  }
+}

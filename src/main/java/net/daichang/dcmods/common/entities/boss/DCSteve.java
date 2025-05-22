@@ -1,5 +1,7 @@
 package net.daichang.dcmods.common.entities.boss;
 
+import net.daichang.dcmods.Config;
+import net.daichang.dcmods.DCMod;
 import net.daichang.dcmods.client.PacketHandler;
 import net.daichang.dcmods.client.network.S2CElainaPacket;
 import net.daichang.dcmods.common.entities.BossEntity;
@@ -11,6 +13,7 @@ import net.daichang.dcmods.utils.helpers.EntityHelper;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
+import net.minecraft.world.BossEvent;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
@@ -87,7 +90,10 @@ public class DCSteve extends BossEntity {
     @Override
     protected void customServerAiStep() {
         super.customServerAiStep();
-        if (this.tickCount % 20 == 0) EntityHelper.forceHeal(this, 4);
+        if (this.tickCount % 20 == 0) {
+            EntityHelper.forceHeal(this, 4);
+            if (Config.Server.steve_health_boost.get()) EntityHelper.forceHeal(this, 30);
+        }
     }
 
     @Override
@@ -195,6 +201,7 @@ public class DCSteve extends BossEntity {
 
     @Override
     public float getMaxHealth() {
+        if (Config.Server.steve_health_boost.get()) return 150.0F;
         return 50.0F;
     }
 
@@ -227,23 +234,34 @@ public class DCSteve extends BossEntity {
         return DCSounds.Recollection.get();
     }
 
+//    @Override
+//    public ResourceLocation getBossBar() {
+//        return new ResourceLocation("dc_m:textures/entities/healthbar/steve/health_bar_1.png");
+//    }
+//
+//    @Override
+//    public ResourceLocation getBossBarOn() {
+//        return new ResourceLocation("dc_m:textures/entities/healthbar/steve/health_bar_2.png");
+//    }
+//
+//    @Override
+//    public boolean isHasMask() {
+//        return true;
+//    }
+
+//    @Override
+//    public ResourceLocation getBossBarOverlay() {
+//        return new ResourceLocation("dc_m:textures/entities/healthbar/steve/health_bar_3.png");
+//    }
+
+
     @Override
-    public ResourceLocation getBossBar() {
-        return new ResourceLocation("dc_m:textures/entities/healthbar/steve/health_bar_1.png");
+    public BossEvent.BossBarColor getBossBarColor() {
+        return BossEvent.BossBarColor.BLUE;
     }
 
     @Override
-    public ResourceLocation getBossBarOn() {
-        return new ResourceLocation("dc_m:textures/entities/healthbar/steve/health_bar_2.png");
-    }
-
-    @Override
-    public boolean isHasMask() {
-        return true;
-    }
-
-    @Override
-    public ResourceLocation getBossBarMask() {
-        return new ResourceLocation("dc_m:textures/entities/healthbar/steve/health_bar_3.png");
+    public ResourceLocation getBossBarOverlay() {
+        return ResourceLocation.fromNamespaceAndPath(DCMod.MOD_ID, "textures/gui/steve_bar.png");
     }
 }

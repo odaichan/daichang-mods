@@ -1,0 +1,16 @@
+JVM:         D:\tools\Java\jdk17\bin\java.exe
+JVM Args:    
+Run Args:    "--task", "MERGE_MAPPING", "--left", "config/joined.tsrg", "--right", "D:\JavaWorkspace\DaiChangMod\build\fg_cache\mcp\1.20.1-20230612.114412\joined\c79176c116c681a26d1b26838b355c1502751f30\downloadClientMappings\client_mappings.txt", "--right-names", "right,left", "--classes", "--output", "D:\JavaWorkspace\DaiChangMod\build\fg_cache\mcp\1.20.1-20230612.114412\joined\c79176c116c681a26d1b26838b355c1502751f30\mergeMappings\output.jar"
+Classpath:   C:\Users\diyou\.gradle\caches\forge_gradle\maven_downloader\net\minecraftforge\installertools\1.2.0\installertools-1.2.0-fatjar.jar
+Working Dir: D:\JavaWorkspace\DaiChangMod\build\fg_cache\mcp\1.20.1-20230612.114412\joined\c79176c116c681a26d1b26838b355c1502751f30\mergeMappings
+Main Class:  net.minecraftforge.installertools.ConsoleTool
+Task: MERGE_MAPPING
+Left:    config\joined.tsrg
+         null
+Right:   D:\JavaWorkspace\DaiChangMod\build\fg_cache\mcp\1.20.1-20230612.114412\joined\c79176c116c681a26d1b26838b355c1502751f30\downloadClientMappings\client_mappings.txt
+         right,left
+Classes: true
+Fields:  false
+Methods: false
+Params:  false
+Output:  D:\JavaWorkspace\DaiChangMod\build\fg_cache\mcp\1.20.1-20230612.114412\joined\c79176c116c681a26d1b26838b355c1502751f30\mergeMappings\output.jar

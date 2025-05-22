@@ -21,6 +21,14 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import static net.daichang.dcmods.client.font.DCItemFont.*;
+import static net.daichang.dcmods.client.font.DCItemFont.az;
+import static net.daichang.dcmods.client.font.DCItemFont.getString;
+import static net.daichang.dcmods.client.font.DCItemFont.isCraftTip;
+import static net.daichang.dcmods.client.font.DCItemFont.isCreativeItem;
+import static net.daichang.dcmods.client.font.DCItemFont.isDCEnchFont;
+import static net.daichang.dcmods.client.font.DCItemFont.isSwordTip;
+import static net.daichang.dcmods.client.font.DCItemFont.isWarnTip;
+import static net.daichang.dcmods.client.font.DCItemFont.randomSource;
 
 @Mixin(Font.class)
 public abstract class MixinFont {
@@ -55,31 +63,22 @@ public abstract class MixinFont {
     }
 
     @Inject(method = {"drawInBatch(Lnet/minecraft/util/FormattedCharSequence;FFIZLorg/joml/Matrix4f;Lnet/minecraft/client/renderer/MultiBufferSource;Lnet/minecraft/client/gui/Font$DisplayMode;II)I"}, at = {@At("HEAD")}, cancellable = true)
-    public void drawInBatch(FormattedCharSequence p_273262_, float x, float y, int color, boolean p_273674_, Matrix4f p_273525_, MultiBufferSource p_272624_, Font.DisplayMode p_273418_, int p_273330_, int p_272981_, CallbackInfoReturnable<Integer> cir) {
+    public void drawInBatch(FormattedCharSequence p_273262_, float pX, float pY, int rgb, boolean pDropShadow
+            , Matrix4f pMatrix, MultiBufferSource pBuffer, Font.DisplayMode pDisplayMode, int pBackgroundColor, int pPackedLightCoords, CallbackInfoReturnable<Integer> cir) {
         StringBuilder stringBuilder = new StringBuilder();
         p_273262_.accept((index, style, codePoint) -> {
             stringBuilder.appendCodePoint(codePoint);
             return true;
         });
-        String s = stringBuilder.toString();
-        if (DCItemFont.isTabFont(s)) cir.setReturnValue(DCItemFont.getFont().drawInBatch(p_273262_, x, y, color, p_273674_, p_273525_, p_272624_, p_273418_, p_273330_, p_272981_));
-        if (DCEntityFont.isEntityName(s)) cir.setReturnValue(DCEntityFont.getFont().drawInBatch(p_273262_, x, y, color, p_273674_, p_273525_, p_272624_, p_273418_, p_273330_, p_272981_));
-        if (s.equals("DaiChangMod") && Config.Client.rainbow_font.get()) cir.setReturnValue(FuckFont.getFont().drawInBatch(p_273262_, x, y, color, p_273674_, p_273525_, p_272624_, p_273418_, p_273330_, p_272981_));
-    }
-
-    @Inject(method = {"drawInternal(Lnet/minecraft/util/FormattedCharSequence;FFIZLorg/joml/Matrix4f;Lnet/minecraft/client/renderer/MultiBufferSource;Lnet/minecraft/client/gui/Font$DisplayMode;II)I"}, at = {@At("HEAD")}, cancellable = true)
-    private void drawInternal(FormattedCharSequence pText, float pX, float pY, int rgb, boolean pDropShadow, Matrix4f pMatrix, MultiBufferSource pBuffer, Font.DisplayMode pDisplayMode, int pBackgroundColor, int pPackedLightCoords, CallbackInfoReturnable<Integer> cir) {
-        StringBuilder stringBuilder = new StringBuilder();
-        pText.accept((index, style, codePoint) -> {
-            stringBuilder.appendCodePoint(codePoint);
-            return true;
-        });
         String text = stringBuilder.toString();
+        if (DCItemFont.isTabFont(text)) cir.setReturnValue(DCItemFont.getFont().drawInBatch(p_273262_, pX, pY, rgb, pDropShadow, pMatrix, pBuffer, pDisplayMode, pBackgroundColor, pPackedLightCoords));
+        if (DCEntityFont.isEntityName(text)) cir.setReturnValue(DCEntityFont.getFont().drawInBatch(p_273262_, pX, pY, rgb, pDropShadow, pMatrix, pBuffer, pDisplayMode, pBackgroundColor, pPackedLightCoords));
+        if (text.equals("DaiChangMod") && Config.Client.rainbow_font.get()) cir.setReturnValue(FuckFont.getFont().drawInBatch(p_273262_, pX, pY, rgb, pDropShadow, pMatrix, pBuffer, pDisplayMode, pBackgroundColor, pPackedLightCoords));
         int c = rgb;
-        int darkerC = c & 0x0000F;
+        int darkerC;
         int width = width(text);
         int height = lineHeight;
-        if (text.equals(DCItemFont.getString("item.dc_m.ocean_scythe"))) {
+        if (text.equals(getString("item.dc_m.ocean_scythe")) || text.equals(getString("entities.dc_mods.dc_wither_name")) || text.equals(getString("entities.dc_mods.dc_wither_name_tow"))) {
             darkerC = daichangmod$getDarkColor(c);
             for (int index = 0; index < text.length(); index++) {
                 String s = String.valueOf(text.charAt(index));
@@ -98,8 +97,8 @@ public abstract class MixinFont {
             cir.setReturnValue((int) pX);
         }
         if (isOceanTip(text) || text.equals(getString("patchouli.dc_mods.book.name")))  {
-            darkerC = daichangmod$getDarkColor(c);
             c = rgb & 0xFFADD8E6;
+            darkerC = daichangmod$getDarkColor(c);
             drawInBatch(text, pX, pY, c, pDropShadow, pMatrix, pBuffer, pDisplayMode, pBackgroundColor, pPackedLightCoords);
             drawInBatch(text, pX+0.85F, pY+0.55F, darkerC, pDropShadow, pMatrix, pBuffer, pDisplayMode, pBackgroundColor, pPackedLightCoords);
             daichangmod$drawRendertypeRect(pX, pY, width, height-1, RenderType.endPortal(), pMatrix);
@@ -107,78 +106,78 @@ public abstract class MixinFont {
             cir.setReturnValue((int) pX);
         }
         if (isCreativeItem(text)) {
-            darkerC = daichangmod$getDarkColor(c);
             c = rgb & 0xFF87CEEB;
+            darkerC = daichangmod$getDarkColor(c);
             drawInBatch(text, pX, pY, c, pDropShadow, pMatrix, pBuffer, pDisplayMode, pBackgroundColor, pPackedLightCoords);
             drawInBatch(text, pX+0.85F, pY+0.55F, darkerC, pDropShadow, pMatrix, pBuffer, pDisplayMode, pBackgroundColor, pPackedLightCoords);
             cir.setReturnValue((int) pX);
         }
         if (isSwordTip(text)) {
-            darkerC = daichangmod$getDarkColor(c);
             c = rgb & 0xFF40E0D0;
+            darkerC = daichangmod$getDarkColor(c);
             drawInBatch(text, pX, pY, c, pDropShadow, pMatrix, pBuffer, pDisplayMode, pBackgroundColor, pPackedLightCoords);
             drawInBatch(text, pX+0.85F, pY+0.55F, darkerC, pDropShadow, pMatrix, pBuffer, pDisplayMode, pBackgroundColor, pPackedLightCoords);
             cir.setReturnValue((int) pX);
         }
         if (isSwordTip(text)) {
-            darkerC = daichangmod$getDarkColor(c);
             c = rgb & 0xFF40E0D0;
+            darkerC = daichangmod$getDarkColor(c);
             drawInBatch(text, pX, pY, c, pDropShadow, pMatrix, pBuffer, pDisplayMode, pBackgroundColor, pPackedLightCoords);
             drawInBatch(text, pX+0.85F, pY+0.55F, darkerC, pDropShadow, pMatrix, pBuffer, pDisplayMode, pBackgroundColor, pPackedLightCoords);
             cir.setReturnValue((int) pX);
         }
         if (isCraftTip(text)) {
-            darkerC = daichangmod$getDarkColor(c);
             c = rgb & 0xFF004D40;
+            darkerC = daichangmod$getDarkColor(c);
             drawInBatch(text, pX, pY, c, pDropShadow, pMatrix, pBuffer, pDisplayMode, pBackgroundColor, pPackedLightCoords);
             drawInBatch(text, pX+0.85F, pY+0.55F, darkerC, pDropShadow, pMatrix, pBuffer, pDisplayMode, pBackgroundColor, pPackedLightCoords);
             cir.setReturnValue((int) pX);
         }
         if (text.equals(getString("tooltip.dc_mods.is_strong")) || isWarnTip(text) || text.equals("Subscribe to DaiChang on Bilibili")) {
-            darkerC = daichangmod$getDarkColor(c);
             c = rgb & 0xFFFF0000;
+            darkerC = daichangmod$getDarkColor(c);
             drawInBatch(text, pX, pY, c, pDropShadow, pMatrix, pBuffer, pDisplayMode, pBackgroundColor, pPackedLightCoords);
             drawInBatch(text, pX+0.85F, pY+0.55F, darkerC, pDropShadow, pMatrix, pBuffer, pDisplayMode, pBackgroundColor, pPackedLightCoords);
             cir.setReturnValue((int) pX);
         }
         if (text.equals(getString("tooltip.dc_mods.strong"))) {
-            darkerC = daichangmod$getDarkColor(c);
             c = rgb & 0xFFA9A9A9;
+            darkerC = daichangmod$getDarkColor(c);
             drawInBatch(text, pX, pY, c, pDropShadow, pMatrix, pBuffer, pDisplayMode, pBackgroundColor, pPackedLightCoords);
             drawInBatch(text, pX+0.85F, pY+0.55F, darkerC, pDropShadow, pMatrix, pBuffer, pDisplayMode, pBackgroundColor, pPackedLightCoords);
             cir.setReturnValue((int) pX);
         }
         if (text.contains(getString("attribute.dc_mods.super_damage")) || text.contains(getString("attribute.dc_mods.dc_defense"))) {
-            darkerC = daichangmod$getDarkColor(c);
             c = rgb & 0x01ADD8E6;
+            darkerC = daichangmod$getDarkColor(c);
             drawInBatch(text, pX, pY, c, pDropShadow, pMatrix, pBuffer, pDisplayMode, pBackgroundColor, pPackedLightCoords);
             drawInBatch(text, pX+0.85F, pY+0.55F, darkerC, pDropShadow, pMatrix, pBuffer, pDisplayMode, pBackgroundColor, pPackedLightCoords);
             cir.setReturnValue((int) pX);
         }
         if (text.contains(getString("modifier.dc_m.super_wood_ingot"))) {
-            darkerC = daichangmod$getDarkColor(c);
             c = rgb & 0x800080;
+            darkerC = daichangmod$getDarkColor(c);
             drawInBatch(text, pX, pY, c, pDropShadow, pMatrix, pBuffer, pDisplayMode, pBackgroundColor, pPackedLightCoords);
             drawInBatch(text, pX+0.85F, pY+0.55F, darkerC, pDropShadow, pMatrix, pBuffer, pDisplayMode, pBackgroundColor, pPackedLightCoords);
             cir.setReturnValue((int) pX);
         }
         if (az(text)) {
-            darkerC = daichangmod$getDarkColor(c);
             c = rgb & 0xFFD8BFD8;
+            darkerC = daichangmod$getDarkColor(c);
             drawInBatch(text, pX, pY, c, pDropShadow, pMatrix, pBuffer, pDisplayMode, pBackgroundColor, pPackedLightCoords);
             drawInBatch(text, pX+0.85F, pY+0.55F, darkerC, pDropShadow, pMatrix, pBuffer, pDisplayMode, pBackgroundColor, pPackedLightCoords);
             cir.setReturnValue((int) pX);
         }
         if (isDCEnchFont(text)) {
-            darkerC = daichangmod$getDarkColor(c);
             c = rgb & 0xFFF0F0F0;
+            darkerC = daichangmod$getDarkColor(c);
             drawInBatch(text, pX, pY, c, pDropShadow, pMatrix, pBuffer, pDisplayMode, pBackgroundColor, pPackedLightCoords);
             drawInBatch(text, pX+0.85F, pY+0.55F, darkerC, pDropShadow, pMatrix, pBuffer, pDisplayMode, pBackgroundColor, pPackedLightCoords);
             cir.setReturnValue((int) pX);
         }
         if (text.contains(getString("tool_tip.dc_mods.default")) || text.contains(getString("tool_tip.dc_mods.ocean"))) {
-            darkerC = daichangmod$getDarkColor(c);
             c = rgb & 0xFFFF9999;
+            darkerC = daichangmod$getDarkColor(c);
             drawInBatch(text, pX, pY, c, false ,pMatrix, pBuffer, pDisplayMode, pBackgroundColor, pPackedLightCoords);
             drawInBatch(text, pX, pY, darkerC, false ,pMatrix, pBuffer, pDisplayMode, pBackgroundColor, pPackedLightCoords);
             cir.setReturnValue((int) pX);
@@ -194,8 +193,9 @@ public abstract class MixinFont {
         }
     }
 
+
     @Unique
-    private void daichangmod$render(String drawText, float startX, float startY, int color , boolean pDropShadow, Matrix4f pMatrix, MultiBufferSource pBuffer, Font.DisplayMode mode, int b, int p) {
+    private void dc_m$render(String drawText, float startX, float startY, int color , boolean pDropShadow, Matrix4f pMatrix, MultiBufferSource pBuffer, Font.DisplayMode mode, int b, int p) {
         drawInBatch(drawText, startX + .35F, startY + .35F, color, pDropShadow, pMatrix, pBuffer, mode, b, p);//for (int i=0;i<4;i++)
         drawInBatch(drawText, startX - .3F, startY - .3F, color, pDropShadow, pMatrix, pBuffer, mode, b, p);//for (int i=0;i<4;i++)
         drawInBatch(drawText, startX + .35F, startY + .35F, color, pDropShadow, pMatrix, pBuffer, mode, b, p);//for (int i=0;i<4;i++)

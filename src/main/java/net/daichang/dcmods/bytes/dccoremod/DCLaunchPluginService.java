@@ -64,27 +64,6 @@ public class DCLaunchPluginService implements ILaunchPluginService {
                         }
                     }
                 }
-//                if (classNode.name.contains("flashfur/omnimobs/entities/anticheat/HealthManager")) {
-//                    if (abstractInsnNode instanceof MethodInsnNode call && call.getOpcode() != Opcodes.INVOKESPECIAL) {
-//                        switch (call.name) {
-//                            case "getHealth" -> {
-//                                rMethod(call, "getHealth");
-//                                logger("Changed GetHealth Method :"  + classNode.name) ;
-//                                writer = true;
-//                            }
-//                            case "isAlive" -> {
-//                                rMethod(call, "isAlive");
-//                                logger("Changed IsAlive Method :"  + classNode.name);
-//                                writer = true;
-//                            }
-//                            case "isDeadOrDying" -> {
-//                                rMethod(call, "isDeadOrDying");
-//                                logger("Changed isDeadOrDying Method :"  + classNode.name);
-//                                writer = true;
-//                            }
-//                        }
-//                    }
-//                }
             }
         }
         return writer;

@@ -27,6 +27,9 @@
       "tick": "Lnet/minecraft/client/player/LocalPlayer;m_8119_()V",
       "hurt": "Lnet/minecraft/client/player/LocalPlayer;m_6469_(Lnet/minecraft/world/damagesource/DamageSource;F)Z"
     },
+    "net/daichang/dcmods/bytes/mixins/MixinHealthOverlay": {
+      "drawBar(Lnet/minecraft/client/gui/GuiGraphics;IILnet/minecraft/world/BossEvent;)V": "Lnet/minecraft/client/gui/components/BossHealthOverlay;m_280106_(Lnet/minecraft/client/gui/GuiGraphics;IILnet/minecraft/world/BossEvent;)V"
+    },
     "net/daichang/dcmods/bytes/mixins/MixinTrident": {
       "releaseUsing": "Lnet/minecraft/world/item/TridentItem;m_5551_(Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/level/Level;Lnet/minecraft/world/entity/LivingEntity;I)V"
     },
@@ -49,7 +52,6 @@
       "render(Lnet/minecraft/world/entity/item/ItemEntity;FFLcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;I)V": "Lnet/minecraft/client/renderer/entity/ItemEntityRenderer;m_7392_(Lnet/minecraft/world/entity/item/ItemEntity;FFLcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;I)V"
     },
     "net/daichang/dcmods/bytes/mixins/MixinFont": {
-      "drawInternal(Lnet/minecraft/util/FormattedCharSequence;FFIZLorg/joml/Matrix4f;Lnet/minecraft/client/renderer/MultiBufferSource;Lnet/minecraft/client/gui/Font$DisplayMode;II)I": "Lnet/minecraft/client/gui/Font;m_272085_(Lnet/minecraft/util/FormattedCharSequence;FFIZLorg/joml/Matrix4f;Lnet/minecraft/client/renderer/MultiBufferSource;Lnet/minecraft/client/gui/Font$DisplayMode;II)I",
       "drawInBatch(Lnet/minecraft/util/FormattedCharSequence;FFIZLorg/joml/Matrix4f;Lnet/minecraft/client/renderer/MultiBufferSource;Lnet/minecraft/client/gui/Font$DisplayMode;II)I": "Lnet/minecraft/client/gui/Font;m_272191_(Lnet/minecraft/util/FormattedCharSequence;FFIZLorg/joml/Matrix4f;Lnet/minecraft/client/renderer/MultiBufferSource;Lnet/minecraft/client/gui/Font$DisplayMode;II)I"
     },
     "net/daichang/dcmods/bytes/mixins/MixinLivingEntity": {
@@ -97,6 +99,9 @@
         "tick": "Lnet/minecraft/client/player/LocalPlayer;m_8119_()V",
         "hurt": "Lnet/minecraft/client/player/LocalPlayer;m_6469_(Lnet/minecraft/world/damagesource/DamageSource;F)Z"
       },
+      "net/daichang/dcmods/bytes/mixins/MixinHealthOverlay": {
+        "drawBar(Lnet/minecraft/client/gui/GuiGraphics;IILnet/minecraft/world/BossEvent;)V": "Lnet/minecraft/client/gui/components/BossHealthOverlay;m_280106_(Lnet/minecraft/client/gui/GuiGraphics;IILnet/minecraft/world/BossEvent;)V"
+      },
       "net/daichang/dcmods/bytes/mixins/MixinTrident": {
         "releaseUsing": "Lnet/minecraft/world/item/TridentItem;m_5551_(Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/level/Level;Lnet/minecraft/world/entity/LivingEntity;I)V"
       },
@@ -119,7 +124,6 @@
         "render(Lnet/minecraft/world/entity/item/ItemEntity;FFLcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;I)V": "Lnet/minecraft/client/renderer/entity/ItemEntityRenderer;m_7392_(Lnet/minecraft/world/entity/item/ItemEntity;FFLcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;I)V"
       },
       "net/daichang/dcmods/bytes/mixins/MixinFont": {
-        "drawInternal(Lnet/minecraft/util/FormattedCharSequence;FFIZLorg/joml/Matrix4f;Lnet/minecraft/client/renderer/MultiBufferSource;Lnet/minecraft/client/gui/Font$DisplayMode;II)I": "Lnet/minecraft/client/gui/Font;m_272085_(Lnet/minecraft/util/FormattedCharSequence;FFIZLorg/joml/Matrix4f;Lnet/minecraft/client/renderer/MultiBufferSource;Lnet/minecraft/client/gui/Font$DisplayMode;II)I",
         "drawInBatch(Lnet/minecraft/util/FormattedCharSequence;FFIZLorg/joml/Matrix4f;Lnet/minecraft/client/renderer/MultiBufferSource;Lnet/minecraft/client/gui/Font$DisplayMode;II)I": "Lnet/minecraft/client/gui/Font;m_272191_(Lnet/minecraft/util/FormattedCharSequence;FFIZLorg/joml/Matrix4f;Lnet/minecraft/client/renderer/MultiBufferSource;Lnet/minecraft/client/gui/Font$DisplayMode;II)I"
       },
       "net/daichang/dcmods/bytes/mixins/MixinLivingEntity": {

@@ -28,11 +28,6 @@
       "type": "spotlight",
       "item": "dc_m:super_wood_hoe",
       "text": "Although it may seem useless, it is a necessity for making certain equipment"
-    },
-    {
-      "type": "spotlight",
-      "item": "dc_m:super_wood_knives",
-      "text": "A relatively high-end wooden knife"
     }
   ]
 }

@@ -19,7 +19,6 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 
@@ -36,24 +35,6 @@ public class EntityHelper extends DataHelper {
         living.setInvulnerable(false);
         living.invulnerableTime = 0;
         living.invulnerableDuration = 0;
-    }
-
-    public static void forceHurt(LivingEntity target,DamageSource source , float value) {
-        target.gameEvent(GameEvent.ENTITY_DAMAGE);
-        EntityHelper.forceSetHealth(target, target.getHealth() - value);
-        target.setDeltaMovement(Vec3.ZERO);
-        target.deltaMovement = Vec3.ZERO;
-        target.hurt(source, value);
-        try {
-            target.playHurtSound(source);
-            target.level().broadcastDamageEvent(target, source);
-        } catch (Exception ignored) {}
-        noHurtDuration(target);
-    }
-
-    public static void forceOceanHurt(LivingEntity target, float value) {
-        forceHurt(target, ocean_damage(target), value);
-        target.hurt(ocean_damage(target), value);
     }
 
     public static List<Entity> getEntity(Level level, double x, double y, double z, double range) {

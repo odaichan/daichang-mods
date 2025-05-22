@@ -40,7 +40,7 @@ public class S2CSyncSetFloatField {
                         field.setFloat(livingEntity, this.value);
                         context.setPacketHandled(true);
                     }
-                    catch (IllegalAccessException | IllegalArgumentException exception) {}
+                    catch (IllegalAccessException | IllegalArgumentException ignored) {}
                 }
             }
         });

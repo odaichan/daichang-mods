@@ -10,6 +10,7 @@ import net.daichang.dcmods.common.entities.BossEntity;
 import net.daichang.dcmods.common.entities.projectile.DCWitherSkull;
 import net.daichang.dcmods.event.DCForgeEventHandler;
 import net.daichang.dcmods.inits.*;
+import net.daichang.dcmods.utils.EntityHurtUtil;
 import net.daichang.dcmods.utils.ModUtil;
 import net.daichang.dcmods.utils.Utils;
 import net.daichang.dcmods.utils.helpers.EffectHelper;
@@ -30,6 +31,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Mth;
+import net.minecraft.world.BossEvent;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.damagesource.DamageSource;
@@ -77,7 +79,7 @@ public class DCLoveElaina extends BossEntity implements PowerableMob, RangedAtta
     }
 
     public DCLoveElaina(PlayMessages.SpawnEntity spawnEntity, Level world) {
-        super(DCEntities.DC_WITHER.get(), world);
+        super(DCEntities.ELAINA.get(), world);
         this.xpReward = 200000;
     }
 
@@ -116,7 +118,6 @@ public class DCLoveElaina extends BossEntity implements PowerableMob, RangedAtta
         if (getHealth() <= 0 || isDeadOrDying()) return false;
         Entity entity = damageSource.getEntity();
         double canTeleport = MathHelper.getRandomDouble(0.0D, 1.0D);
-        if (entity instanceof LivingEntity living && !(living instanceof ServerPlayer player && player.isCreative())) this.setTarget(living);
         if (canTeleport == 0.2 && entity != null) doHurtTarget(entity);
         this.addAttackCount(1);
         return super.hurt(damageSource, damage);
@@ -383,8 +384,13 @@ public class DCLoveElaina extends BossEntity implements PowerableMob, RangedAtta
             }
             else if (target instanceof ServerPlayer player && player.gameMode.isSurvival() && !EffectHelper.hasEffect(player, DCEffects.EnchantressMercy.get())) {
                 float value = 0.5F;
+                if (player.getMaxHealth() > 5128)
+                    value = value + player.getHealth() * 0.01F;
+                if (player.getMaxHealth() > 1000)
+                    value = value + player.getMaxHealth() * 0.01F;
                 if (ModUtil.isFELoad()) value = value + player.getMaxHealth() * 0.01F;
-                EntityHelper.forceOceanHurt(player, value);
+                EntityHurtUtil util = EntityHurtUtil.getInstance(player, this);
+                util.dcHurt(value);
                 PacketHandler.sendToClient(new S2CLastKillPlayer(player.getId(), value));
                 PacketHandler.sendToClient(new S2CElainaKillAllEntity(this.getId()));
             }
@@ -434,6 +440,11 @@ public class DCLoveElaina extends BossEntity implements PowerableMob, RangedAtta
     public float getMaxHealth() {
         if (Config.Server.elaina_super_mode.get()) return 5200.0F;
         return 520.0F;
+    }
+
+    @Override
+    public BossEvent.BossBarColor getBossBarColor() {
+        return BossEvent.BossBarColor.PINK;
     }
 
     @Override
@@ -494,24 +505,24 @@ public class DCLoveElaina extends BossEntity implements PowerableMob, RangedAtta
         return 10.0F;
     }
 
-    @Override
-    public ResourceLocation getBossBar() {
-        return DCMod.getDCEntitiesLocation("health_bar_1");
-    }
+//    @Override
+//    public ResourceLocation getBossBar() {
+//        return DCMod.getDCEntitiesLocation("health_bar_1");
+//    }
+//
+//    @Override
+//    public ResourceLocation getBossBarOn() {
+//        return DCMod.getDCEntitiesLocation("health_bar_2");
+//    }
+//
+//    @Override
+//    public boolean isHasMask() {
+//        return true;
+//    }
 
     @Override
-    public ResourceLocation getBossBarOn() {
-        return DCMod.getDCEntitiesLocation("health_bar_2");
-    }
-
-    @Override
-    public boolean isHasMask() {
-        return true;
-    }
-
-    @Override
-    public ResourceLocation getBossBarMask() {
-        return DCMod.getDCEntitiesLocation("health_bar_3");
+    public ResourceLocation getBossBarOverlay() {
+        return ResourceLocation.fromNamespaceAndPath(DCMod.MOD_ID, "textures/gui/elaina_bar.png");
     }
 
     @Override
@@ -522,7 +533,7 @@ public class DCLoveElaina extends BossEntity implements PowerableMob, RangedAtta
     }
 
     static {
-        ATTACK_COUNT = SynchedEntityData.defineId(DCLoveElaina.class, EntityDataSerializers.INT);
         IS_RANGE_ATTACK = SynchedEntityData.defineId(DCLoveElaina.class, EntityDataSerializers.BOOLEAN);
+        ATTACK_COUNT = SynchedEntityData.defineId(DCLoveElaina.class, EntityDataSerializers.INT);
     }
 }

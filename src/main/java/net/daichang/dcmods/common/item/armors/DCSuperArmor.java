@@ -345,7 +345,7 @@ public class DCSuperArmor extends ArmorItem {
     //        }
     //
     //        @Override
-    //        public String getArmorTexture(ItemStack stack, Entity entity, EquipmentSlot slot, String type) {
+    //        public String getArmorTexture(UseCountItem stack, Entity entity, EquipmentSlot slot, String type) {
     //            return "trom:textures/models/armor/olivine_layer_1.png";
     //        }
     //    }
@@ -356,7 +356,7 @@ public class DCSuperArmor extends ArmorItem {
     //        }
     //
     //        @Override
-    //        public String getArmorTexture(ItemStack stack, Entity entity, EquipmentSlot slot, String type) {
+    //        public String getArmorTexture(UseCountItem stack, Entity entity, EquipmentSlot slot, String type) {
     //            return "trom:textures/models/armor/olivine_layer_1.png";
     //        }
     //
@@ -369,7 +369,7 @@ public class DCSuperArmor extends ArmorItem {
     //        }
     //
     //        @Override
-    //        public String getArmorTexture(ItemStack stack, Entity entity, EquipmentSlot slot, String type) {
+    //        public String getArmorTexture(UseCountItem stack, Entity entity, EquipmentSlot slot, String type) {
     //            return "trom:textures/models/armor/olivine_layer_2.png";
     //        }
     //    }
@@ -380,7 +380,7 @@ public class DCSuperArmor extends ArmorItem {
     //        }
     //
     //        @Override
-    //        public String getArmorTexture(ItemStack stack, Entity entity, EquipmentSlot slot, String type) {
+    //        public String getArmorTexture(UseCountItem stack, Entity entity, EquipmentSlot slot, String type) {
     //            return "trom:textures/models/armor/olivine_layer_1.png";
     //        }
     //    }

@@ -100,7 +100,7 @@ public class DCMod implements DCBaseLib {
         } catch (NoSuchFieldException e) {
             System.err.println("[DC MODS]Field " + fieldName + " does not exist in class " + clazz.getName());
         } catch (Exception e) {
-            throw new RuntimeException("Failed to set static final field: " + fieldName, e);
+            throw new RuntimeException("Failed to setUse static final field: " + fieldName, e);
         }
     }
 }

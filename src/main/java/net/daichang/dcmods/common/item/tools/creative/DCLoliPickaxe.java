@@ -2,17 +2,14 @@ package net.daichang.dcmods.common.item.tools.creative;
 
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
-import net.daichang.dcmods.common.entities.BossEntity;
 import net.daichang.dcmods.inits.DCItems;
 import net.daichang.dcmods.inits.DCSounds;
-import net.daichang.dcmods.utils.Utils;
+import net.daichang.dcmods.utils.helpers.DataHelper;
 import net.daichang.dcmods.utils.helpers.EntityHelper;
-import net.daichang.dcmods.utils.lists.GetHealthList;
 import net.daichang.dcmods.utils.lists.items.CreativeItemList;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
-import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
@@ -25,7 +22,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Rarity;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.AABB;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -70,22 +66,11 @@ public class DCLoliPickaxe extends Item {
     }
 
     public static void killEntity(Entity target, Entity attacker) {
-        if (target instanceof LivingEntity living && !isHasLoliPickaxe(living)) {
-            DamageSource source = EntityHelper.dc_damage(attacker);
-            Utils.Override_DATA_HEALTH_ID(living, 0.0F);
+        if (target instanceof LivingEntity living && !isHasLoliPickaxe(living) && living.isAlive()) {
+            DataHelper.setIsDead(living, true);
             try {
-                living.dropAllDeathLoot(source);
+                living.playHurtSound(EntityHelper.dc_damage(attacker));
             } catch (Exception ignored) {}
-            living.setHealth(0.0F);
-            living.entityData.set(LivingEntity.DATA_HEALTH_ID, 0.0F);
-            Utils.Override_DATA_HEALTH_ID(living, 0.0F);
-            EntityHelper.forceSetHealth(living, 0.0F);
-            living.gameEvent(GameEvent.ENTITY_DIE);
-            living.die(source);
-            if (!living.getPersistentData().contains("dc_death") && !(living instanceof Player) && !(living instanceof BossEntity)) {
-                living.getPersistentData().putInt("dc_death", 0);
-                GetHealthList.addHealth(living);
-            }
         }
     }
 

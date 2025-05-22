@@ -1,0 +1,17 @@
+{
+  "sortnum": 1,
+  "name": "海洋",
+  "icon": "dc_m:heart_of_the_ocean",
+  "category": "dc_m:item",
+  "pages": [
+    {
+      "type": "spotlight",
+      "item": "dc_m:heart_of_the_ocean",
+      "text": "海洋之心$(br2)它是一种较为强大的材料,在水中时,它会发挥它最大的力量,仿佛你是海的子女"
+    },
+    {
+      "type": "text",
+      "text": "海洋之心$(br2)它是无合成配方的,杀死热带鱼有概率掉落,击杀 Steve 100%掉落。$(br2)它可用于升级下界合金甲"
+    }
+  ]
+}

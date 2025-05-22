@@ -3,11 +3,14 @@ package net.daichang.dcmods.common.item.tools;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
 import com.mega.uom.attribute.ModAttributes;
+import net.daichang.dcmods.client.tool_tip.DCItemTip;
 import net.daichang.dcmods.common.item.DCTier;
 import net.daichang.dcmods.common.item.DCTierItem;
+import net.daichang.dcmods.common.item.UseCountItem;
 import net.daichang.dcmods.common.item.tools.creative.DCLoliPickaxe;
 import net.daichang.dcmods.inits.DCAttributes;
 import net.daichang.dcmods.inits.DCEffects;
+import net.daichang.dcmods.utils.EntityHurtUtil;
 import net.daichang.dcmods.utils.ModUtil;
 import net.daichang.dcmods.utils.TextUtils;
 import net.daichang.dcmods.utils.Utils;
@@ -43,7 +46,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
-public class OceanScythe extends DCTierItem {
+public class OceanScythe extends DCTierItem implements UseCountItem {
     public Multimap<Attribute, AttributeModifier> mainHandModifiers;
     public Multimap<Attribute, AttributeModifier> offHandModifiers;
     public OceanScythe() {
@@ -80,7 +83,7 @@ public class OceanScythe extends DCTierItem {
 
     @Override
     public Multimap<Attribute, AttributeModifier> getAttributeModifiers(EquipmentSlot slot, ItemStack stack) {
-        if (!stack.getTag().contains("dcOceanUse")) stack.getTag().putInt("dcOceanUse", 0);
+        if (!stack.getTag().contains("dc_attking")) stack.getTag().putInt("dc_attking", 0);
         if (!stack.getTag().contains("dcAttackValue")) stack.getTag().putInt("dcAttackValue", 0);
         return super.getAttributeModifiers(slot, stack);
     }
@@ -122,7 +125,7 @@ public class OceanScythe extends DCTierItem {
 
     @Override
     public void appendHoverText(ItemStack pStack, @Nullable Level pLevel, List<Component> list, TooltipFlag pIsAdvanced) {
-        list.add(Component.literal(Component.translatable("tooltip.dc_mods.hurts").getString() + pStack.getTag().getInt("dcOceanUse")).withStyle(ChatFormatting.AQUA));
+        DCItemTip.addAttackCount(list, pStack);
         list.add(Component.translatable("tool_tip.dc_m.ocean_tip_1").withStyle(ChatFormatting.AQUA));
         list.add(Component.translatable("tool_tip.dc_m.ocean_tip_2").withStyle(ChatFormatting.AQUA));
         list.add(Component.translatable("tool_tip.dc_m.ocean_tip_3").withStyle(ChatFormatting.AQUA));
@@ -131,17 +134,16 @@ public class OceanScythe extends DCTierItem {
 
     void hurtEntity(LivingEntity target, LivingEntity attcker, ItemStack stack) {
         CompoundTag tag = stack.getTag();
-        int useValue = tag.getInt("dcOceanUse");
+        int useValue = getUse(stack);
         int attackValue = tag.getInt("dcAttackValue");
-        tag.putInt("dcAttackValue",  attackValue+ 1);
-        float value = tag.getInt("dcOceanUse") + (float) (attcker.getAttributeValue(DCAttributes.OCEAN_DAMAGE.get()) + attcker.getAttributeValue(DCAttributes.DC_SUPER_DAMAGE.get()) + attcker.getAttributeValue(Attributes.ATTACK_DAMAGE));
+        float value = tag.getInt("dc_attking") + (float) (attcker.getAttributeValue(DCAttributes.OCEAN_DAMAGE.get()) + attcker.getAttributeValue(DCAttributes.DC_SUPER_DAMAGE.get()) + attcker.getAttributeValue(Attributes.ATTACK_DAMAGE));
         if (useValue >= 100) value = value + 40 + target.getMaxHealth() * 0.1F;
         if (target.attributes.hasAttribute(Attributes.MAX_HEALTH)) Objects.requireNonNull(target.getAttribute(Attributes.MAX_HEALTH)).setBaseValue(target.getMaxHealth() - 10);
         if (useValue >= 1000) value = value + 50;
         if (useValue >= 10000) value = value + 30;
         if (useValue >= 12000) value = value + 20;
-        if (useValue < Integer.MAX_VALUE) tag.putInt("dcOceanUse", useValue + 1);
-        if (useValue < 0)  tag.putInt("dcOceanUse", 0);
+        if (useValue < Integer.MAX_VALUE) addUse(stack, 1);
+        if (useValue < 0)  setUse(stack, 0);
         if (attackValue > 10) {
             target.addEffect(EffectHelper.addEffect(DCEffects.Freeze.get(), 40, 1));
             target.addEffect(EffectHelper.addEffect(DCEffects.Bloodshed.get(), 40, 1));
@@ -149,7 +151,8 @@ public class OceanScythe extends DCTierItem {
         }
         if (useValue >= 15000) DCLoliPickaxe.killEntity(target, attcker);
         if (target.getHealth() < 10) DCLoliPickaxe.killEntity(target, attcker);
-        EntityHelper.forceOceanHurt(target, value);
+        EntityHurtUtil util = EntityHurtUtil.getInstance(target,attcker);
+        util.dcHurt(value);
         try {
             target.dropAllDeathLoot(EntityHelper.dc_damage(target));
         } catch (Exception ignored) {}

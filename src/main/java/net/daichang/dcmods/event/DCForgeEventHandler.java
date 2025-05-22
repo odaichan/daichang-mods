@@ -1,7 +1,5 @@
 package net.daichang.dcmods.event;
 
-import com.mojang.blaze3d.platform.GlStateManager;
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.brigadier.arguments.FloatArgumentType;
 import net.daichang.dcmods.Config;
 import net.daichang.dcmods.DCMod;
@@ -11,17 +9,14 @@ import net.daichang.dcmods.common.entities.BossEntity;
 import net.daichang.dcmods.common.entities.boss.DCLoveElaina;
 import net.daichang.dcmods.common.item.armors.DCSuperArmor;
 import net.daichang.dcmods.common.item.tools.creative.DCLoliPickaxe;
-import net.daichang.dcmods.inits.*;
+import net.daichang.dcmods.inits.DCEffects;
+import net.daichang.dcmods.inits.DCEntities;
+import net.daichang.dcmods.inits.DCItems;
 import net.daichang.dcmods.utils.*;
 import net.daichang.dcmods.utils.helpers.*;
 import net.minecraft.ChatFormatting;
 import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.renderer.GameRenderer;
-import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.commands.Commands;
 import net.minecraft.commands.arguments.EntityArgument;
 import net.minecraft.core.BlockPos;
@@ -46,7 +41,6 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.event.RenderGuiEvent;
 import net.minecraftforge.client.event.RenderTooltipEvent;
 import net.minecraftforge.event.AnvilUpdateEvent;
 import net.minecraftforge.event.RegisterCommandsEvent;
@@ -69,27 +63,12 @@ public class DCForgeEventHandler {
 
     public static CopyOnWriteArrayList<LivingEntity> bossList = new CopyOnWriteArrayList<>();
 
+    public static final Set<BossEntity> BOSSES = Collections.newSetFromMap(new WeakHashMap<>());
+
     private static final Map<BossEntity, Integer> prevBarWidthMap = new HashMap<>();
-
-    private static int rotate;
-
-    public static void setRotate(int value) {
-        rotate = value;
-    }
-
-    public static int getRotate() {
-        return rotate;
-    }
-
-    public static void addRotate(int value) {
-        setRotate(getRotate() + value);
-        if (getRotate() >= 360) setRotate(1);
-    }
 
     @SubscribeEvent
     public static void hurtEvent(@NotNull LivingHurtEvent event) {
-        DamageSource source = event.getSource();
-        LivingEntity attack = event.getEntity();
         LivingEntity hurtEntity = event.getEntity();
         if (Utils.isBlocking(hurtEntity)) {
             hurtEntity.playSound(SoundEvents.SHIELD_BLOCK);
@@ -101,6 +80,7 @@ public class DCForgeEventHandler {
     @SubscribeEvent
     public static void leftClickEntity(@NotNull LivingAttackEvent event) {
         LivingEntity living = event.getEntity();
+        DamageSource source = event.getSource();
         if (Utils.isBlocking(living)) {
             living.playSound(SoundEvents.SHIELD_BLOCK);
             event.setCanceled(true);
@@ -131,7 +111,7 @@ public class DCForgeEventHandler {
         if (block instanceof RedSpiderLily) {
             if (player.getInventory().countItem(DCItems.SUPER_WOOD_INGOT.get()) > 9) {
                 if (level instanceof ServerLevel serverLevel) {
-                    DCLoveElaina dcWitherBoss = new DCLoveElaina(DCEntities.DC_WITHER.get(), serverLevel);
+                    DCLoveElaina dcWitherBoss = new DCLoveElaina(DCEntities.ELAINA.get(), serverLevel);
                     dcWitherBoss.setPos(pos.getX(), pos.getY(), pos.getZ());
                     dcWitherBoss.setTarget(player);
                     serverLevel.addFreshEntity(dcWitherBoss);
@@ -141,71 +121,69 @@ public class DCForgeEventHandler {
         }
     }
 
-    @OnlyIn(value=Dist.CLIENT)
-    @SubscribeEvent
-    public static void onRenderGUI(RenderGuiEvent.Pre event) {
-        GuiGraphics graphics = event.getGuiGraphics();
-        MultiBufferSource source = graphics.bufferSource();
-        if (Minecraft.getInstance().player == null) {
-            return;
-        }
-        if (EntityHelper.hasBoss(Minecraft.getInstance().player.level())) {
-            int w = event.getWindow().getGuiScaledWidth();
-            int h = event.getWindow().getGuiScaledHeight();
-            int posX = w / 2;
-            int posY = h / 2;
-            int offset = 0;
-            RenderSystem.disableDepthTest();
-            RenderSystem.depthMask(false);
-            RenderSystem.enableBlend();
-            RenderSystem.setShader(GameRenderer::getPositionTexShader);
-            RenderSystem.blendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
-            RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
-            Iterator<LivingEntity> iterator = bossList.iterator();
-            while (iterator.hasNext()) {
-                synchronized (iterator) {
-                    LivingEntity entity = iterator.next();
-                    if (entity == null) continue;
-                    if (entity instanceof BossEntity boss) {
-                        Font font = boss.getBossBarFont();
-                        float maxHealth = boss.getMaxHealth();
-                        float health = boss.getHealth();
-                        int barWidth = (int)(health / maxHealth * 190.0f);
-                        int prevBarWidth = prevBarWidthMap.getOrDefault(boss, barWidth);
-
-                        float transitionSpeed = 0.1F;
-                        int interpolatedBarWidth = (int) ((1 - transitionSpeed * event.getPartialTick()) * prevBarWidth + transitionSpeed * event.getPartialTick() * barWidth);
-                        prevBarWidthMap.put(boss, barWidth);
-
-                        String displayName = boss.getDisplayName().getString();
-                        String displayHealth = String.format("%.1f/%.1f", health, maxHealth);
-                        int displayNameWidth = font.width(displayName);
-                        int healthWidth = font.width(displayHealth);
-
-                        graphics.blit(boss.getBossBar(), posX - 97, posY - 116 + offset, 0.0f, 0.0f, 256, 256, 256, 256);
-                        if (boss.isHasMask()) graphics.blit(boss.getBossBarMask(), posX - 97, posY - 148 + offset, 0.0f, 0.0f, interpolatedBarWidth, 256, 256, 256);
-                        graphics.blit(boss.getBossBarOn(), posX - 97, posY - 148 + offset, 0.0f, 0.0f, barWidth, 256, 256, 256);
-                        source.getBuffer(RenderType.endPortal());
-                        graphics.drawString(font, Component.literal(displayName), posX - (displayNameWidth / 2), posY + -92 + offset, -26368, false);
-                        graphics.drawString(font, Component.literal(displayHealth), posX - (healthWidth / 2), posY + -82 + offset, -26368, false);
-                        offset += 30;
-                    }
-                }
-            }
-            RenderSystem.depthMask(true);
-            RenderSystem.defaultBlendFunc();
-            RenderSystem.enableDepthTest();
-            RenderSystem.disableBlend();
-            RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
-        }
-    }
+//    @OnlyIn(value=Dist.CLIENT)
+//    @SubscribeEvent
+//    public static void onRenderGUI(RenderGuiEvent.Pre event) {
+//        GuiGraphics graphics = event.getGuiGraphics();
+//        MultiBufferSource source = graphics.bufferSource();
+//        if (Minecraft.getInstance().player == null) return;
+//        if (EntityHelper.hasBoss(Minecraft.getInstance().player.level())) {
+//            int w = event.getWindow().getGuiScaledWidth();
+//            int h = event.getWindow().getGuiScaledHeight();
+//            int posX = w / 2;
+//            int posY = h / 2;
+//            int offset = 0;
+//            RenderSystem.disableDepthTest();
+//            RenderSystem.depthMask(false);
+//            RenderSystem.enableBlend();
+//            RenderSystem.setShader(GameRenderer::getPositionTexShader);
+//            RenderSystem.blendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
+//            RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
+//            Iterator<LivingEntity> iterator = bossList.iterator();
+//            while (iterator.hasNext()) {
+//                synchronized (iterator) {
+//                    LivingEntity entity = iterator.next();
+//                    if (entity == null) continue;
+//                    if (entity instanceof BossEntity boss) {
+//                        Font font = boss.getBossBarFont();
+//                        float maxHealth = boss.getMaxHealth();
+//                        float health = boss.getHealth();
+//                        int barWidth = (int)(health / maxHealth * 190.0f);
+//                        int prevBarWidth = prevBarWidthMap.getOrDefault(boss, barWidth);
+//
+//                        float transitionSpeed = 0.1F;
+//                        int interpolatedBarWidth = (int) ((1 - transitionSpeed * event.getPartialTick()) * prevBarWidth + transitionSpeed * event.getPartialTick() * barWidth);
+//                        prevBarWidthMap.put(boss, barWidth);
+//
+//                        String displayName = boss.getDisplayName().getString();
+//                        String displayHealth = String.format("%.1f/%.1f", health, maxHealth);
+//                        int displayNameWidth = font.width(displayName);
+//                        int healthWidth = font.width(displayHealth);
+//
+//                        graphics.blit(boss.getBossBar(), posX - 97, posY - 116 + offset, 0.0f, 0.0f, 256, 256, 256, 256);
+//                        if (boss.isHasMask()) graphics.blit(boss.getBossBarOverlay(), posX - 97, posY - 148 + offset, 0.0f, 0.0f, interpolatedBarWidth, 256, 256, 256);
+//                        graphics.blit(boss.getBossBarOn(), posX - 97, posY - 148 + offset, 0.0f, 0.0f, barWidth, 256, 256, 256);
+//                        source.getBuffer(RenderType.endPortal());
+//                        graphics.drawString(font, Component.literal(displayName), posX - (displayNameWidth / 2), posY + -92 + offset, -26368, false);
+//                        graphics.drawString(font, Component.literal(displayHealth), posX - (healthWidth / 2), posY + -82 + offset, -26368, false);
+//                        offset += 30;
+//                    }
+//                }
+//            }
+//            RenderSystem.depthMask(true);
+//            RenderSystem.defaultBlendFunc();
+//            RenderSystem.enableDepthTest();
+//            RenderSystem.disableBlend();
+//            RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
+//        }
+//    }
 
 //
 //    @OnlyIn(Dist.CLIENT)
 //    @SubscribeEvent
 //    public static void renderTooltipEventPre(RenderTooltipEvent.Pre event) {
 //        Random random = new Random(Util.getMillis());
-//        ItemStack stack = event.getItemStack();
+//        UseCountItem stack = event.getItemStack();
 //        Item item = stack.getItem();
 //        GuiGraphics graphics = event.getGraphics();
 //        PoseStack poseStack = graphics.pose();
@@ -221,7 +199,7 @@ public class DCForgeEventHandler {
 //        else if (Utils.isCreativeItem(item)) {
 //            Render2DHelper.drawBlurredShadow(poseStack, x, y, 100, 100, 15, rgb);
 //        }
-//        else if (item.equals(DCTestItem.DC_ENTITY_REMOVE.get())) {
+//        else if (item.equals(DCTestItem.DC_ENTITY_REMOVE.getUse())) {
 //            Render2DHelper.drawGradientRound(poseStack, x, y, 100, 100, 15, Color.RED, Color.BLUE, Color.GREEN, Color.YELLOW);
 //        }
 //    }
@@ -271,7 +249,7 @@ public class DCForgeEventHandler {
 //    @SubscribeEvent
 //    public static void renderTooltipEventPre(RenderTooltipEvent.Pre event) {
 //        addRotate(1);
-//        ItemStack stack = event.getItemStack();
+//        UseCountItem stack = event.getItemStack();
 //        GuiGraphics graphics = event.getGraphics();
 //        MultiBufferSource bufferSource = graphics.bufferSource();
 //        PoseStack pose = graphics.pose();
@@ -284,6 +262,7 @@ public class DCForgeEventHandler {
 
     @SubscribeEvent
     public static void registerCommand(RegisterCommandsEvent event) {
+
         event.getDispatcher()
                 .register(Commands.literal("dc_mods")
                         .then(Commands.literal("attack")
@@ -319,7 +298,7 @@ public class DCForgeEventHandler {
                                         )
                                 )
                         )
-                        .then(Commands.literal("asmSetGetHealth")
+                        .then(Commands.literal("forceGetHealthSet")
                                 .executes(cs->{
                                     Entity entity = cs.getSource().getEntity();
                                     SoftGetHealthCommand.killed(entity);
@@ -355,7 +334,7 @@ public class DCForgeEventHandler {
                                                     float value = FloatArgumentType.getFloat(cs, "value");
                                                     for (Entity target : EntityArgument.getEntities(cs, "target")) {
                                                         if (target instanceof LivingEntity living) {
-                                                            EntityHelper.forceOceanHurt(living, value);
+                                                            EntityHurtUtil.getInstance(living, living).dcHurt(value);
                                                             if (value >= living.getMaxHealth()) DCLoliPickaxe.killEntity(living, living);
                                                         }
                                                         else target.hurt(EntityHelper.dc_damage(target), value);
@@ -383,6 +362,7 @@ public class DCForgeEventHandler {
                                     for (Entity entity : EntityArgument.getEntities(cs, "entities")) FileHelper.removeDefaultItem(entity);
                                     return 2;
                                 })))
+
                 );
     }
 
@@ -405,8 +385,8 @@ public class DCForgeEventHandler {
             int size = tooltip.size();
             MutableComponent mutableComponent1 = Component.translatable("attribute.name.generic.attack_damage");
             MutableComponent mutableComponent2 = Component.translatable("attribute.name.generic.attack_speed");
-            MutableComponent mutableComponent3 = Component.literal(ChatFormatting.GRAY + " +" + TextUtils.rainbow("(TREE)3").getString() +  " " + ChatFormatting.GRAY + mutableComponent1.getString());
-            MutableComponent mutableComponent4 = Component.literal(ChatFormatting.GRAY + " +" + TextUtils.rainbow("(TREE)3").getString() +  " " + ChatFormatting.GRAY + mutableComponent2.getString());
+            MutableComponent mutableComponent3 = Component.literal(ChatFormatting.GRAY + " +" + TextUtils.rainbow("(TREE)3") +  " " + ChatFormatting.GRAY + mutableComponent1.getString());
+            MutableComponent mutableComponent4 = Component.literal(ChatFormatting.GRAY + " +" + TextUtils.rainbow("(TREE)3") +  " " + ChatFormatting.GRAY + mutableComponent2.getString());
             for (int i = 0; i < size; i++) {
                 Component line = tooltip.get(i);
                 if (line.contains(mutableComponent1))

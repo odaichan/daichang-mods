@@ -2,6 +2,7 @@ package net.daichang.dcmods.bytes.mixins;
 
 import net.daichang.dcmods.inits.DCEffects;
 import net.daichang.dcmods.utils.Utils;
+import net.daichang.dcmods.utils.helpers.DataHelper;
 import net.daichang.dcmods.utils.helpers.EffectHelper;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.particles.ParticleTypes;
@@ -36,6 +37,9 @@ public abstract class MixinEntity {
     @Inject(method = "getDeltaMovement", at = @At("HEAD"), cancellable = true)
     private void getDeltaMovement(CallbackInfoReturnable<Vec3> cir) {
         if (dc_entity instanceof LivingEntity && EffectHelper.hasEffect((LivingEntity) dc_entity,DCEffects.Freeze.get())) {
+            cir.setReturnValue(Vec3.ZERO);
+        }
+        if (dc_entity instanceof LivingEntity && DataHelper.isDead((LivingEntity) dc_entity)) {
             cir.setReturnValue(Vec3.ZERO);
         }
     }

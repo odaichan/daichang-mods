@@ -188,5 +188,8 @@
   "tconstruct.dc_m.tool_tip.ocean_heart": "水，是生命之源.",
   "tconstruct.dc_m.tool_tip.ocean_heart_1": "当你进入海中时，大海也拥抱了你",
   "config.dc_mods.ocean_heart_get": "海洋之心简易获取",
-  "config.dc_mods.prohibition_of_treatment": "Mod伤害禁止治疗"
+  "config.dc_mods.prohibition_of_treatment": "Mod伤害禁止治疗",
+  "entity.dc_m.loli": "萝莉",
+  "tool_tip.dc_m.spwan_entity": "生成的实体：:",
+  "tool_tip.iaxe_item": "攻击有护甲值的目标时，造成额外伤害"
 }

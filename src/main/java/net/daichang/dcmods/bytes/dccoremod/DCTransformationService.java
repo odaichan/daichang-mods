@@ -28,7 +28,18 @@ public class DCTransformationService implements ITransformationService {
 
     @Override
     public void onLoad(IEnvironment env, Set<String> otherServices) {
-        System.out.println("[DC ASM]Starting.....");
+        println("Starting.....");
+        println("ASM Is Load.");
+        String osName = System.getProperty("os.name");
+        String osVersion = System.getProperty("os.version");
+        println("Loading...");
+        println(osName);
+        println(osVersion);
+        println("Clazz：" + this.name());
+    }
+
+    static void println(Object input) {
+        System.out.println("[DC ASM]" + input);
     }
 
     @Override

@@ -8,9 +8,10 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import it.unimi.dsi.fastutil.ints.Int2ObjectLinkedOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
 import net.daichang.dcmods.DCMod;
+import net.daichang.dcmods.common.item.UseCountItem;
 import net.daichang.dcmods.inits.DCAttributes;
+import net.daichang.dcmods.utils.helpers.DataHelper;
 import net.daichang.dcmods.utils.helpers.EntityHelper;
-import net.daichang.dcmods.utils.lists.DeathList;
 import net.daichang.dcmods.utils.lists.items.CanSwordBlockItem;
 import net.daichang.dcmods.utils.lists.items.CreativeItemList;
 import net.daichang.dcmods.utils.lists.items.SuperItemList;
@@ -23,7 +24,6 @@ import net.minecraft.core.Registry;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.resources.ResourceLocation;
@@ -83,10 +83,25 @@ public class Utils {
         target.setRemoved(reason);
         target.onClientRemoval();
         target.onRemovedFromWorld();
-        if (level instanceof ServerLevel serverLevel) {
-            serverLevel.entityTickList.remove(target);
-            serverLevel.entityManager.visibleEntityStorage.remove(target);
-        }
+        try {
+            if (level instanceof ServerLevel serverLevel) {
+                serverLevel.entityTickList.remove(target);
+                serverLevel.entityManager.entityGetter.get(target.getUUID()).setRemoved(reason);
+                serverLevel.entityManager.entityGetter.get(target.getUUID()).remove(reason);
+                serverLevel.entityManager.visibleEntityStorage.remove(target);
+            }
+            if (level instanceof ClientLevel clientLevel) {
+                Entity entity = clientLevel.getEntity(target.getId());
+                entity.remove(reason);
+                entity.setRemoved(reason);
+                clientLevel.entitiesForRendering().forEach(targetE ->{
+                    if (targetE.getId() == target.getId()) {
+                        targetE.remove(reason);
+                        target.setRemoved(reason);
+                    }
+                });
+            }
+        } catch (Exception ignored){}
     }
 
     public static void addAdvancementToPlayer(Player player, String advancement) {
@@ -102,7 +117,6 @@ public class Utils {
         DamageSource damageSource = new DamageSource(target.level().registryAccess().registryOrThrow(Registries.DAMAGE_TYPE).getHolderOrThrow(DamageTypes.GENERIC_KILL), target);
         Utils.Override_DATA_HEALTH_ID(target, 0.0F);
         target.setPose(Pose.DYING);
-        DeathList.addDeath(target);
         if (target instanceof LivingEntity living) {
             living.setHealth(0.0F);
             Override_DATA_HEALTH_ID(living, 0.0F);
@@ -281,31 +295,36 @@ public class Utils {
         DamageSource damageSource = EntityHelper.dc_damage(player);
         final float normal = (float) player.getAttributeValue(Attributes.ATTACK_DAMAGE);
         final float dc_super_damage = (float) player.getAttributeValue(DCAttributes.DC_SUPER_DAMAGE.get());
-        CompoundTag tag = stack.getTag();
-        int dc_kill_count = 0;
-        if (tag != null) dc_kill_count = tag.getInt("dc_attking");
+        int dc_kill_count = UseCountItem.getUseS(stack);
         float damage = dc_super_damage + dc_kill_count * 0.2F + normal + target.getMaxHealth() * 0.01F;
         if (dc_kill_count >= 100) damage = damage + 40 + target.getMaxHealth() * 0.1F;
         if (dc_kill_count >= 1000) damage = damage + 50;
         if (dc_kill_count >= 10000) damage = damage + 30;
         if (dc_kill_count >= 12000) damage = damage + 20;
-        if (dc_kill_count < Integer.MAX_VALUE) tag.putInt("dc_attking", tag.getInt("dc_attking") + 1);
-        if (dc_kill_count < 0)  tag.putInt("dc_attking", 0);
+        if (dc_kill_count < Integer.MAX_VALUE) UseCountItem.addUseS(stack, 1);
+        if (dc_kill_count < 0)  UseCountItem.setUseS(stack, 0);
         if (target.attributes.hasAttribute(Attributes.MAX_HEALTH)) Objects.requireNonNull(target.getAttribute(Attributes.MAX_HEALTH)).setBaseValue(target.getMaxHealth() - 10);
         Utils.sweepAttack(target.level(), player, target);
-        if (dc_kill_count >= 15000) dataHealthSet(target);
         if (!(target instanceof Player) && target.getHealth() <= 0 || target.entityData.get(LivingEntity.DATA_HEALTH_ID) <= 0) dataHealthSet(target);
-        EntityHelper.forceHurt(target, damageSource, damage);
+        EntityHurtUtil.getInstance(target, player).dcHurt(damage);
+        if (dc_kill_count > 15000) {
+            if (!(target instanceof Player)) DataHelper.setIsDead(target, true);
+            if (target instanceof Player tPlayer) DataHelper.addHealthDelta(tPlayer, -tPlayer.getMaxHealth());
+        }
+        try {
+            target.dropAllDeathLoot(damageSource);
+        } catch (Exception ignored) {}
     }
 
     public static void attackEntity(LivingEntity target, LivingEntity player) {
-        DamageSource damageSource = EntityHelper.dc_damage(player);
         float dc_super_damage = 0;
         float normalDamage = 0;
         if (player.attributes.hasAttribute(Attributes.ATTACK_DAMAGE)) normalDamage = (float) (player.getAttributeValue(Attributes.ATTACK_DAMAGE));
         if (player.attributes.hasAttribute(DCAttributes.DC_SUPER_DAMAGE.get())) dc_super_damage = (float) (player.getAttributeValue(DCAttributes.DC_SUPER_DAMAGE.get()));
         float damage = dc_super_damage + normalDamage + 30;
-        EntityHelper.forceHurt(target, damageSource, damage);
+        if (target.getMaxHealth() >= 10000) damage = target.getMaxHealth() * 0.001F + target.getHealth() * 0.001F + damage;
+        if (target.getHealth() > 2) DataHelper.setIsDead(target, true);
+        EntityHurtUtil.getInstance(target).dcHurt(damage);
     }
 
     public static UseAnim getUseAnim() {
@@ -340,7 +359,7 @@ public class Utils {
     }
 
     public static boolean isBlockItem(ItemStack item) {
-        return item.is(getModItemTag("block_item"));
+         return item.is(getModItemTag("block_item"));
     }
 
     public static void Override_DATA_HEALTH_ID(LivingEntity livingEntity, final float X) {

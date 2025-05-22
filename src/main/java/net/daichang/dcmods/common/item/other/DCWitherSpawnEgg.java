@@ -14,7 +14,7 @@ import java.util.List;
 
 public class DCWitherSpawnEgg extends DCBaseSpawnEgg {
     public DCWitherSpawnEgg() {
-        super(DCEntities.DC_WITHER , Color.WHITE.getRGB(), Color.CYAN.getRGB(), new Properties());
+        super(DCEntities.ELAINA, Color.WHITE.getRGB(), Color.CYAN.getRGB(), new Properties());
         CreativeItemList.addItem(this);
     }
 

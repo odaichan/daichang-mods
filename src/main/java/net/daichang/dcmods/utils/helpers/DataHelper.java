@@ -18,7 +18,11 @@ import java.lang.reflect.Method;
 //一些灵感来源于Omni-mob,部分来源于梦幻终焉
 public class DataHelper {
     public static EntityDataAccessor<Float> DC_GET_HEALTH_DATA;
+    public static EntityDataAccessor<Boolean> DC_ENTITY_DEATH;
+    public static EntityDataAccessor<Integer> DC_DEATH_TIME;
     public static String DC_GET_HEALTH = "dcGetHealth";
+    public static String DC_ENTITY_DIE = "dcIsDead";
+    public static String DC_ENTITY_DEATH_TIME = "dcDeathTime";
 
     public static void setAllSyncedHealthData(LivingEntity entity, float value) {
         entity.getEntityData().itemsById.forEach((integer, dataItem) -> {
@@ -49,7 +53,7 @@ public class DataHelper {
                 if (field.getFloat(entity) != entity.getHealth()) continue;
                 field.setFloat(entity, value);
             }
-            catch (IllegalAccessException | IllegalArgumentException exception) {}
+            catch (IllegalAccessException | IllegalArgumentException ignored) {}
         }
         PacketHandler.sendToClient((Object)new S2CSyncSetFloatField(value, entity.getId()));
     }
@@ -58,7 +62,7 @@ public class DataHelper {
         for (Method method : ClassUtil.getAllDeclaredMethods(entity.getClass())) {
             try {
                 method.setAccessible(true);
-                if (!method.getName().toLowerCase().contains("set") || !FormattingHelper.isHealth((String)method.getName())) continue;
+                if (!method.getName().toLowerCase().contains("setUse") || !FormattingHelper.isHealth((String)method.getName())) continue;
                 method.invoke(entity, Float.valueOf(value));
             }
             catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException exception) {}
@@ -104,7 +108,27 @@ public class DataHelper {
     }
 
     public static void setHealthDelta(LivingEntity living, float value) {
-        if (Config.Server.hp_heal.get()) living.getEntityData().set(DC_GET_HEALTH_DATA, value);
+        if (Config.Server.anti_heal.get()) living.getEntityData().set(DC_GET_HEALTH_DATA, value);
+    }
+
+    public static int getDeathTime(LivingEntity living) {
+        return living.getEntityData().get(DC_DEATH_TIME);
+    }
+
+    public static void setDeathTime(LivingEntity living, int value) {
+        living.entityData.set(DC_DEATH_TIME, value);
+    }
+
+    public static boolean isDead(LivingEntity living) {
+        return living.entityData.get(DC_ENTITY_DEATH);
+    }
+
+    public static void setIsDead(LivingEntity living, boolean value) {
+        living.entityData.set(DC_ENTITY_DEATH, value);
+    }
+
+    public static void addDeathTime(LivingEntity living, int value) {
+        if (value > 0) living.entityData.set(DC_DEATH_TIME, getDeathTime(living) + value);
     }
 
     public static float getHealthDelta(LivingEntity living) {

@@ -5,6 +5,7 @@ import net.daichang.dcmods.common.item.BaseSuperItem;
 import net.daichang.dcmods.common.item.DCTier;
 import net.daichang.dcmods.common.item.armors.DCSuperArmor;
 import net.daichang.dcmods.common.item.crafts.HeartOfTheOcean;
+import net.daichang.dcmods.common.item.other.DCLoliSpawnEgg;
 import net.daichang.dcmods.common.item.other.DCSteveSpawnEgg;
 import net.daichang.dcmods.common.item.other.DCWitherSpawnEgg;
 import net.daichang.dcmods.common.item.other.SteveTokenItem;
@@ -12,6 +13,11 @@ import net.daichang.dcmods.common.item.tools.*;
 import net.daichang.dcmods.common.item.tools.bow.DCArrow;
 import net.daichang.dcmods.common.item.tools.bow.DCBow;
 import net.daichang.dcmods.common.item.tools.creative.*;
+import net.daichang.dcmods.common.item.tools.normal.IAxeItem;
+import net.daichang.dcmods.common.item.tools.normal.IHoeItem;
+import net.daichang.dcmods.common.item.tools.normal.IPickaxeItem;
+import net.daichang.dcmods.common.item.tools.normal.IShovelItem;
+import net.daichang.dcmods.common.item.tools.supers.*;
 import net.minecraft.world.item.*;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -98,6 +104,7 @@ public class DCItems {
     public static final RegistryObject<Item> HEART_OF_THE_OCEAN;
     public static final RegistryObject<Item> ELIANIA_MODE;
     public static final RegistryObject<Item> OCEAN_SCYTHE;
+    public static final RegistryObject<Item> LOLI_SPAWN;
 
     static {
         WOOD_INGOT = normalItemRegister("wood_ingot", ()-> new Item(new Item.Properties().stacksTo(16).rarity(Rarity.COMMON)));
@@ -114,10 +121,10 @@ public class DCItems {
 
         //NORMAL ITEMS
         NORMAL_WOOD_SWORD = normalItemRegister("normal_wood_sword", ()-> new ISwordItem(DCTier.NORMAL, 3, -2.4F, new Item.Properties()));
-        NORMAL_WOOD_PICKAXE = normalItemRegister("normal_wood_pickaxe", ()-> new PickaxeItem(DCTier.NORMAL, 1, -2.8F, new Item.Properties()));
-        NORMAL_WOOD_AXE = normalItemRegister("normal_wood_axe", ()-> new AxeItem(DCTier.NORMAL, 1, -2.8F, new Item.Properties()));
-        NORMAL_WOOD_SHOVEL = normalItemRegister("normal_wood_shovel", ()-> new ShovelItem(DCTier.NORMAL, 1.5F, -3.0F, new Item.Properties()));
-        NORMAL_WOOD_HOE = normalItemRegister("normal_wood_hoe", ()-> new HoeItem(DCTier.NORMAL, -4, 0.0F, new Item.Properties()));
+        NORMAL_WOOD_PICKAXE = normalItemRegister("normal_wood_pickaxe", ()-> new IPickaxeItem(DCTier.NORMAL, 1, -2.8F, new Item.Properties()));
+        NORMAL_WOOD_AXE = normalItemRegister("normal_wood_axe", ()-> new IAxeItem(DCTier.NORMAL, 1, -2.8F, new Item.Properties()));
+        NORMAL_WOOD_SHOVEL = normalItemRegister("normal_wood_shovel", ()-> new IShovelItem(DCTier.NORMAL, 1.5F, -3.0F, new Item.Properties()));
+        NORMAL_WOOD_HOE = normalItemRegister("normal_wood_hoe", ()-> new IHoeItem(DCTier.NORMAL, -4, 0.0F, new Item.Properties()));
 
         //SUPER ITEMS
         SUPER_WOOD_INGOT = normalItemRegister("super_wood_ingot", ()-> new BaseSuperItem(new Item.Properties().rarity(Rarity.EPIC).stacksTo(16)));
@@ -134,6 +141,8 @@ public class DCItems {
 
         DC_STEVE = creativeItemRegister("dc_steve_spawn_egg", DCSteveSpawnEgg::new);
 
+        LOLI_SPAWN = creativeItemRegister("dc_loli_spawn_egg", DCLoliSpawnEgg::new);
+
         LoliPickaxe = creativeItemRegister("loli_pickaxe", DCLoliPickaxe::new);
 
         WOOD_TOTEM = registry("super_wood_totem", SuperWoodTotem::new);
@@ -145,6 +154,6 @@ public class DCItems {
         WOOD_LEGGINGS = armorRegister("super_wood_leggings", DCSuperArmor.Leggings::new);
         WOOD_BOOTS = armorRegister("super_wood_boots", DCSuperArmor.Boots::new);
         OCEAN_SCYTHE = normalItemRegister("ocean_scythe", OceanScythe::new);
-        ELIANIA_MODE = creativeItemRegister("elaina_mode_set", DCElainaMode::new);
+        ELIANIA_MODE = creativeItemRegister("set_dead", DCElainaMode::new);
     }
 }

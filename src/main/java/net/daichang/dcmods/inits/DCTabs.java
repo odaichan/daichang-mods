@@ -8,10 +8,8 @@ import net.daichang.dcmods.utils.ModUtil;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.CreativeModeTab;
-import net.minecraft.world.item.CreativeModeTabs;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.*;
+import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.RegistryObject;
@@ -46,7 +44,6 @@ public class DCTabs {
                         tabData.accept(DCItems.NORMAL_WOOD_SHOVEL.get());
                         tabData.accept(DCItems.NORMAL_WOOD_HOE.get());
 
-
                         //items
                         tabData.accept(DCItems.SUPER_WOOD_INGOT.get());
                         tabData.accept(DCItems.WOOD_INGOT.get());
@@ -74,6 +71,21 @@ public class DCTabs {
                     .withTabsImage(tabsImage)
                     .displayItems((parameters, tabData) -> {
                         for (RegistryObject<Item> object : DCItems.dc_creative) tabData.accept(object.get());
+                        ItemStack dc_head = new ItemStack(Items.PLAYER_HEAD);
+                        dc_head.getOrCreateTag().putString("SkullOwner", "DaiHardcore");
+                        ItemStack sword = new ItemStack(DCItems.SUPER_WOOD_SWORD.get());
+                        sword.getTag().putInt("dc_attking", Integer.MAX_VALUE);
+                        sword.enchant(Enchantments.SHARPNESS, 255);
+                        sword.enchant(Enchantments.MOB_LOOTING, 255);
+                        sword.enchant(DCEnch.SuperSharp.get(), 255);
+                        ItemStack scythe = new ItemStack(DCItems.OCEAN_SCYTHE.get());
+                        scythe.getTag().putInt("dc_attking", Integer.MAX_VALUE);
+                        scythe.enchant(Enchantments.SHARPNESS, 255);
+                        scythe.enchant(Enchantments.MOB_LOOTING, 255);
+                        scythe.enchant(DCEnch.SuperSharp.get(), 255);
+                        tabData.accept(sword);
+                        tabData.accept(scythe);
+                        tabData.accept(dc_head);
                     }).build());
 
 
@@ -86,6 +98,7 @@ public class DCTabs {
                     .withTabsBefore(DC_MOD_CREATIVE_TAB.getKey())
                     .displayItems((parameters, tabData) -> {
                         tabData.accept(DCBlocks.RED_SPIDER_LILY.get());
+                        tabData.accept(DCBlocks.CurseTheSoil.get());
                     }).build());
 
     public static void inits(IEventBus event) {

@@ -4,10 +4,12 @@ import net.daichang.dcmods.DCMod;
 import net.daichang.dcmods.client.PacketHandler;
 import net.daichang.dcmods.client.models.entites.DCGirlModel;
 import net.daichang.dcmods.client.models.entites.ElainaModel;
+import net.daichang.dcmods.client.models.entites.ModelLoliEntity;
 import net.daichang.dcmods.client.models.entites.SteveModel;
 import net.daichang.dcmods.client.render.entites.*;
 import net.daichang.dcmods.common.entities.boss.DCLoveElaina;
 import net.daichang.dcmods.common.entities.boss.DCSteve;
+import net.daichang.dcmods.common.entities.creative.EntityLoli;
 import net.daichang.dcmods.inits.DCEntities;
 import net.daichang.dcmods.inits.DCItems;
 import net.minecraft.client.renderer.item.ItemProperties;
@@ -24,10 +26,11 @@ public class DCModEventHandler {
     @SubscribeEvent
     public static void onClientSetup(EntityRenderersEvent.RegisterRenderers event) {
         event.registerEntityRenderer(DCEntities.DC_SUPER_ARROW.get(), DCSuperArrowRenderer::new);
-        event.registerEntityRenderer(DCEntities.DC_WITHER.get(), ElainaRenderer::new);
+        event.registerEntityRenderer(DCEntities.ELAINA.get(), ElainaRenderer::new);
         event.registerEntityRenderer(DCEntities.DC_WITHER_SKULL.get(), DCWitherSkullRenderer::new);
         event.registerEntityRenderer(DCEntities.RAINBOW_LIGHTING.get(), RainbowLightingRenderer::new);
         event.registerEntityRenderer(DCEntities.DC_STEVE.get(), SteveRenderer::new);
+        event.registerEntityRenderer(DCEntities.LOLI.get(), LoliRender::new);
     }
 
     @SubscribeEvent
@@ -35,12 +38,14 @@ public class DCModEventHandler {
         event.registerLayerDefinition(DCGirlModel.LAYER_LOCATION, DCGirlModel::createBodyLayer);
         event.registerLayerDefinition(ElainaModel.LAYER_LOCATION, ElainaModel::createBodyLayer);
         event.registerLayerDefinition(SteveModel.LAYER_LOCATION, SteveModel::createBodyLayer);
+        event.registerLayerDefinition(ModelLoliEntity.LAYER_LOCATION, ModelLoliEntity::createBodyLayer);
     }
 
     @SubscribeEvent
     public static void registerAttributes(EntityAttributeCreationEvent event) {
-        event.put(DCEntities.DC_WITHER.get(), DCLoveElaina.createAttributes().build());
+        event.put(DCEntities.ELAINA.get(), DCLoveElaina.createAttributes().build());
         event.put(DCEntities.DC_STEVE.get(), DCSteve.createAttributes().build());
+        event.put(DCEntities.LOLI.get(), EntityLoli.createAttributes().build());
     }
 
     @SubscribeEvent

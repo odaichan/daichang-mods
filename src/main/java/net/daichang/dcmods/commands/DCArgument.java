@@ -10,7 +10,7 @@ public class DCArgument implements IEntitySelectorType {
 
     @Override
     public EntitySelector build(EntitySelectorParser parser) {
-        parser.limitToType(DCEntities.DC_WITHER.get());
+        parser.limitToType(DCEntities.ELAINA.get());
         parser.setIncludesEntities(true);
         parser.setOrder(EntitySelectorParser.ORDER_NEAREST);
         return parser.getSelector();

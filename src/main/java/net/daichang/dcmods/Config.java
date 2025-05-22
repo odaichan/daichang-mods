@@ -32,11 +32,11 @@ public class Config {
 
         public static final ForgeConfigSpec.BooleanValue steve_health_boost;
 
+        public static final ForgeConfigSpec.BooleanValue anti_heal;
+
         public static final ForgeConfigSpec.IntValue heal_count;
 
         public static final ForgeConfigSpec.BooleanValue ocean_heart;
-
-        public static final ForgeConfigSpec.BooleanValue hp_heal;
 
         public static final ForgeConfigSpec server;
 
@@ -46,7 +46,7 @@ public class Config {
             elaina_super_mode = serverBuild.comment("Elaina Super Mode").define("Elaina Super Mode", true);
             ocean_heart = serverBuild.comment("Heart of the Ocean is easy to obtain").define("Ocean Heart Easy Get", false);
             heal_count = serverBuild.comment("DC Health Delta Heal").defineInRange("DC Health Delta Heal", 1, 1, 40);
-            hp_heal = serverBuild.comment("Prohibition of treatment").define("Prohibition of treatment", true);
+            anti_heal = serverBuild.comment("Prohibition of treatment").define("Prohibition of treatment", true);
             steve_health_boost = serverBuild.comment("Steve Health Boost").define("Steve Health Boost", false);
             server = serverBuild.build();
         }

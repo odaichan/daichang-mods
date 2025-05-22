@@ -1,0 +1,15 @@
+{
+  "type": "minecraft:smithing_transform",
+  "addition": {
+    "item": "dc_m:super_wood_ingot"
+  },
+  "base": {
+    "item": "dc_m:super_wood_hoe"
+  },
+  "result": {
+    "item": "dc_m:ocean_scythe"
+  },
+  "template": {
+    "item": "dc_m:heart_of_the_ocean"
+  }
+}

@@ -25,6 +25,10 @@ public class PacketHandler {
         }
     }
 
+    public static <MSG> void sendToPlayer(MSG msg) {
+        CHANNEL.sendToServer(msg);
+    }
+
     public static void init() {
         DistExecutor.unsafeRunWhenOn(Dist.DEDICATED_SERVER, () -> () -> {
             int packetId = 0;

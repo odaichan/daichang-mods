@@ -5,8 +5,10 @@ import com.mojang.blaze3d.platform.TextureUtil;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
 import com.mojang.math.Axis;
+import net.daichang.dcmods.common.entities.DCServerBossEvent;
 import net.daichang.dcmods.utils.GaussianFilter;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
@@ -97,7 +99,9 @@ public class Render2DHelper extends RenderHelper {
         renderRoundedQuad2(ms, darker, darker1, darker2, darker3, v, v1, v + i, v1 + i1, v2);
     }
 
+    public static void renderDCBossBarOverlay(GuiGraphics guiGraphics, int x, int y, DCServerBossEvent bossEvent) {
 
+    }
 
     //绘制2d圆角矩形
     public static void renderRoundedQuad2(PoseStack matrices, Color c, Color c2, Color c3, Color c4, double fromX, double fromY, double toX, double toY, double radius) {

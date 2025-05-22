@@ -28,11 +28,6 @@
       "type": "spotlight",
       "item": "dc_m:normal_wood_hoe",
       "text": "The most useless thing"
-    },
-    {
-      "type": "spotlight",
-      "item": "dc_m:normal_wood_knives",
-      "text": "A regular wooden knife, but very sharp"
     }
   ]
 }
