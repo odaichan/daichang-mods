@@ -17,8 +17,12 @@ public class AvaritiaItems {
     public static final DeferredRegister<Item> items = DeferredRegister.create(ForgeRegistries.ITEMS, DCMod.MOD_ID);
 
     public static RegistryObject<Item> registry(String id, Supplier<? extends Item> target) {
+        long startTime = System.currentTimeMillis();
+        DCMod.logger("try to register item " + id);
         RegistryObject<Item> object = items.register(id, target);
-        list.add(object);
+        long endTime = System.currentTimeMillis();
+        long executionTime = endTime - startTime;
+        DCMod.logger("item " + id + " registered in " + executionTime + " ms");
         return object;
     }
 

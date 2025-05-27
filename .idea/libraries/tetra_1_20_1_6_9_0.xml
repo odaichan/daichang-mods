@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="tetra-1.20.1-6.9.0">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/libs/tetra-1.20.1-6.9.0.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

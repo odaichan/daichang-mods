@@ -4,11 +4,14 @@ import net.daichang.dcmods.addons.avaritia.AvaritiaItems;
 import net.daichang.dcmods.addons.curios.CuriosItems;
 import net.daichang.dcmods.addons.fantasy_ending.FEItem;
 import net.daichang.dcmods.addons.farmers_delight.FDItem;
+import net.daichang.dcmods.addons.slashblade.DaiChangSB;
+import net.daichang.dcmods.addons.slashblade.SBInits;
 import net.daichang.dcmods.utils.ModUtil;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.*;
+import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.registries.DeferredRegister;
@@ -60,6 +63,11 @@ public class DCTabs {
                         if (ModUtil.isAvaritiaLoad()) for (RegistryObject<Item> object : AvaritiaItems.list) tabData.accept(object.get());
                         if (ModUtil.isFDLoad()) for (RegistryObject<Item> object : FDItem.list) tabData.accept(object.get());
                         if (ModUtil.isFELoad()) for (RegistryObject<Item> object : FEItem.list) tabData.accept(object.get());
+                        if (ModUtil.isSBLoad()) {
+                            ItemStack stack = new ItemStack(SBInits.DC_SB.get());
+                            DaiChangSB.init(stack);
+                            tabData.accept(stack);
+                        }
                     }).build());
 
     public static final RegistryObject<CreativeModeTab> DC_MOD_CREATIVE_TAB = tab.register("dc_mod_creative_tab",
@@ -71,21 +79,31 @@ public class DCTabs {
                     .withTabsImage(tabsImage)
                     .displayItems((parameters, tabData) -> {
                         for (RegistryObject<Item> object : DCItems.dc_creative) tabData.accept(object.get());
-                        ItemStack dc_head = new ItemStack(Items.PLAYER_HEAD);
-                        dc_head.getOrCreateTag().putString("SkullOwner", "DaiHardcore");
+
                         ItemStack sword = new ItemStack(DCItems.SUPER_WOOD_SWORD.get());
                         sword.getTag().putInt("dc_attking", Integer.MAX_VALUE);
                         sword.enchant(Enchantments.SHARPNESS, 255);
                         sword.enchant(Enchantments.MOB_LOOTING, 255);
                         sword.enchant(DCEnch.SuperSharp.get(), 255);
+                        tabData.accept(sword);
+
                         ItemStack scythe = new ItemStack(DCItems.OCEAN_SCYTHE.get());
                         scythe.getTag().putInt("dc_attking", Integer.MAX_VALUE);
                         scythe.enchant(Enchantments.SHARPNESS, 255);
                         scythe.enchant(Enchantments.MOB_LOOTING, 255);
                         scythe.enchant(DCEnch.SuperSharp.get(), 255);
-                        tabData.accept(sword);
                         tabData.accept(scythe);
+
+                        ItemStack dc_head = new ItemStack(Items.PLAYER_HEAD);
+                        dc_head.getOrCreateTag().putString("SkullOwner", "DaiHardcore");
                         tabData.accept(dc_head);
+                        for (RegistryObject<Item> object : DCItems.spawn_egg) tabData.accept(object.get());
+
+                        for (RegistryObject<Enchantment> ench : DCEnch.list) {
+                            ItemStack ench_book = new ItemStack(Items.ENCHANTED_BOOK);
+                            ench_book.enchant(ench.get(), 10);
+                            tabData.accept(ench_book);
+                        }
                     }).build());
 
 

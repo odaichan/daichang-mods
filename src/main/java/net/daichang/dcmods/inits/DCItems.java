@@ -31,16 +31,29 @@ public class DCItems {
     public static final DeferredRegister<Item> items = DeferredRegister.create(ForgeRegistries.ITEMS, DCMod.MOD_ID);
 
     public static RegistryObject<Item> registry(String id, Supplier<? extends Item> target) {
-        return items.register(id, target);
+        long startTime = System.currentTimeMillis();
+        DCMod.logger("try to register item " + id);
+        RegistryObject<Item> item = items.register(id, target);
+        long endTime = System.currentTimeMillis();
+        long executionTime = endTime - startTime;
+        DCMod.logger("item " + id + " registered in " + executionTime + " ms");
+        return item;
     }
 
     public static final List<RegistryObject<Item>> armors = new ArrayList<>();
     public static final List<RegistryObject<Item>> dc_normal = new ArrayList<>();
     public static final List<RegistryObject<Item>> dc_creative = new ArrayList<>();
+    public static final List<RegistryObject<Item>> spawn_egg = new ArrayList<>();
 
     public static RegistryObject<Item> armorRegister(String id, Supplier<? extends ArmorItem> target) {
         RegistryObject<Item> object = registry(id, target);
         armors.add(object);
+        return object;
+    }
+
+    public static RegistryObject<Item> eggRegister(String id, Supplier<? extends Item> target) {
+        RegistryObject<Item> object = registry(id, target);
+        spawn_egg.add(object);
         return object;
     }
 
@@ -135,13 +148,13 @@ public class DCItems {
         SUPER_WOOD_HOE = normalItemRegister("super_wood_hoe", ()-> new DCHoeItem(DCTier.SUPERS, -4, 0.0F, new Item.Properties().rarity(Rarity.EPIC)));
 
         //SPAWN EGG
-        DC_WITHER_SPAWN = creativeItemRegister("dc_wither_spawn_egg", DCWitherSpawnEgg::new);
+        DC_WITHER_SPAWN = eggRegister("dc_wither_spawn_egg", DCWitherSpawnEgg::new);
 
         STEVE_TOKEN = normalItemRegister("steve_token", SteveTokenItem::new);
 
-        DC_STEVE = creativeItemRegister("dc_steve_spawn_egg", DCSteveSpawnEgg::new);
+        DC_STEVE = eggRegister("dc_steve_spawn_egg", DCSteveSpawnEgg::new);
 
-        LOLI_SPAWN = creativeItemRegister("dc_loli_spawn_egg", DCLoliSpawnEgg::new);
+        LOLI_SPAWN = eggRegister("dc_loli_spawn_egg", DCLoliSpawnEgg::new);
 
         LoliPickaxe = creativeItemRegister("loli_pickaxe", DCLoliPickaxe::new);
 

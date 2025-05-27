@@ -26,7 +26,7 @@
   "item.dc_m.heal" : "Life Restoration",
   "item.dc_m.dc_super_remove" : "Super Entity Remove",
   "item.dc_m.loli_pickaxe" : "Loli Pickaxe",
-  "tooltip.dc_mods.hurts" : "Usage frequency:",
+  "tooltip.dc_mods.hurts" : "Usage frequency: %s",
   "tooltip.dc_mods.tips" : "The damage of the item will gradually increase with your use",
   "attribute.dc_mods.super_damage" : "Snow Damage",
   "attribute.dc_mods.dc_defense" : "Snow Defense",
@@ -191,5 +191,12 @@
   "config.dc_mods.prohibition_of_treatment": "Prohibition of treatment",
   "entity.dc_m.loli" : "Loli",
   "tool_tip.dc_m.spwan_entity": "Generated entity:",
-  "tool_tip.iaxe_item": "When attacking targets with armor value, deal additional damage"
+  "tool_tip.iaxe_item": "When attacking targets with armor value, deal additional damage",
+  "chat.dc_m.loli_pickaxe_attack" : "Attacked %s entities within 100 * 100 * 100",
+  "item.dc_m.dc_head": "DaiChang Head",
+  "item.dc_m.daichang_slash_blade": "Murasaki- Kitsune Mumei",
+  "slashblade.dc_m.daichang_blade.tool_tip_1": "When the Phantom Sword attacks entities, it ignores the entity's invincibility time",
+  "slashblade.dc_m.daichang_blade.tool_tip_2": "It will increase attack damage based on the number of kills",
+  "se.dc_m.daichang_se" : "Fear value",
+  "logger.daichang.omni_mob_load": "Found Omni mod mod. If you want to kill entities in this mod, you can use the Starlight Mod made with DaiChang"
 }

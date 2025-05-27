@@ -16,10 +16,10 @@
     "ItemRendererMixin",
     "MixinFont",
     "MixinGameRenderer",
+    "MixinHealthOverlay",
     "MixinItemEntityRenderer",
     "MixinLivingEntityRender",
     "MixinLocalPlayer",
-    "MixinHealthOverlay",
     "sword_block.HumanoidModelMixin",
     "sword_block.ItemInHandRendererMixin",
     "sword_block.PlayerItemInHandLayerMixin"

@@ -4,6 +4,7 @@ import net.daichang.dcmods.inits.DCEffects;
 import net.daichang.dcmods.utils.Utils;
 import net.daichang.dcmods.utils.helpers.DataHelper;
 import net.daichang.dcmods.utils.helpers.EffectHelper;
+import net.daichang.dcmods.utils.lists.items.LightItemList;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
@@ -68,6 +69,11 @@ public abstract class MixinEntity {
                 dc_entity.setDeltaMovement(0, 0, 0);
                 dc_entity.setNoGravity(true);
                 dc_entity.noPhysics = true;
+            }
+            else if (LightItemList.getItem(item)) {
+                dc_entity.setCustomName(item.getName(stack));
+                dc_entity.setCustomNameVisible(true);
+                dc_entity.setGlowingTag(true);
             }
         }
     }

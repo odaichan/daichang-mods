@@ -20,7 +20,6 @@ public class DCWitherSpawnEgg extends DCBaseSpawnEgg {
 
     @Override
     public void appendHoverText(ItemStack p_41421_, @Nullable Level p_41422_, List<Component> list, TooltipFlag p_41424_) {
-        list.add(Component.translatable("tooltip.dc_mods.spawn_mods_egg"));
         super.appendHoverText(p_41421_, p_41422_, list, p_41424_);
     }
 }

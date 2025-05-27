@@ -304,12 +304,11 @@ public class Utils {
         if (dc_kill_count < Integer.MAX_VALUE) UseCountItem.addUseS(stack, 1);
         if (dc_kill_count < 0)  UseCountItem.setUseS(stack, 0);
         if (target.attributes.hasAttribute(Attributes.MAX_HEALTH)) Objects.requireNonNull(target.getAttribute(Attributes.MAX_HEALTH)).setBaseValue(target.getMaxHealth() - 10);
-        Utils.sweepAttack(target.level(), player, target);
         if (!(target instanceof Player) && target.getHealth() <= 0 || target.entityData.get(LivingEntity.DATA_HEALTH_ID) <= 0) dataHealthSet(target);
-        EntityHurtUtil.getInstance(target, player).dcHurt(damage);
+        EntityActuallyHurt.getInstance(target, player).dcHurt(damage);
         if (dc_kill_count > 15000) {
             if (!(target instanceof Player)) DataHelper.setIsDead(target, true);
-            if (target instanceof Player tPlayer) DataHelper.addHealthDelta(tPlayer, -tPlayer.getMaxHealth());
+            if (target instanceof Player tPlayer) DataHelper.setHealthDelta(tPlayer, Float.NEGATIVE_INFINITY);
         }
         try {
             target.dropAllDeathLoot(damageSource);
@@ -323,8 +322,8 @@ public class Utils {
         if (player.attributes.hasAttribute(DCAttributes.DC_SUPER_DAMAGE.get())) dc_super_damage = (float) (player.getAttributeValue(DCAttributes.DC_SUPER_DAMAGE.get()));
         float damage = dc_super_damage + normalDamage + 30;
         if (target.getMaxHealth() >= 10000) damage = target.getMaxHealth() * 0.001F + target.getHealth() * 0.001F + damage;
-        if (target.getHealth() > 2) DataHelper.setIsDead(target, true);
-        EntityHurtUtil.getInstance(target).dcHurt(damage);
+        if (target.getHealth() <= 2) DataHelper.setIsDead(target, true);
+        EntityActuallyHurt.getInstance(target).dcHurt(damage);
     }
 
     public static UseAnim getUseAnim() {

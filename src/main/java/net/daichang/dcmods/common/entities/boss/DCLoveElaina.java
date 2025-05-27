@@ -8,9 +8,10 @@ import net.daichang.dcmods.client.font.DCItemFont;
 import net.daichang.dcmods.client.network.*;
 import net.daichang.dcmods.common.entities.BossEntity;
 import net.daichang.dcmods.common.entities.projectile.DCWitherSkull;
+import net.daichang.dcmods.common.item.UseCountItem;
 import net.daichang.dcmods.event.DCForgeEventHandler;
 import net.daichang.dcmods.inits.*;
-import net.daichang.dcmods.utils.EntityHurtUtil;
+import net.daichang.dcmods.utils.EntityActuallyHurt;
 import net.daichang.dcmods.utils.ModUtil;
 import net.daichang.dcmods.utils.Utils;
 import net.daichang.dcmods.utils.helpers.EffectHelper;
@@ -116,10 +117,10 @@ public class DCLoveElaina extends BossEntity implements PowerableMob, RangedAtta
     @Override
     public boolean hurt(@NotNull DamageSource damageSource, float damage) {
         if (getHealth() <= 0 || isDeadOrDying()) return false;
-        Entity entity = damageSource.getEntity();
-        double canTeleport = MathHelper.getRandomDouble(0.0D, 1.0D);
-        if (canTeleport == 0.2 && entity != null) doHurtTarget(entity);
         this.addAttackCount(1);
+        Entity entity = damageSource.getEntity();
+        if (entity instanceof LivingEntity living)
+            EntityActuallyHurt.getInstance(living, this).actuallyHurt(damageSource, damage);
         return super.hurt(damageSource, damage);
     }
 
@@ -131,10 +132,7 @@ public class DCLoveElaina extends BossEntity implements PowerableMob, RangedAtta
 
     @Override
     public void die(@NotNull DamageSource p_21014_) {
-        if (isDeadOrDying()) {
-            super.die(p_21014_);
-            DCForgeEventHandler.bossList.remove(this);
-        }
+        if (isDeadOrDying()) super.die(p_21014_);
     }
 
     @Override
@@ -197,13 +195,8 @@ public class DCLoveElaina extends BossEntity implements PowerableMob, RangedAtta
         stack.enchant(Enchantments.UNBREAKING, 5);
         stack.enchant(Enchantments.BLOCK_FORTUNE, 5);
         stack.enchant(Enchantments.INFINITY_ARROWS, 3);
-        stack.getOrCreateTag().putInt("dc_attking", Integer.MAX_VALUE);
+        UseCountItem.setUseS(stack, Integer.MAX_VALUE);
         return stack;
-    }
-
-    @Override
-    public void dropCustomDeathLoot(DamageSource pDamageSource, int pLooting, boolean pHitByPlayer) {
-        super.dropCustomDeathLoot(pDamageSource, pLooting, pHitByPlayer);
     }
 
     @Override
@@ -240,9 +233,8 @@ public class DCLoveElaina extends BossEntity implements PowerableMob, RangedAtta
     @Override
     public void onAddedToWorld() {
         super.onAddedToWorld();
-        if (level instanceof ServerLevel serverLevel) {
+        if (level instanceof ServerLevel serverLevel)
             for (ServerPlayer serverPlayer : serverLevel.players()) serverPlayer.displayClientMessage(Component.literal(DCItemFont.getString("entities.dc_mods.dc_wither_name") + " join the game").withStyle(ChatFormatting.YELLOW), false);
-        }
     }
 
     private int currentAttackAnimation = 0;
@@ -359,12 +351,6 @@ public class DCLoveElaina extends BossEntity implements PowerableMob, RangedAtta
         }
     }
 
-    void sendPlayerMsg(String msg) {
-        if (level instanceof ServerLevel serverLevel) {
-            for (ServerPlayer player : serverLevel.players()) if (this.distanceTo(player) <= 40 && player.level().isClientSide()) player.displayClientMessage(Component.literal(msg), false);
-        }
-    }
-
     boolean isCanRangeAttack(LivingEntity living) {
         int rangeAttackDelay = 10;
         switch (difficulty) {
@@ -383,13 +369,13 @@ public class DCLoveElaina extends BossEntity implements PowerableMob, RangedAtta
                 target.addEffect(EffectHelper.addEffect(DCEffects.Bloodshed.get(), 20, 5, true));
             }
             else if (target instanceof ServerPlayer player && player.gameMode.isSurvival() && !EffectHelper.hasEffect(player, DCEffects.EnchantressMercy.get())) {
-                float value = 0.5F;
+                float value = 2.5F + player.getMaxHealth() * 0.001F;
                 if (player.getMaxHealth() > 5128)
                     value = value + player.getHealth() * 0.01F;
                 if (player.getMaxHealth() > 1000)
                     value = value + player.getMaxHealth() * 0.01F;
                 if (ModUtil.isFELoad()) value = value + player.getMaxHealth() * 0.01F;
-                EntityHurtUtil util = EntityHurtUtil.getInstance(player, this);
+                EntityActuallyHurt util = EntityActuallyHurt.getInstance(player, this);
                 util.dcHurt(value);
                 PacketHandler.sendToClient(new S2CLastKillPlayer(player.getId(), value));
                 PacketHandler.sendToClient(new S2CElainaKillAllEntity(this.getId()));

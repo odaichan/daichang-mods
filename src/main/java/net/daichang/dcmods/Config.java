@@ -12,6 +12,8 @@ public class Config {
 
         public static final ForgeConfigSpec.BooleanValue boss_music;
 
+        public static final ForgeConfigSpec.BooleanValue toop_tip_background_color;
+
         public static final ForgeConfigSpec client;
 
         static {
@@ -19,6 +21,7 @@ public class Config {
             rainbow_font = clientBuild.comment("Mod Name Rainbow Font").define("Mod Name Rainbow Font", true);
             boss_music = clientBuild.comment("Boss Music").define("Boss Music", true);
             tool_tip_render = clientBuild.comment("More tooltip render").define("More tooltip render", true);
+            toop_tip_background_color = clientBuild.comment("Tool Tip Custom Render").define("Tool Tip Custom Render", false);
             client = clientBuild.build();
         }
     }

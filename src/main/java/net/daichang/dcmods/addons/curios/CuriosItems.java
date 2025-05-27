@@ -15,8 +15,12 @@ public class CuriosItems {
     public static final List<RegistryObject<Item>> curios = new ArrayList<>();
 
     public static RegistryObject<Item> registry(String id, Supplier<? extends Item> target) {
+        long startTime = System.currentTimeMillis();
+        DCMod.logger("try to register item " + id);
         RegistryObject<Item> object = items.register(id, target);
-        curios.add(object);
+        long endTime = System.currentTimeMillis();
+        long executionTime = endTime - startTime;
+        DCMod.logger("item " + id + " registered in " + executionTime + " ms");
         return object;
     }
 

@@ -1,6 +1,6 @@
 package net.daichang.dcmods.client.network;
 
-import net.daichang.dcmods.utils.EntityHurtUtil;
+import net.daichang.dcmods.utils.EntityActuallyHurt;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.Entity;
@@ -31,7 +31,7 @@ public class S2CLastKillPlayer {
         context.enqueueWork(() -> {
             Entity entity1;
             if (Minecraft.getInstance().level != null && (entity1 = Minecraft.getInstance().level.getEntity(this.entity)) != null && entity1 instanceof LivingEntity living) {
-                EntityHurtUtil util = EntityHurtUtil.getInstance(living, living);
+                EntityActuallyHurt util = EntityActuallyHurt.getInstance(living, living);
                 util.dcHurt(damage);
                 context.setPacketHandled(true);
             }

@@ -1,6 +1,6 @@
 package net.daichang.dcmods.common.item.tools.supers;
 
-import net.daichang.dcmods.utils.EntityHurtUtil;
+import net.daichang.dcmods.utils.EntityActuallyHurt;
 import net.daichang.dcmods.utils.lists.items.SuperItemList;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.LivingEntity;
@@ -30,7 +30,7 @@ public class DCAxeItem extends AxeItem {
     public boolean hurtEnemy(ItemStack pStack, LivingEntity pTarget, LivingEntity pAttacker) {
         pTarget.wasOnFire = true;
         pTarget.setRemainingFireTicks(300);
-        EntityHurtUtil util = EntityHurtUtil.getInstance(pTarget, pAttacker);
+        EntityActuallyHurt util = EntityActuallyHurt.getInstance(pTarget, pAttacker);
         util.kbDCHurt(30 + pTarget.getMaxHealth() * 0.001F);
         return super.hurtEnemy(pStack, pTarget, pAttacker);
     }

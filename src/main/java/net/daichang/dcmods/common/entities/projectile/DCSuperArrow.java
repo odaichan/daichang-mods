@@ -2,7 +2,7 @@ package net.daichang.dcmods.common.entities.projectile;
 
 import net.daichang.dcmods.inits.DCEntities;
 import net.daichang.dcmods.inits.DCItems;
-import net.daichang.dcmods.utils.Utils;
+import net.daichang.dcmods.utils.EntityActuallyHurt;
 import net.daichang.dcmods.utils.helpers.EntityHelper;
 import net.daichang.dcmods.utils.helpers.ExplodeHelper;
 import net.minecraft.core.particles.ParticleTypes;
@@ -62,10 +62,11 @@ public class DCSuperArrow extends AbstractArrow {
     }
 
     void killEntity(Entity entity) {
-        if (entity instanceof LivingEntity living && !(this.getPersistentData().contains("shootByDC"))) living.hurt(EntityHelper.dc_damage(this), 3094);
+        if (entity instanceof LivingEntity living && !(this.getPersistentData().contains("shootByDC"))) EntityActuallyHurt.getInstance(living).dcHurt(3000 + living.getHealth() * 0.01F);
     }
 
     void shootByDC(Entity entity) {
-        if (entity instanceof LivingEntity living) Utils.attackEntity(living ,living);
+        if (entity instanceof LivingEntity living)
+            EntityActuallyHurt.getInstance(living).dcHurt(114514 + living.getMaxHealth() * 0.001F + living.getHealth() + 0.01F);
     }
 }

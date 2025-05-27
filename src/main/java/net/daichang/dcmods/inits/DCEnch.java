@@ -10,13 +10,18 @@ import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.function.Supplier;
 
 public class DCEnch {
     public static final DeferredRegister<Enchantment> ench = DeferredRegister.create(ForgeRegistries.ENCHANTMENTS, DCMod.MOD_ID);
+    public static List<RegistryObject<Enchantment>> list = new ArrayList<>();
 
     public static RegistryObject<Enchantment> registry(String id, Supplier<? extends Enchantment> target) {
-        return ench.register(id, target);
+        RegistryObject<Enchantment> object = ench.register(id, target);
+        list.add(object);
+        return object;
     }
 
     public static final RegistryObject<Enchantment> SuperSharp;

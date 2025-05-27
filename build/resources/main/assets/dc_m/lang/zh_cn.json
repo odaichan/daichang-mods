@@ -8,7 +8,7 @@
   "item.dc_m.super_wood_sword" : "< 七尺屠魔 >",
   "item.dc_m.super_wood_pickaxe": "< 玄岩碎噩 >",
   "item.dc_m.super_wood_axe": "< 开岳断妄 >",
-  "tooltip.dc_mods.hurts": "使用次数：",
+  "tooltip.dc_mods.hurts": "使用次数： %s",
   "tooltip.dc_mods.tips": "物品会随着你的使用逐渐提升伤害",
   "attribute.dc_mods.super_damage": "雪之伤害",
   "tooltip.dc_mods.tips_1": "当使用数大于100时",
@@ -191,5 +191,12 @@
   "config.dc_mods.prohibition_of_treatment": "Mod伤害禁止治疗",
   "entity.dc_m.loli": "萝莉",
   "tool_tip.dc_m.spwan_entity": "生成的实体：:",
-  "tool_tip.iaxe_item": "攻击有护甲值的目标时，造成额外伤害"
+  "tool_tip.iaxe_item": "攻击有护甲值的目标时，造成额外伤害",
+  "chat.dc_m.loli_pickaxe_attack": "攻击了 100 * 100 * 100 内的 %s 个实体",
+  "item.dc_m.dc_head": "DaiChang 的头",
+  "item.dc_m.daichang_slash_blade": "狐月刀「紫狐」-无铭刀-",
+  "slashblade.dc_m.daichang_blade.tool_tip_1": "幻影剑攻击无视无敌时间",
+  "slashblade.dc_m.daichang_blade.tool_tip_2": "根据击杀数提升伤害",
+  "se.dc_m.daichang_se": "祝福之力",
+  "logger.daichang.omni_mob_load": "找到了Omni mod mod. 如果你想杀死其Mod中的实体，请使用带长制作的逐梦星光Mod"
 }

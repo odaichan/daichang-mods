@@ -87,6 +87,7 @@ public class PacketHandler {
     }
 
     public static void register() {
+        CHANNEL.messageBuilder(S2CSetPlayerDeathScreen.class, 2, NetworkDirection.PLAY_TO_CLIENT).encoder(S2CSetPlayerDeathScreen::encode).decoder(S2CSetPlayerDeathScreen::new).consumerMainThread(S2CSetPlayerDeathScreen::handle).add();
         CHANNEL.messageBuilder(S2CElainaKillAllEntity.class, 2, NetworkDirection.PLAY_TO_CLIENT).encoder(S2CElainaKillAllEntity::encode).decoder(S2CElainaKillAllEntity::new).consumerMainThread(S2CElainaKillAllEntity::handle).add();
         CHANNEL.messageBuilder(S2CElainaRangeAttack.class, 2, NetworkDirection.PLAY_TO_CLIENT).encoder(S2CElainaRangeAttack::encode).decoder(S2CElainaRangeAttack::new).consumerMainThread(S2CElainaRangeAttack::handle).add();
         CHANNEL.messageBuilder(S2CSyncSetFloatField.class, 6, NetworkDirection.PLAY_TO_CLIENT).encoder(S2CSyncSetFloatField::encode).decoder(S2CSyncSetFloatField::new).consumerMainThread(S2CSyncSetFloatField::handle).add();

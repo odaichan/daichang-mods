@@ -4,13 +4,14 @@ import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
 import com.mega.uom.attribute.ModAttributes;
 import net.daichang.dcmods.client.tool_tip.DCItemTip;
+import net.daichang.dcmods.common.item.AttackCountItem;
 import net.daichang.dcmods.common.item.DCTier;
 import net.daichang.dcmods.common.item.DCTierItem;
 import net.daichang.dcmods.common.item.UseCountItem;
 import net.daichang.dcmods.common.item.tools.creative.DCLoliPickaxe;
 import net.daichang.dcmods.inits.DCAttributes;
 import net.daichang.dcmods.inits.DCEffects;
-import net.daichang.dcmods.utils.EntityHurtUtil;
+import net.daichang.dcmods.utils.EntityActuallyHurt;
 import net.daichang.dcmods.utils.ModUtil;
 import net.daichang.dcmods.utils.TextUtils;
 import net.daichang.dcmods.utils.Utils;
@@ -46,7 +47,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
-public class OceanScythe extends DCTierItem implements UseCountItem {
+public class OceanScythe extends DCTierItem implements UseCountItem, AttackCountItem {
     public Multimap<Attribute, AttributeModifier> mainHandModifiers;
     public Multimap<Attribute, AttributeModifier> offHandModifiers;
     public OceanScythe() {
@@ -83,8 +84,8 @@ public class OceanScythe extends DCTierItem implements UseCountItem {
 
     @Override
     public Multimap<Attribute, AttributeModifier> getAttributeModifiers(EquipmentSlot slot, ItemStack stack) {
-        if (!stack.getTag().contains("dc_attking")) stack.getTag().putInt("dc_attking", 0);
-        if (!stack.getTag().contains("dcAttackValue")) stack.getTag().putInt("dcAttackValue", 0);
+        if (!stack.getTag().contains("dc_attking")) setUse(stack, 0);
+        if (!stack.getTag().contains("dcAttackValue")) setCount(stack, 0);
         return super.getAttributeModifiers(slot, stack);
     }
 
@@ -133,9 +134,9 @@ public class OceanScythe extends DCTierItem implements UseCountItem {
     }
 
     void hurtEntity(LivingEntity target, LivingEntity attcker, ItemStack stack) {
+        AttackCountItem.addCountS(stack, 1);
         CompoundTag tag = stack.getTag();
         int useValue = getUse(stack);
-        int attackValue = tag.getInt("dcAttackValue");
         float value = tag.getInt("dc_attking") + (float) (attcker.getAttributeValue(DCAttributes.OCEAN_DAMAGE.get()) + attcker.getAttributeValue(DCAttributes.DC_SUPER_DAMAGE.get()) + attcker.getAttributeValue(Attributes.ATTACK_DAMAGE));
         if (useValue >= 100) value = value + 40 + target.getMaxHealth() * 0.1F;
         if (target.attributes.hasAttribute(Attributes.MAX_HEALTH)) Objects.requireNonNull(target.getAttribute(Attributes.MAX_HEALTH)).setBaseValue(target.getMaxHealth() - 10);
@@ -144,14 +145,13 @@ public class OceanScythe extends DCTierItem implements UseCountItem {
         if (useValue >= 12000) value = value + 20;
         if (useValue < Integer.MAX_VALUE) addUse(stack, 1);
         if (useValue < 0)  setUse(stack, 0);
-        if (attackValue > 10) {
+        if (AttackCountItem.getCountS(stack) >= 10) {
             target.addEffect(EffectHelper.addEffect(DCEffects.Freeze.get(), 40, 1));
             target.addEffect(EffectHelper.addEffect(DCEffects.Bloodshed.get(), 40, 1));
-            tag.putInt("dcAttackValue", 0);
         }
         if (useValue >= 15000) DCLoliPickaxe.killEntity(target, attcker);
         if (target.getHealth() < 10) DCLoliPickaxe.killEntity(target, attcker);
-        EntityHurtUtil util = EntityHurtUtil.getInstance(target,attcker);
+        EntityActuallyHurt util = EntityActuallyHurt.getInstance(target,attcker);
         util.dcHurt(value);
         try {
             target.dropAllDeathLoot(EntityHelper.dc_damage(target));

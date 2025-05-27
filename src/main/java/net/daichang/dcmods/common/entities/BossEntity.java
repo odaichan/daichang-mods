@@ -3,7 +3,7 @@ package net.daichang.dcmods.common.entities;
 import net.daichang.dcmods.Config;
 import net.daichang.dcmods.event.DCForgeEventHandler;
 import net.daichang.dcmods.inits.DCAttributes;
-import net.daichang.dcmods.utils.EntityHurtUtil;
+import net.daichang.dcmods.utils.EntityActuallyHurt;
 import net.daichang.dcmods.utils.helpers.DataHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
@@ -84,7 +84,7 @@ public class BossEntity extends Monster {
             damage = (float) (damage + this.getAttributeValue(Attributes.ATTACK_DAMAGE));
             damage = (float) (damage + this.getAttributeValue(DCAttributes.DC_SUPER_DAMAGE.get()));
             if (!(pEntity instanceof Player) && pEntity instanceof LivingEntity living) {
-                EntityHurtUtil util = EntityHurtUtil.getInstance(living, this);
+                EntityActuallyHurt util = EntityActuallyHurt.getInstance(living, this);
                 util.dcHurt(damage);
                 if (living.getHealth() < 2) {
                     DataHelper.setIsDead(living, true);

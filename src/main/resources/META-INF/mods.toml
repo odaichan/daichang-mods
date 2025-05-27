@@ -61,3 +61,59 @@ mandatory = true
 versionRange = "${minecraft_version_range}"
 ordering = "NONE"
 side = "BOTH"
+# 拔刀剑
+[[dependencies."${mod_id}"]]
+modId="slashblade"
+mandatory=false
+versionRange="[0.0,)"
+ordering="NONE"
+side="BOTH"
+# 逐梦星光
+[[dependencies."${mod_id}"]]
+modId="fantasy_ending"
+mandatory=false
+versionRange="[0.0,)"
+ordering="NONE"
+side="BOTH"
+# 无尽贪婪
+[[dependencies."${mod_id}"]]
+modId="avaritia"
+mandatory=false
+versionRange="[0.0,)"
+ordering="NONE"
+side="BOTH"
+#农夫乐事
+[[dependencies."${mod_id}"]]
+modId="farmersdelight"
+mandatory=false
+versionRange="[0.0,)"
+ordering="NONE"
+side="BOTH"
+# 帕秋莉手册
+[[dependencies."${mod_id}"]]
+modId="patchouli"
+mandatory=false
+versionRange="[0.0,)"
+ordering="NONE"
+side="BOTH"
+#铁魔法
+[[dependencies."${mod_id}"]]
+modId="irons_spellbooks"
+mandatory=false
+versionRange="[0.0,)"
+ordering="NONE"
+side="BOTH"
+#dialog
+[[dependencies."${mod_id}"]]
+modId="dialog"
+mandatory=false
+versionRange="[0.0,)"
+ordering="NONE"
+side="BOTH"
+#tetra
+[[dependencies."${mod_id}"]]
+modId="tetra"
+mandatory=false
+versionRange="[0.0,)"
+ordering="NONE"
+side="BOTH"

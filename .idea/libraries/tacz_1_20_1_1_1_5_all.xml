@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="tacz-1.20.1-1.1.5-all">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/libs/tacz-1.20.1-1.1.5-all.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

@@ -1,0 +1,52 @@
+{
+  "type": "slashblade:shaped_blade",
+  "blade": "dc_m:daichang_slash_blade",
+  "category": "equipment",
+  "key": {
+    "B": {
+      "item": "minecraft:blaze_powder"
+    },
+    "C": {
+      "type": "slashblade:blade",
+      "item": "slashblade:slashblade",
+      "request": {
+        "enchantments": [
+          {
+            "id": "minecraft:looting"
+          }
+        ],
+        "name": "slashblade:ruby"
+      }
+    },
+    "E": {
+      "tag": "forge:obsidian"
+    },
+    "F": {
+      "tag": "forge:feathers"
+    },
+    "Q": {
+      "tag": "forge:storage_blocks/quartz"
+    },
+    "Z" : {
+      "item" : "dc_m:super_wood_ingot"
+    },
+    "S": {
+      "item": "slashblade:proudsoul_crystal"
+    },
+    "W": {
+      "tag": "forge:crops/wheat"
+    },
+    "M" : {
+      "item": "dc_m:heart_of_the_ocean"
+    }
+  },
+  "pattern": [
+    "ZEF",
+    "BCS",
+    "WQM"
+  ],
+  "result": {
+    "item": "dc_m:daichang_slash_blade"
+  },
+  "show_notification": true
+}

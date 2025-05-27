@@ -1,6 +1,8 @@
 package net.daichang.dcmods.event;
 
+import mods.flammpfeil.slashblade.client.renderer.model.BladeModel;
 import net.daichang.dcmods.DCMod;
+import net.daichang.dcmods.addons.slashblade.SBInits;
 import net.daichang.dcmods.client.PacketHandler;
 import net.daichang.dcmods.client.models.entites.DCGirlModel;
 import net.daichang.dcmods.client.models.entites.ElainaModel;
@@ -12,14 +14,22 @@ import net.daichang.dcmods.common.entities.boss.DCSteve;
 import net.daichang.dcmods.common.entities.creative.EntityLoli;
 import net.daichang.dcmods.inits.DCEntities;
 import net.daichang.dcmods.inits.DCItems;
+import net.daichang.dcmods.utils.ModUtil;
+import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.client.renderer.item.ClampedItemPropertyFunction;
 import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.EntityRenderersEvent;
+import net.minecraftforge.client.event.ModelEvent;
 import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
+
+import javax.annotation.Nullable;
 
 @Mod.EventBusSubscriber(modid = DCMod.MOD_ID, value = Dist.CLIENT, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class DCModEventHandler {
@@ -41,6 +51,19 @@ public class DCModEventHandler {
         event.registerLayerDefinition(ModelLoliEntity.LAYER_LOCATION, ModelLoliEntity::createBodyLayer);
     }
 
+//    @SubscribeEvent(priority = EventPriority.LOWEST)
+//    public static void init(RegisterEvent event) {
+//        if (ModUtil.isSBLoad())
+//            SBHandler.init(event);
+//    }
+
+    @SubscribeEvent
+    public static void Baked(ModelEvent.ModifyBakingResult event) {
+        if (ModUtil.isSBLoad()) {
+            mods.flammpfeil.slashblade.client.ClientHandler.bakeBlade(SBInits.DC_SB.get(), event);
+        }
+    }
+
     @SubscribeEvent
     public static void registerAttributes(EntityAttributeCreationEvent event) {
         event.put(DCEntities.ELAINA.get(), DCLoveElaina.createAttributes().build());
@@ -57,6 +80,14 @@ public class DCModEventHandler {
                 return entity.getUseItem() != stack ? 0.0F : (float)(stack.getUseDuration() - entity.getUseItemRemainingTicks());
             }
         });
+        if (ModUtil.isSBLoad()) {
+            ItemProperties.register(SBInits.DC_SB.get(), new ResourceLocation("slashblade:user"), new ClampedItemPropertyFunction() {
+                public float unclampedCall(ItemStack p_174564_, @Nullable ClientLevel p_174565_, @Nullable LivingEntity p_174566_, int p_174567_) {
+                    BladeModel.user = p_174566_;
+                    return 0.0F;
+                }
+            });
+        }
         ItemProperties.register(DCItems.DC_BOW.get(), new ResourceLocation("dc_m", "pulling"), (stack, level, entity, i) -> entity != null && entity.isUsingItem() && entity.getUseItem() == stack ? 1.0F : 0.0F);
         PacketHandler.init();
         event.enqueueWork(PacketHandler::register);

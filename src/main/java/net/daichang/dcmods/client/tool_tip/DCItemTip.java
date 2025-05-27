@@ -9,6 +9,7 @@ import java.util.List;
 
 public class DCItemTip {
     public static void addAttackCount(List<Component> list, ItemStack pStack) {
-        list.add(Component.literal(Component.translatable("tooltip.dc_mods.hurts").getString() + UseCountItem.getUseS(pStack)).withStyle(ChatFormatting.AQUA));
+        int count = UseCountItem.getUseS(pStack);
+        list.add(Component.translatable("tooltip.dc_mods.hurts", count).withStyle(ChatFormatting.AQUA));
     }
 }

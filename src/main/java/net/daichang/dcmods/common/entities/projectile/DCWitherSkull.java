@@ -4,7 +4,7 @@ import net.daichang.dcmods.common.entities.boss.DCLoveElaina;
 import net.daichang.dcmods.common.entities.entity.RainbowLightingEntity;
 import net.daichang.dcmods.inits.DCEffects;
 import net.daichang.dcmods.inits.DCEntities;
-import net.daichang.dcmods.utils.EntityHurtUtil;
+import net.daichang.dcmods.utils.EntityActuallyHurt;
 import net.daichang.dcmods.utils.helpers.EffectHelper;
 import net.daichang.dcmods.utils.helpers.EntityHelper;
 import net.daichang.dcmods.utils.helpers.ExplodeHelper;
@@ -51,10 +51,10 @@ public class DCWitherSkull extends WitherSkull {
             this.level.addFreshEntity(lighting);
             if (!(living instanceof DCLoveElaina) && !(living instanceof Player)) {
                 float damage = living.getMaxHealth() * 0.1F + 47;
-                EntityHurtUtil.getInstance(living).dcHurt(damage);
+                EntityActuallyHurt.getInstance(living).dcHurt(damage);
             }
             if (isSuPlayer(living)) {
-                EntityHurtUtil.getInstance(living).dcHurt(3 + living.getMaxHealth() * 0.01F);
+                EntityActuallyHurt.getInstance(living).dcHurt(3 + living.getMaxHealth() * 0.01F);
                 living.addEffect(EffectHelper.addEffect(DCEffects.Bloodshed.get()));
             }
         }

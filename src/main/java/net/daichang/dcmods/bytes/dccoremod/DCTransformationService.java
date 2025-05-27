@@ -9,6 +9,7 @@ import cpw.mods.modlauncher.serviceapi.ILaunchPluginService;
 import net.daichang.dcmods.utils.HelperLib;
 import org.jetbrains.annotations.NotNull;
 
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -35,11 +36,10 @@ public class DCTransformationService implements ITransformationService {
         println("Loading...");
         println(osName);
         println(osVersion);
-        println("Clazz：" + this.name());
     }
 
     static void println(Object input) {
-        System.out.println("[DC ASM]" + input);
+        System.out.println("[" + LocalDateTime.now().getHour() + ":" + LocalDateTime.now().getMinute() + "]" +"[DC ASM]" + input);
     }
 
     @Override

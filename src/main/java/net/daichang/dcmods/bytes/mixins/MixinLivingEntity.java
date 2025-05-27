@@ -54,6 +54,10 @@ public abstract class MixinLivingEntity extends Entity {
             Utils.Override_DATA_HEALTH_ID(dc_mod$living, Float.NEGATIVE_INFINITY);
             if (DataHelper.getDeathTime(dc_mod$living) > 20) Utils.removeEntity(dc_mod$living);
         }
+        if (EffectHelper.hasEffect(dc_mod$living, DCEffects.Freeze.get())) {
+            dc_mod$living.setDeltaMovement(Vec3.ZERO);
+            dc_mod$living.deltaMovement = Vec3.ZERO;
+        }
     }
 
     @Inject(method = "isDeadOrDying", at = @At("RETURN"), cancellable = true)
@@ -79,8 +83,8 @@ public abstract class MixinLivingEntity extends Entity {
     @Inject(method = "<clinit>", at = @At("TAIL"))
     private static void clinit(CallbackInfo ci) {
         DataHelper.DC_GET_HEALTH_DATA = SynchedEntityData.defineId(LivingEntity.class, EntityDataSerializers.FLOAT);
-        DataHelper.DC_DEATH_TIME = SynchedEntityData.defineId(LivingEntity.class, EntityDataSerializers.INT);
-        DataHelper.DC_ENTITY_DEATH = SynchedEntityData.defineId(LivingEntity.class, EntityDataSerializers.BOOLEAN);
+        DataHelper.DC_DEATH_TIME_DATA = SynchedEntityData.defineId(LivingEntity.class, EntityDataSerializers.INT);
+        DataHelper.DC_ENTITY_DEATH_DATA = SynchedEntityData.defineId(LivingEntity.class, EntityDataSerializers.BOOLEAN);
     }
 
     @Inject(method = "readAdditionalSaveData", at = @At("TAIL"))
@@ -100,8 +104,8 @@ public abstract class MixinLivingEntity extends Entity {
     @Inject(method = "defineSynchedData", at = @At("HEAD"))
     private void defineSynchedData(CallbackInfo ci) {
         this.entityData.define(DataHelper.DC_GET_HEALTH_DATA, 0F);
-        this.entityData.define(DataHelper.DC_DEATH_TIME, 0);
-        this.entityData.define(DataHelper.DC_ENTITY_DEATH, false);
+        this.entityData.define(DataHelper.DC_DEATH_TIME_DATA, 0);
+        this.entityData.define(DataHelper.DC_ENTITY_DEATH_DATA, false);
     }
 
     @Inject(method = "getSpeed", at = @At("RETURN"), cancellable = true)

@@ -80,6 +80,7 @@ public class DCItemFont extends Font {
     public static boolean isSuperItemName(String s) {
         return s.contains(getString("item.dc_m.super_wood_ingot"))
                 || s.contains(getString("item.dc_m.super_wood_sword"))
+                || s.equals(getString("item.dc_m.daichang_slash_blade"))
                 || s.contains(getString("item.dc_m.super_wood_pickaxe"))
                 || s.contains(getString("item.dc_m.super_wood_axe"))
                 || s.contains(getString("item.dc_m.super_wood_shovel"))

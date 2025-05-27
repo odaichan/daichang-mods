@@ -1,6 +1,6 @@
 package net.daichang.dcmods.common.item.tools.normal;
 
-import net.daichang.dcmods.utils.EntityHurtUtil;
+import net.daichang.dcmods.utils.EntityActuallyHurt;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.HoeItem;
@@ -26,7 +26,7 @@ public class IHoeItem extends HoeItem {
     @Override
     public boolean hurtEnemy(ItemStack pStack, LivingEntity pTarget, LivingEntity pAttacker) {
         if (pTarget.getArmorValue() > 0)
-            EntityHurtUtil.getInstance(pTarget, pAttacker).kbHurt(pAttacker.damageSources().magic(), 4.0F);
+            EntityActuallyHurt.getInstance(pTarget, pAttacker).kbActuallyHurt(pAttacker.damageSources().magic(), 4.0F);
         return super.hurtEnemy(pStack, pTarget, pAttacker);
     }
 }

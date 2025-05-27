@@ -1,10 +1,7 @@
 package net.daichang.dcmods.inits;
 
 import net.daichang.dcmods.DCMod;
-import net.daichang.dcmods.common.effect.BaseEffect;
-import net.daichang.dcmods.common.effect.EffectBloodshed;
-import net.daichang.dcmods.common.effect.EffectHeal;
-import net.daichang.dcmods.common.effect.SpeedEffect;
+import net.daichang.dcmods.common.effect.*;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
@@ -29,8 +26,8 @@ public class DCEffects {
     static {
         effects = DeferredRegister.create(Registries.MOB_EFFECT, DCMod.MOD_ID);
         Bloodshed = register("bloodshed", EffectBloodshed::new);
-        Freeze = register("freeze", ()-> new BaseEffect(MobEffectCategory.NEUTRAL, 0xFF55FF));
-        EnchantressMercy = register("enchantress_mercy", ()-> new BaseEffect(MobEffectCategory.NEUTRAL, 0xFF54FF));
+        Freeze = register("freeze", EffectFreeze::new);
+        EnchantressMercy = register("enchantress_mercy", ()-> new BaseEffect(MobEffectCategory.BENEFICIAL, 0xFF54FF));
         Heal = register("super_heal", EffectHeal::new);
         Speed = register("speed_increase", SpeedEffect::new);
     }

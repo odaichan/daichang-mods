@@ -30,7 +30,7 @@ public class BossMusic extends AbstractTickableSoundInstance {
                 if (entity.equals(this.boss)) this.boss.distanceTo(Minecraft.getInstance().player);
             }
         }
-        if (Minecraft.getInstance().options.getSoundSourceVolume(SoundSource.RECORDS) <= 0.0f) {
+        if (Minecraft.getInstance().options.getSoundSourceVolume(SoundSource.MUSIC) <= 0.0f) {
             this.volume = 0.0f;
         }
         if (!b) {
@@ -52,7 +52,7 @@ public class BossMusic extends AbstractTickableSoundInstance {
     }
 
     public static void playMusic(BossMusic music, BossEntity bossEntity) {
-        if (Minecraft.getInstance().options.getSoundSourceVolume(SoundSource.RECORDS) <= 0.0f) {
+        if (Minecraft.getInstance().options.getSoundSourceVolume(SoundSource.MUSIC) <= 0.0f) {
             music = null;
         }
         if (music != null) {

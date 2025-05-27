@@ -43,11 +43,20 @@ public class DCLoliPickaxe extends Item {
     @Override
     public @NotNull InteractionResultHolder<ItemStack> use(@NotNull Level pLevel, Player pPlayer, @NotNull InteractionHand pUsedHand) {
         double range = 200.0D;
+        int attackCount = 0;
         double x = pPlayer.getX();
         double y = pPlayer.getY();
         double z = pPlayer.getZ();
         AABB aabb = new AABB(x - range, y - range, z - range, x + range, y + range, z + range);
-        if (pPlayer.isShiftKeyDown()) for (Entity entity : pLevel.getEntitiesOfClass(Entity.class, aabb)) killEntity(entity, pPlayer);
+        if (pPlayer.isShiftKeyDown()) {
+            for (Entity entity : pLevel.getEntitiesOfClass(Entity.class, aabb)) {
+                if (entity instanceof LivingEntity living && living != pPlayer) {
+                    killEntity(living, pPlayer);
+                    ++attackCount;
+                }
+            }
+            if (pLevel.isClientSide()) pPlayer.displayClientMessage(Component.translatable("chat.dc_m.loli_pickaxe_attack", attackCount), false);
+        }
         pPlayer.playSound(DCSounds.LOLI_SUCCRSS.get());
         return super.use(pLevel, pPlayer, pUsedHand);
     }

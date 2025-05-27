@@ -146,7 +146,7 @@ public class DCSuperSwordItem extends ISwordItem implements UseCountItem {
 
     @Override
     public boolean isBarVisible(ItemStack stack) {
-        return stack.getTag().getInt("dc_attking") >= 10000;
+        return getUse(stack) >= 10000;
     }
 
     @Override

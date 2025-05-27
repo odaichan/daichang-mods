@@ -17,6 +17,7 @@ import java.lang.module.ModuleReader;
 import java.lang.module.ModuleReference;
 import java.lang.module.ResolvedModule;
 import java.lang.reflect.Field;
+import java.time.LocalDateTime;
 import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Map;
@@ -25,7 +26,7 @@ import java.util.function.BiFunction;
 public class DCLaunchPluginService implements ILaunchPluginService {
 
     public static void logger(String msg){
-        System.out.println("[DC ASM]：" + msg);
+        System.out.println("[" + LocalDateTime.now().getHour() + ":" + LocalDateTime.now().getMinute() + "]" + "[DC ASM]：" + msg);
     }
     private static final String DC_METHOD_OWER;
     private static final VarHandle packageLookup;
@@ -48,7 +49,7 @@ public class DCLaunchPluginService implements ILaunchPluginService {
         boolean writer = false;
         for (MethodNode methodNode : classNode.methods) {
             for (AbstractInsnNode abstractInsnNode : methodNode.instructions) {
-                if (!classNode.name.contains("net/daichang/") && !classNode.name.contains("net/mehvahdjukaar/dummmmmmy/") && !classNode.name.contains("net/arna/jcraft/") && !classNode.name.contains("io/redspace/ironsspellbooks/") && !classNode.name.contains("com/mega/uom/item/") && !classNode.name.contains("com/obscuria/aquamirae/common/effects/") && !classNode.name.contains("com/jerotes/jerotesvillage/world/inventory/MobInventoryGUIMenu") && !classNode.name.contains("vazkii/neat/") && !classNode.name.contains("com/mega/uom/client/music/") && !classNode.name.contains("net/minecraft/") && !classNode.name.contains("io/redspace/ironsspellbooks/api/util/Utils") && !classNode.name.contains("com/freefish/torchesbecomesunlight/server/entity/ai/") && !classNode.name.contains("tamaized/voidscape/entity/ai/nullservant/") && !classNode.name.contains("de/teamlapen/vampirism/") && !classNode.name.contains("com/mega/uom/mixin/") && !classNode.name.contains("com/github/alexthe666/") && !classNode.name.contains("com/c2h6s/etstlib/") && !classNode.name.contains("committee/nova/mods/avaritia/") && !classNode.name.contains("net/minecraftforge/")) {
+                if (!classNode.name.contains("net/daichang/") && !classNode.name.contains("mods/flammpfeil/slashblade/") && !classNode.name.contains("net/mehvahdjukaar/dummmmmmy/") && !classNode.name.contains("net/arna/jcraft/") && !classNode.name.contains("io/redspace/ironsspellbooks/") && !classNode.name.contains("com/mega/uom/item/") && !classNode.name.contains("com/obscuria/aquamirae/common/effects/") && !classNode.name.contains("com/jerotes/jerotesvillage/world/inventory/MobInventoryGUIMenu") && !classNode.name.contains("vazkii/neat/") && !classNode.name.contains("com/mega/uom/client/music/") && !classNode.name.contains("net/minecraft/") && !classNode.name.contains("io/redspace/ironsspellbooks/api/util/Utils") && !classNode.name.contains("com/freefish/torchesbecomesunlight/server/entity/ai/") && !classNode.name.contains("tamaized/voidscape/entity/ai/nullservant/") && !classNode.name.contains("de/teamlapen/vampirism/") && !classNode.name.contains("com/mega/uom/mixin/") && !classNode.name.contains("com/github/alexthe666/") && !classNode.name.contains("com/c2h6s/etstlib/") && !classNode.name.contains("committee/nova/mods/avaritia/") && !classNode.name.contains("net/minecraftforge/")) {
                     if (abstractInsnNode instanceof MethodInsnNode call && call.getOpcode() != Opcodes.INVOKESPECIAL) {
                         switch (call.name) {
                             case "m_21223_" -> {

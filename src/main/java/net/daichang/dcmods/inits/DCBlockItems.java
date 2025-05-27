@@ -9,13 +9,19 @@ import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.function.Supplier;
 
 public class DCBlockItems {
     public static final DeferredRegister<Item> items = DeferredRegister.create(ForgeRegistries.ITEMS, DCMod.MOD_ID);
 
+    public static final List<RegistryObject<Item>> list = new ArrayList<>();
+
     public static RegistryObject<Item> registry(String id, Supplier<? extends BlockItem> clazz) {
-        return items.register(id, clazz);
+        RegistryObject<Item> object = items.register(id, clazz);
+        list.add(object);
+        return object;
     }
 
     public static final RegistryObject<Item> RED_SPIDER_LILY;

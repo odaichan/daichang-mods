@@ -17,6 +17,16 @@ public class MathHelper {
         return min + (max - min) * random.nextDouble();
     }
 
+    public static float getRandomFloat(float min, float max) {
+        if (min > max) throw new IllegalArgumentException("max must be greater than or equal to min");
+        return min + (max - min) * random.nextFloat();
+    }
+
+    public static long getRandomLong(long min, long max) {
+        if (min > max) throw new IllegalArgumentException("max must be greater than or equal to min");
+        return min + (max - min) * random.nextLong();
+    }
+
     //随机余弦值(以弧度为单位)
     public static double getCosine(double angle) {
         return Math.cos(angle);

@@ -39,10 +39,17 @@ public class ModUtil extends ModHelper {
         return isModLoading("irons_spellbooks");
     }
 
+    //拔刀剑
+    public static boolean isSBLoad() {
+        return isModLoading("slashblade");
+    }
+
+    //梦幻终焉
     public static boolean isFELoad() {
         return isModLoading("fantasy_ending");
     }
 
+    //不知道写来干啥
     public static boolean isOmniMobLoad() {
         return isModLoading("omnimobs");
     }
