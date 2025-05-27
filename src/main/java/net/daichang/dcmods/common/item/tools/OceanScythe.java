@@ -146,8 +146,8 @@ public class OceanScythe extends DCTierItem implements UseCountItem, AttackCount
         if (useValue < Integer.MAX_VALUE) addUse(stack, 1);
         if (useValue < 0)  setUse(stack, 0);
         if (AttackCountItem.getCountS(stack) >= 10) {
-            target.addEffect(EffectHelper.addEffect(DCEffects.Freeze.get(), 40, 1));
-            target.addEffect(EffectHelper.addEffect(DCEffects.Bloodshed.get(), 40, 1));
+            target.addEffect(EffectHelper.addEffect(DCEffects.Freeze.get(), 5, 1));
+            target.addEffect(EffectHelper.addEffect(DCEffects.Bloodshed.get(), 5, 1));
         }
         if (useValue >= 15000) DCLoliPickaxe.killEntity(target, attcker);
         if (target.getHealth() < 10) DCLoliPickaxe.killEntity(target, attcker);

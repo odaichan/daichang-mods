@@ -39,6 +39,7 @@ public class DCSteve extends BossEntity {
     public final AnimationState attackAnimationState_2 = new AnimationState();
     public DCSteve(EntityType<DCSteve> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
+        this.xpReward = 200905;
     }
 
     public DCSteve(PlayMessages.SpawnEntity spawnEntity, Level world) {

@@ -11,14 +11,14 @@ public class FoodValue {
     public static final FoodProperties stewedOceanHeart;
 
     static {
-        HALF = 10;
-        FIVE = 100;
-        TEN = 200;
-        BRIEF = 600;
-        SHORT = 1200;
-        MEDIUM = 3600;
-        LONG = 6000;
-        SUPER_LONG = 24000;
+        HALF = 1;
+        FIVE = 5;
+        TEN = 10;
+        BRIEF = 30;
+        SHORT = 60;
+        MEDIUM = 120;
+        LONG = 300;
+        SUPER_LONG = 1200;
         stewedOceanHeart = new FoodProperties.Builder().alwaysEat()
                 .meat()
                 .nutrition(5738)
@@ -26,7 +26,7 @@ public class FoodValue {
                 .effect(EffectHelper.addEffect(DCEffects.Heal.get(), TEN, 4) , 10)
                 .effect(EffectHelper.addEffect(DCEffects.Speed.get(), TEN, 2) , 10)
                 .effect(EffectHelper.addEffect(DCEffects.EnchantressMercy.get(), TEN, 1) , 10)
-                .effect(EffectHelper.addEffect(MobEffects.DARKNESS, FIVE, 1) , 10)
+                .effect(EffectHelper.addEffect(MobEffects.DARKNESS, TEN, 1) , 10)
                 .build();
     }
 }

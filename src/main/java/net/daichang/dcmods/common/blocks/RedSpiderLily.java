@@ -55,7 +55,7 @@ public class RedSpiderLily extends FlowerBlock {
 
     @Override
     public boolean onDestroyedByPlayer(BlockState state, Level level, BlockPos pos, Player player, boolean willHarvest, FluidState fluid) {
-        player.addEffect(EffectHelper.addEffect(MobEffects.DARKNESS, 60, 5));
+        player.addEffect(EffectHelper.addEffect(MobEffects.DARKNESS, 3, 5));
         return super.onDestroyedByPlayer(state, level, pos, player, willHarvest, fluid);
     }
 
@@ -65,7 +65,7 @@ public class RedSpiderLily extends FlowerBlock {
         if (p_60498_ instanceof LivingEntity living) {
             if (!(living instanceof Player) && !(living instanceof DCLoveElaina)) {
                 float damageValue = living.getMaxHealth() * 0.01F + 20;
-                int duration = 60;
+                int duration = 3;
                 int level = 2;
                 living.addEffect(EffectHelper.addEffect(DCEffects.Bloodshed.get(), duration, level, true));
                 living.addEffect(EffectHelper.addEffect(MobEffects.DARKNESS, duration, level));

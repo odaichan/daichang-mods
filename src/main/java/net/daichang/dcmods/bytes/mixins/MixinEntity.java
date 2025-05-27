@@ -8,6 +8,7 @@ import net.daichang.dcmods.utils.lists.items.LightItemList;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -32,6 +33,7 @@ public abstract class MixinEntity {
 
     @Shadow public abstract void setTicksFrozen(int pTicksFrozen);
 
+    @Shadow public Level level;
     @Unique
     private final Entity dc_entity = (Entity) (Object) this;
 
@@ -55,7 +57,6 @@ public abstract class MixinEntity {
         if (dc_entity instanceof ItemEntity) {
             ItemStack stack = ((ItemEntity) dc_entity).getItem();
             Item item = stack.getItem();
-            Level level = dc_entity.level();
             if (Utils.isSuperTool(stack)) {
                 level.addParticle(ParticleTypes.WAX_ON, dc_entity.getX(), dc_entity.getY() + 0.895F, dc_entity.getZ(), 0, 0, 0);
                 dc_entity.setCustomName(item.getName(stack));
@@ -71,9 +72,16 @@ public abstract class MixinEntity {
                 dc_entity.noPhysics = true;
             }
             else if (LightItemList.getItem(item)) {
-                dc_entity.setCustomName(item.getName(stack));
-                dc_entity.setCustomNameVisible(true);
+                double $$6 = dc_entity.getX();
+                double $$7 = dc_entity.getZ();
+                RandomSource randomSource = RandomSource.create(432L);
                 dc_entity.setGlowingTag(true);
+                for(int $$8 = 0; $$8 < 20; ++$$8) {
+                    if (randomSource.nextBoolean()) {
+                        level.addParticle(ParticleTypes.ASH, $$6 + randomSource.nextDouble() / (double)5.0F, dc_entity.getY() + ((double)0.5F - randomSource.nextDouble()), $$7 + randomSource.nextDouble() / (double)5.0F, 0.0F, 0.0F, 0.0F);
+                        level.addParticle(ParticleTypes.ASH, $$6 + randomSource.nextDouble() / (double)5.0F, dc_entity.getY() + ((double)0.5F - randomSource.nextDouble()), $$7 + randomSource.nextDouble() / (double)5.0F, 0.0F, 0.0F, 0.0F);
+                    }
+                }
             }
         }
     }
@@ -82,7 +90,7 @@ public abstract class MixinEntity {
     private void hurt(DamageSource pSource, float pAmount, CallbackInfoReturnable<Boolean> cir) {
         if (dc_entity instanceof ItemEntity) {
             ItemStack stack = ((ItemEntity) dc_entity).getItem();
-            if (Utils.isSuperTool(stack) || Utils.isCreativeItem(stack)) cir.setReturnValue(Boolean.FALSE);
+            if (Utils.isSuperTool(stack) || Utils.isCreativeItem(stack) || Utils.isLightItem(stack)) cir.setReturnValue(Boolean.FALSE);
         }
     }
 
@@ -90,7 +98,7 @@ public abstract class MixinEntity {
     private void kill(CallbackInfo ci) {
         if (dc_entity instanceof ItemEntity) {
             ItemStack stack = ((ItemEntity) dc_entity).getItem();
-            if (Utils.isSuperTool(stack) || Utils.isCreativeItem(stack)) ci.cancel();
+            if (Utils.isSuperTool(stack) || Utils.isCreativeItem(stack) || Utils.isLightItem(stack)) ci.cancel();
         }
     }
 }

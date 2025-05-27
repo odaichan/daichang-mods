@@ -2,7 +2,7 @@ package net.daichang.dcmods.inits;
 
 import net.daichang.dcmods.addons.avaritia.AvaritiaItems;
 import net.daichang.dcmods.addons.curios.CuriosItems;
-import net.daichang.dcmods.addons.fantasy_ending.FEItem;
+import net.daichang.dcmods.addons.fantasy_ending.FEInit;
 import net.daichang.dcmods.addons.farmers_delight.FDItem;
 import net.daichang.dcmods.addons.slashblade.DaiChangSB;
 import net.daichang.dcmods.addons.slashblade.SBInits;
@@ -62,7 +62,7 @@ public class DCTabs {
                         if (ModUtil.isCuriosLoad()) for (RegistryObject<Item> object : CuriosItems.curios) tabData.accept(object.get());
                         if (ModUtil.isAvaritiaLoad()) for (RegistryObject<Item> object : AvaritiaItems.list) tabData.accept(object.get());
                         if (ModUtil.isFDLoad()) for (RegistryObject<Item> object : FDItem.list) tabData.accept(object.get());
-                        if (ModUtil.isFELoad()) for (RegistryObject<Item> object : FEItem.list) tabData.accept(object.get());
+                        if (ModUtil.isFELoad()) for (RegistryObject<Item> object : FEInit.list) tabData.accept(object.get());
                         if (ModUtil.isSBLoad()) {
                             ItemStack stack = new ItemStack(SBInits.DC_SB.get());
                             DaiChangSB.init(stack);

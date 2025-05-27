@@ -84,9 +84,9 @@ public class SuperWoodRing extends Item implements ICurioItem {
             EntityHelper.forceHeal(livingEntity, 5.1F);
             livingEntity.heal(5.1F);
         }
-        livingEntity.addEffect(EffectHelper.addEffect(DCEffects.Heal.get(), 200, 5));
-        livingEntity.addEffect(EffectHelper.addEffect(MobEffects.LUCK, 200));
-        livingEntity.addEffect(EffectHelper.addEffect(MobEffects.ABSORPTION, 200));
+        livingEntity.addEffect(EffectHelper.addEffect(DCEffects.Heal.get(), 10, 5));
+        livingEntity.addEffect(EffectHelper.addEffect(MobEffects.LUCK, 10));
+        livingEntity.addEffect(EffectHelper.addEffect(MobEffects.ABSORPTION, 10));
     }
 
     @Override

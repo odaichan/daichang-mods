@@ -14,6 +14,7 @@ import net.daichang.dcmods.utils.helpers.DataHelper;
 import net.daichang.dcmods.utils.helpers.EntityHelper;
 import net.daichang.dcmods.utils.lists.items.CanSwordBlockItem;
 import net.daichang.dcmods.utils.lists.items.CreativeItemList;
+import net.daichang.dcmods.utils.lists.items.LightItemList;
 import net.daichang.dcmods.utils.lists.items.SuperItemList;
 import net.minecraft.Util;
 import net.minecraft.advancements.Advancement;
@@ -347,6 +348,10 @@ public class Utils {
 
     public static boolean isCreativeItem(ItemStack item) {
         return item.is(getModItemTag("creative")) || CreativeItemList.getItem(item.getItem());
+    }
+
+    public static boolean isLightItem(ItemStack stack) {
+        return LightItemList.getItem(stack.getItem()) || stack.is(getModItemTag("light"));
     }
 
     public static boolean isSuperTool(ItemStack item) {

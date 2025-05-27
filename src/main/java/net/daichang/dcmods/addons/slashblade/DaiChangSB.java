@@ -1,10 +1,14 @@
 package net.daichang.dcmods.addons.slashblade;
 
+import com.google.common.collect.Multimap;
 import mods.flammpfeil.slashblade.capability.slashblade.ISlashBladeState;
 import mods.flammpfeil.slashblade.capability.slashblade.SlashBladeState;
 import mods.flammpfeil.slashblade.client.renderer.CarryType;
 import mods.flammpfeil.slashblade.item.ItemSlashBlade;
+import mods.flammpfeil.slashblade.item.SwordType;
+import mods.flammpfeil.slashblade.registry.ComboStateRegistry;
 import mods.flammpfeil.slashblade.registry.SlashArtsRegistry;
+import mods.flammpfeil.slashblade.registry.combo.ComboState;
 import net.daichang.dcmods.DCMod;
 import net.daichang.dcmods.client.tool_tip.DCItemTip;
 import net.daichang.dcmods.common.item.AttackCountItem;
@@ -19,14 +23,18 @@ import net.daichang.dcmods.utils.helpers.EffectHelper;
 import net.daichang.dcmods.utils.helpers.EntityHelper;
 import net.daichang.dcmods.utils.helpers.MathHelper;
 import net.daichang.dcmods.utils.lists.items.LightItemList;
-import net.daichang.dcmods.utils.lists.items.SuperItemList;
 import net.minecraft.Util;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.attributes.Attribute;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.boss.wither.WitherBoss;
 import net.minecraft.world.entity.player.Player;
@@ -36,11 +44,14 @@ import net.minecraft.world.item.Rarity;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.registries.IForgeRegistry;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.EnumSet;
 import java.util.List;
 import java.util.Random;
 
@@ -49,7 +60,6 @@ public class DaiChangSB extends ItemSlashBlade implements UseCountItem, AttackCo
     public static final ResourceLocation model = new ResourceLocation(DCMod.MOD_ID, "models/named/dc_sb.obj");
     public DaiChangSB() {
         super(DCTier.OCEAN_HEART, 45, 1024, new Properties().fireResistant().rarity(Rarity.EPIC));
-        SuperItemList.addItem(this);
         LightItemList.addItem(this);
     }
 
@@ -138,8 +148,8 @@ public class DaiChangSB extends ItemSlashBlade implements UseCountItem, AttackCo
         AttackCountItem.addCountS(pStack, 1);
         UseCountItem.addUseS(pStack, 1);
         if (AttackCountItem.getCountS(pStack) == 10) {
-            pTarget.addEffect(EffectHelper.addEffect(DCEffects.Freeze.get(), 60, 1));
-            pTarget.addEffect(EffectHelper.addEffect(DCEffects.Bloodshed.get(), 60, 1));
+            pTarget.addEffect(EffectHelper.addEffect(DCEffects.Freeze.get(), 3, 1));
+            pTarget.addEffect(EffectHelper.addEffect(DCEffects.Bloodshed.get(), 3, 1));
             state.setProudSoulCount(state.getProudSoulCount() + 30);
         }
         float damage = MathHelper.getRandomFloat(4.1F ,16.2F) + pTarget.getMaxHealth() * 0.001F + pTarget.getHealth() * 0.001F;
@@ -185,15 +195,28 @@ public class DaiChangSB extends ItemSlashBlade implements UseCountItem, AttackCo
         list.add(Component.translatable("tool_tip.dc_m.ocean_tip_2"));
         list.add(Component.translatable("tool_tip.dc_m.ocean_tip_3"));
         list.add(Component.translatable("tool_tip.iaxe_item"));
-        list.add(Component.translatable("slashblade.dc_m.daichang_blade.tool_tip_1"));
         super.appendHoverText(pStack, pLevel, list, pIsAdvanced);
     }
 
     @Override
-    public void onUseTick(Level pLevel, LivingEntity pLivingEntity, ItemStack pStack, int pRemainingUseDuration) {
-        EntityHelper.forceHeal(pLivingEntity, MathHelper.getRandomFloat(0.1f, 6.4f));
-        pLivingEntity.addEffect(EffectHelper.addEffect(DCEffects.Heal.get(), 1, 2));
-        super.onUseTick(pLevel, pLivingEntity, pStack, pRemainingUseDuration);
+    public void onUseTick(Level level, LivingEntity player, ItemStack stack, int count) {
+        super.onUseTick(level, player, stack, count);
+        EntityHelper.forceHeal(player, MathHelper.getRandomFloat(1.2F, 7.2F));
+        if (!player.isDeadOrDying()) player.deathTime = 0;
+        stack.getCapability(BLADESTATE).ifPresent((state) -> {
+            (((IForgeRegistry) ComboStateRegistry.REGISTRY.get()).getValue(state.getComboSeq()) != null ? (ComboState) ((IForgeRegistry) ComboStateRegistry.REGISTRY.get()).getValue(state.getComboSeq()) : ComboStateRegistry.NONE.get()).holdAction(player);
+            EnumSet<SwordType> swordType = SwordType.from(stack);
+            if (!state.isBroken() && !state.isSealed() && swordType.contains(SwordType.ENCHANTED)) {
+                if (!player.level().isClientSide()) {
+                    int ticks = player.getTicksUsingItem();
+                    int fullChargeTicks = state.getFullChargeTicks(player);
+                    if (0 < ticks && ticks == fullChargeTicks / 2) {
+                        Vec3 pos = player.getEyePosition(1.0F).add(player.getLookAngle());
+                        ((ServerLevel) player.level()).sendParticles(ParticleTypes.PORTAL, pos.x, pos.y, pos.z, 7, 0.7, 0.7, 0.7, 0.02);
+                    }
+                }
+            }
+        });
     }
 
     @Override
@@ -213,4 +236,20 @@ public class DaiChangSB extends ItemSlashBlade implements UseCountItem, AttackCo
         addUse(itemstack, 1);
         return super.onLeftClickEntity(itemstack, playerIn, entity);
     }
+
+    @Override
+    public Multimap<Attribute, AttributeModifier> getAttributeModifiers(EquipmentSlot slot, ItemStack stack) {
+        return super.getAttributeModifiers(slot, stack);
+    }
+
+
+//    @Override
+//    public Multimap<Attribute, AttributeModifier> getDefaultAttributeModifiers(EquipmentSlot slot) {
+//        Multimap<Attribute, AttributeModifier> modifierMulti = super.getDefaultAttributeModifiers(slot);
+//        if (slot == EquipmentSlot.MAINHAND) {
+//            modifierMulti.put(DCAttributes.DC_SUPER_DAMAGE.get(), new AttributeModifier(BASE_ATTACK_SPEED_UUID, "Weapon Modifier", 42F, AttributeModifier.Operation.ADDITION));
+//            modifierMulti.put(DCAttributes.OCEAN_DAMAGE.get(), new AttributeModifier(BASE_ATTACK_SPEED_UUID, "Weapon Modifier", 42F, AttributeModifier.Operation.ADDITION));
+//        }
+//        return super.getDefaultAttributeModifiers(slot);
+//    }
 }

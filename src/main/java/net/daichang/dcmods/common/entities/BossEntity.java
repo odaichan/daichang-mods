@@ -9,8 +9,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.BossEvent;
@@ -28,9 +26,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class BossEntity extends Monster {
     public final DCServerBossEvent bossEvent;
@@ -116,16 +111,15 @@ public class BossEntity extends Monster {
     @Override
     public void onAddedToWorld() {
         super.onAddedToWorld();
-        DCForgeEventHandler.BOSSES.add(this);
     }
 
     @Override
     public boolean hurt(DamageSource pSource, float pAmount) {
-        if (pAmount > getMaxDamageHurt()) pAmount = getMaxDamageHurt();
         if (isUnsafeDamage(pSource)) return false;
         this.setDeltaMovement(Vec3.ZERO);
         Entity entity = pSource.getEntity();
-        if (entity instanceof LivingEntity living && !(living instanceof BossEntity)) this.setTarget(living);
+        if (entity instanceof LivingEntity living && !(living instanceof BossEntity) && !(living instanceof Player)) this.setTarget(living);
+        if (entity instanceof ServerPlayer player && !player.isCreative()) this.setTarget(player);
         return super.hurt(pSource, pAmount);
     }
 
@@ -141,7 +135,7 @@ public class BossEntity extends Monster {
     }
 
     @Override
-    public void readAdditionalSaveData(CompoundTag pCompound) {
+    public void readAdditionalSaveData(@NotNull CompoundTag pCompound) {
         super.readAdditionalSaveData(pCompound);
         bossEvent.setID(this.getUUID());
     }
@@ -157,21 +151,6 @@ public class BossEntity extends Monster {
     }
 
     @Override
-    public void die(DamageSource pDamageSource) {
-        super.die(pDamageSource);
-    }
-
-    @Override
-    public void heal(float pHealAmount) {
-        super.heal(pHealAmount);
-    }
-
-    @Override
-    public void remove(RemovalReason pReason) {
-        super.remove(pReason);
-    }
-
-    @Override
     public void tick() {
         super.tick();
         if (level().isClientSide() && Config.Client.boss_music.get()) BossMusic.playMusic(music ,this);
@@ -179,29 +158,11 @@ public class BossEntity extends Monster {
         this.fallDistance = 0;
         bossEvent.setName(this.getDisplayName());
         bossEvent.setProgress(this.getHealth() / this.getMaxHealth());
+        DataHelper.restHealthDelta(this);
     }
 
     @Override
-    public void setRemoved(@NotNull RemovalReason pRemovalReason) {
-        super.setRemoved(pRemovalReason);
-    }
-
-    @Override
-    public void onClientRemoval() {
-        super.onClientRemoval();
-    }
-
-    @Override
-    public void onRemovedFromWorld() {
-        super.onRemovedFromWorld();
-    }
-
-    public List<ServerPlayer> getAllPlayer() {
-        List<ServerPlayer> list = new ArrayList<>();
-        if (level instanceof ServerLevel serverLevel) {
-            MinecraftServer server = serverLevel.getServer();
-            list.addAll(server.getPlayerList().getPlayers());
-        }
-        return list;
+    public void defineSynchedData() {
+        super.defineSynchedData();
     }
 }

@@ -41,6 +41,8 @@ public class Config {
 
         public static final ForgeConfigSpec.BooleanValue ocean_heart;
 
+        public static final ForgeConfigSpec.BooleanValue rest_fe_ban_heal;
+
         public static final ForgeConfigSpec server;
 
         static {
@@ -48,9 +50,10 @@ public class Config {
             boss_super_hurt = serverBuild.comment("Boss Super Hurt").define("Boss Super Hurt", true);
             elaina_super_mode = serverBuild.comment("Elaina Super Mode").define("Elaina Super Mode", true);
             ocean_heart = serverBuild.comment("Heart of the Ocean is easy to obtain").define("Ocean Heart Easy Get", false);
-            heal_count = serverBuild.comment("DC Health Delta Heal").defineInRange("DC Health Delta Heal", 1, 1, 40);
+            heal_count = serverBuild.comment("DC Health Delta Heal Value").defineInRange("DC Health Delta Heal", 1, 1, 40);
             anti_heal = serverBuild.comment("Prohibition of treatment").define("Prohibition of treatment", true);
             steve_health_boost = serverBuild.comment("Steve Health Boost").define("Steve Health Boost", false);
+            rest_fe_ban_heal = serverBuild.comment("Reset Fantasy Ending Health Delta").define("Reset FE Health Delta", false);
             server = serverBuild.build();
         }
     }

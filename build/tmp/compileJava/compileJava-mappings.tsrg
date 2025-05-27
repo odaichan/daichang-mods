@@ -1,5 +1,6 @@
 net/daichang/dcmods/bytes/mixins/ItemRendererMixin minecraft f_265848_
 net/daichang/dcmods/bytes/mixins/MixinEntity deltaMovement f_19827_
+net/daichang/dcmods/bytes/mixins/MixinEntity level f_19853_
 net/daichang/dcmods/bytes/mixins/MixinFont lineHeight f_92710_
 net/daichang/dcmods/bytes/mixins/MixinGameRenderer minecraft f_109059_
 net/daichang/dcmods/bytes/mixins/MixinGameRenderer postEffect f_109050_

@@ -3,10 +3,12 @@ package net.daichang.dcmods.addons.slashblade;
 import mods.flammpfeil.slashblade.capability.slashblade.ISlashBladeState;
 import mods.flammpfeil.slashblade.event.SlashBladeEvent;
 import mods.flammpfeil.slashblade.registry.specialeffects.SpecialEffect;
+import net.daichang.dcmods.utils.helpers.EffectHelper;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
@@ -42,21 +44,21 @@ public class DaiChangSpecialEffect extends SpecialEffect {
 
     @SubscribeEvent
     public static void onSlashBladeAttack(SlashBladeEvent.UpdateAttackEvent event) {
-
     }
 
-//    @SubscribeEvent
-//    public static void onSlashBladeHit(SlashBladeEvent.HitEvent event) {
-//        ISlashBladeState state = event.getSlashBladeState();
-//        if (state.hasSpecialEffect(SBInits.DC_EDGE.getId())) {
-//            if (!(event.getUser() instanceof Player player)) {
-//                return;
-//            }
-//            int level = player.experienceLevel;
-//            if (SpecialEffect.isEffective(SBInits.DC_EDGE.getId(), level))
-//                DaiChangSB.onDCSBHitEntity(event.getBlade(), event.getTarget(), event.getUser());
-//        }
-//    }
+    @SubscribeEvent
+    public static void onSlashBladeHit(SlashBladeEvent.HitEvent event) {
+        ISlashBladeState state = event.getSlashBladeState();
+        LivingEntity target = event.getTarget();
+        if (state.hasSpecialEffect(SBInits.DC_EDGE.getId())) {
+            if (!(event.getUser() instanceof Player player)) {
+                return;
+            }
+            int level = player.experienceLevel;
+            if (SpecialEffect.isEffective(SBInits.DC_EDGE.getId(), level))
+                target.addEffect(EffectHelper.addEffect(MobEffects.DARKNESS, 20));
+        }
+    }
 
     @Override
     public Component getDescription() {

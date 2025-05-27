@@ -5,6 +5,7 @@ import com.c2h6s.etstlib.register.EtSTLibHooks;
 import com.c2h6s.etstlib.tool.hooks.ModifyDamageSourceModifierHook;
 import net.daichang.dcmods.inits.DCAttributes;
 import net.daichang.dcmods.utils.TextUtils;
+import net.daichang.dcmods.utils.helpers.DataHelper;
 import net.daichang.dcmods.utils.helpers.EntityHelper;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
@@ -41,6 +42,7 @@ public class OceanHeart extends Modifier implements ModifyDamageSourceModifierHo
 
     @Override
     public LegacyDamageSource modifyDamageSource(IToolStackView tool, ModifierEntry entry, LivingEntity attacker, InteractionHand hand, Entity target, EquipmentSlot sourceSlot, boolean isFullyCharged, boolean isExtraAttack, boolean isCritical, LegacyDamageSource source) {
+        DataHelper.addHealthDelta(attacker, 2);
         return new LegacyDamageSource(EntityHelper.ocean_damage(attacker));
     }
 

@@ -383,7 +383,7 @@ public class DCForgeEventHandler {
 
     @SubscribeEvent
     public static void playerRespawn(PlayerEvent.PlayerRespawnEvent event) {
-        event.getEntity().addEffect(EffectHelper.addEffect(DCEffects.EnchantressMercy.get(), 80, 1));
+        event.getEntity().addEffect(EffectHelper.addEffect(DCEffects.EnchantressMercy.get(), 4, 1));
     }
 
     @SubscribeEvent

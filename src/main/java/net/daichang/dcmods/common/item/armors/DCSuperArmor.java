@@ -93,8 +93,8 @@ public class DCSuperArmor extends ArmorItem {
         super.onArmorTick(stack, level, player);
         if (player.tickCount % 40 == 0) DataHelper.addHealthDelta(player, 1.0F);
         if (player.isUnderWater()) {
-            player.addEffect(EffectHelper.addEffect(MobEffects.CONDUIT_POWER, 20, 2));
-            player.addEffect(EffectHelper.addEffect(MobEffects.DAMAGE_BOOST, 20, 2));
+            player.addEffect(EffectHelper.addEffect(MobEffects.CONDUIT_POWER, 1, 2));
+            player.addEffect(EffectHelper.addEffect(MobEffects.DAMAGE_BOOST, 1, 2));
         }
         if (hasAllArmor(player) && player.isAlive()) {
             player.getFoodData().setFoodLevel(20);
@@ -271,7 +271,7 @@ public class DCSuperArmor extends ArmorItem {
         public void onArmorTick(ItemStack stack, Level level, Player player) {
             super.onArmorTick(stack, level, player);
             player.addEffect(EffectHelper.addEffect(MobEffects.DAMAGE_BOOST));
-            player.addEffect(EffectHelper.addEffect(DCEffects.Heal.get(), 40, 1));
+            player.addEffect(EffectHelper.addEffect(DCEffects.Heal.get(), 2, 1));
             if (player.isInLava()) player.clearFire();
         }
 

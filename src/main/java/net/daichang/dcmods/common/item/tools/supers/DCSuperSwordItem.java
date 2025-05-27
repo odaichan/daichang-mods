@@ -82,8 +82,8 @@ public class DCSuperSwordItem extends ISwordItem implements UseCountItem {
 
     @Override
     public void onUseTick(Level p_41428_, LivingEntity living, ItemStack p_41430_, int p_41431_) {
-        living.addEffect(EffectHelper.addEffect(MobEffects.REGENERATION, 20, true));
-        living.addEffect(EffectHelper.addEffect(MobEffects.DAMAGE_RESISTANCE, 20, 3,true));
+        living.addEffect(EffectHelper.addEffect(MobEffects.REGENERATION, 1, true));
+        living.addEffect(EffectHelper.addEffect(MobEffects.DAMAGE_RESISTANCE, 1, 3,true));
         living.heal(5.5F);
         EntityHelper.forceHeal(living, 5.5F);
         if (DataHelper.getHealthDelta(living) <= 0) DataHelper.addHealthDelta(living, 10.5F);

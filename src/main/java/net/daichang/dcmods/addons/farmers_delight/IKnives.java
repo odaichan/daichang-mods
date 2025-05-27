@@ -72,7 +72,7 @@ public class IKnives extends KnifeItem {
 
     @Override
     public boolean hurtEnemy(ItemStack pStack, LivingEntity pTarget, LivingEntity pAttacker) {
-        pTarget.addEffect(EffectHelper.addEffect(DCEffects.Bloodshed.get(), s * 20, 1));
+        pTarget.addEffect(EffectHelper.addEffect(DCEffects.Bloodshed.get(), s, 1));
         EntityHelper.noHurtDuration(pTarget);
         return super.hurtEnemy(pStack, pTarget, pAttacker);
     }

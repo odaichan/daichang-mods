@@ -11,21 +11,21 @@ public class EffectHelper {
         return new MobEffectInstance(mobEffect);
     }
 
-    public static MobEffectInstance addEffect(MobEffect mobEffect, int duration, int level, boolean isVis) {
-        return new MobEffectInstance(mobEffect, duration, level, false, isVis);
+    public static MobEffectInstance addEffect(MobEffect mobEffect, int second, int level, boolean isVis) {
+        return new MobEffectInstance(mobEffect, second * 20, level, false, isVis);
     }
 
-    public static MobEffectInstance addEffect(MobEffect mobEffect, int duration) {
-        return new MobEffectInstance(mobEffect, duration);
+    public static MobEffectInstance addEffect(MobEffect mobEffect, int second) {
+        return new MobEffectInstance(mobEffect, second * 20);
     }
 
 
-    public static MobEffectInstance addEffect(MobEffect mobEffect, int duration, int level) {
-        return new MobEffectInstance(mobEffect, duration, level, false, false);
+    public static MobEffectInstance addEffect(MobEffect mobEffect, int second, int level) {
+        return new MobEffectInstance(mobEffect, second * 20, level, false, false);
     }
 
-    public static MobEffectInstance addEffect(MobEffect mobEffect, int duration, boolean isVis) {
-        return addEffect(mobEffect, duration, 1, isVis);
+    public static MobEffectInstance addEffect(MobEffect mobEffect, int second, boolean isVis) {
+        return addEffect(mobEffect, second * 20, 1, isVis);
     }
 
     public static boolean hasEffect(LivingEntity entity, MobEffect mobEffect) {
@@ -33,6 +33,7 @@ public class EffectHelper {
     }
 
     public static int getEffectLevel(LivingEntity entity, MobEffect mobEffect) {
-        return Objects.requireNonNull(entity.getEffect(mobEffect)).getAmplifier();
+        if (hasEffect(entity, mobEffect)) return Objects.requireNonNull(entity.getEffect(mobEffect)).getAmplifier();
+        return 0;
     }
 }

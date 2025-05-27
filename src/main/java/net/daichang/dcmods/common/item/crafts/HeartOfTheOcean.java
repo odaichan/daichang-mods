@@ -39,10 +39,10 @@ public class HeartOfTheOcean extends Item {
     public InteractionResultHolder<ItemStack> use(Level pLevel, Player pPlayer, InteractionHand pUsedHand) {
         ItemStack stack = this.getDefaultInstance();
         stack.setDamageValue(stack.getDamageValue() + 1);
-        pPlayer.addEffect(EffectHelper.addEffect(MobEffects.FIRE_RESISTANCE, 100, 5));
-        pPlayer.addEffect(EffectHelper.addEffect(MobEffects.REGENERATION, 100, 3));
-        pPlayer.addEffect(EffectHelper.addEffect(MobEffects.ABSORPTION, 100, 4));
-        pPlayer.addEffect(EffectHelper.addEffect(MobEffects.CONDUIT_POWER, 100 ,2));
+        pPlayer.addEffect(EffectHelper.addEffect(MobEffects.FIRE_RESISTANCE, 5, 5));
+        pPlayer.addEffect(EffectHelper.addEffect(MobEffects.REGENERATION, 5, 3));
+        pPlayer.addEffect(EffectHelper.addEffect(MobEffects.ABSORPTION, 5, 4));
+        pPlayer.addEffect(EffectHelper.addEffect(MobEffects.CONDUIT_POWER, 5 ,2));
         Minecraft.getInstance().gameRenderer.displayItemActivation(stack);
         pPlayer.playSound(SoundEvents.TOTEM_USE);
         return super.use(pLevel, pPlayer, pUsedHand);

@@ -14,5 +14,8 @@ public class EffectFreeze extends BaseEffect {
         super.applyEffectTick(pLivingEntity, pAmplifier);
         pLivingEntity.deltaMovement = Vec3.ZERO;
         pLivingEntity.setDeltaMovement(Vec3.ZERO);
+        pLivingEntity.clearFire();
+        pLivingEntity.wasOnFire = false;
+        pLivingEntity.setTicksFrozen(20);
     }
 }

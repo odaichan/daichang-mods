@@ -365,8 +365,8 @@ public class DCLoveElaina extends BossEntity implements PowerableMob, RangedAtta
         if (entity instanceof LivingEntity target && target.getHealth() > 0) {
             if (!(target instanceof Player)) {
                 Utils.attackEntity(target, this);
-                target.addEffect(EffectHelper.addEffect(MobEffects.DARKNESS, 20, 1));
-                target.addEffect(EffectHelper.addEffect(DCEffects.Bloodshed.get(), 20, 5, true));
+                target.addEffect(EffectHelper.addEffect(MobEffects.DARKNESS, 1, 1));
+                target.addEffect(EffectHelper.addEffect(DCEffects.Bloodshed.get(), 1, 5, true));
             }
             else if (target instanceof ServerPlayer player && player.gameMode.isSurvival() && !EffectHelper.hasEffect(player, DCEffects.EnchantressMercy.get())) {
                 float value = 2.5F + player.getMaxHealth() * 0.001F;
@@ -386,11 +386,6 @@ public class DCLoveElaina extends BossEntity implements PowerableMob, RangedAtta
     @Override
     public Font getBossBarFont() {
         return DCEntityFont.getFont();
-    }
-
-    @Override
-    public boolean isInvulnerable() {
-        return getHealth() <= 0;
     }
 
     @Override
@@ -451,11 +446,11 @@ public class DCLoveElaina extends BossEntity implements PowerableMob, RangedAtta
         skull.shoot(f, g, h, 4, (float) 12.0);
         skull.lookAt(EntityAnchorArgument.Anchor.EYES, livingEntity.position());
         if (!(livingEntity instanceof Player) && !isCanRangeAttack(this)) {
-            livingEntity.addEffect(EffectHelper.addEffect(DCEffects.Freeze.get(), 60));
+            livingEntity.addEffect(EffectHelper.addEffect(DCEffects.Freeze.get(), 3));
             livingEntity.addEffect(EffectHelper.addEffect(DCEffects.Bloodshed.get()));
             lastKill(livingEntity);
         }
-        if (livingEntity instanceof Player player) player.addEffect(EffectHelper.addEffect(MobEffects.HUNGER, 60));
+        if (livingEntity instanceof Player player) player.addEffect(EffectHelper.addEffect(MobEffects.HUNGER, 3));
         setIsRangeAttack(true);
         Vec3 thisVec = new Vec3(getX(), getY(), getZ());
         Vec3 targetVec = new Vec3(livingEntity.getX(), livingEntity.getX(), livingEntity.getZ());

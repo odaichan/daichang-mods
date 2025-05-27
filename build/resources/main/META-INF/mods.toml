@@ -61,44 +61,58 @@ mandatory = true
 versionRange = "[1.20.1]"
 ordering = "NONE"
 side = "BOTH"
+# 拔刀剑
 [[dependencies."dc_m"]]
 modId="slashblade"
 mandatory=false
 versionRange="[0.0,)"
 ordering="NONE"
 side="BOTH"
+# 逐梦星光
 [[dependencies."dc_m"]]
 modId="fantasy_ending"
 mandatory=false
 versionRange="[0.0,)"
 ordering="NONE"
 side="BOTH"
+# 无尽贪婪
 [[dependencies."dc_m"]]
 modId="avaritia"
 mandatory=false
 versionRange="[0.0,)"
 ordering="NONE"
 side="BOTH"
+#农夫乐事
 [[dependencies."dc_m"]]
 modId="farmersdelight"
 mandatory=false
 versionRange="[0.0,)"
 ordering="NONE"
 side="BOTH"
+# 帕秋莉手册
 [[dependencies."dc_m"]]
 modId="patchouli"
 mandatory=false
 versionRange="[0.0,)"
 ordering="NONE"
 side="BOTH"
+#铁魔法
 [[dependencies."dc_m"]]
 modId="irons_spellbooks"
 mandatory=false
 versionRange="[0.0,)"
 ordering="NONE"
 side="BOTH"
+#dialog
 [[dependencies."dc_m"]]
 modId="dialog"
+mandatory=false
+versionRange="[0.0,)"
+ordering="NONE"
+side="BOTH"
+#tetra
+[[dependencies."dc_m"]]
+modId="tetra"
 mandatory=false
 versionRange="[0.0,)"
 ordering="NONE"

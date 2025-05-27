@@ -4,7 +4,7 @@ import io.netty.util.internal.shaded.org.jctools.util.UnsafeAccess;
 import mods.flammpfeil.slashblade.SlashBladeCreativeGroup;
 import net.daichang.dcmods.addons.avaritia.AvaritiaItems;
 import net.daichang.dcmods.addons.curios.CuriosItems;
-import net.daichang.dcmods.addons.fantasy_ending.FEItem;
+import net.daichang.dcmods.addons.fantasy_ending.FEInit;
 import net.daichang.dcmods.addons.farmers_delight.FDItem;
 import net.daichang.dcmods.addons.slashblade.DaiChangSB;
 import net.daichang.dcmods.addons.slashblade.SBInits;
@@ -70,34 +70,34 @@ public class DCMod implements DCBaseLib {
 
     public DCMod() {
         ModLoadingContext context = ModLoadingContext.get();
-        IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
-        DCEnch.ench.register(modEventBus);
+        IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
+        DCEnch.ench.register(bus);
         logger(Minecraft.getInstance().gameDirectory.getAbsolutePath());
-        DCItems.items.register(modEventBus);
-        DCAttributes.attribute.register(modEventBus);
-        DCSounds.sounds.register(modEventBus);
-        DCEntities.entities.register(modEventBus);
-        DCEffects.effects.register(modEventBus);
-        DCBlocks.block.register(modEventBus);
-        DCDiscs.items.register(modEventBus);
-        DCBlockItems.items.register(modEventBus);
+        DCItems.items.register(bus);
+        DCAttributes.attribute.register(bus);
+        DCSounds.sounds.register(bus);
+        DCEntities.entities.register(bus);
+        DCEffects.effects.register(bus);
+        DCBlocks.block.register(bus);
+        DCDiscs.items.register(bus);
+        DCBlockItems.items.register(bus);
         MinecraftForge.EVENT_BUS.register(this);
-        if (ModUtil.isTconstructLoad() && ModUtil.isEtstLoad()) ModifierRegister.MODIFIERS.register(modEventBus);
+        if (ModUtil.isTconstructLoad() && ModUtil.isEtstLoad()) ModifierRegister.MODIFIERS.register(bus);
         if (ModUtil.isCuriosLoad()) {
-            CuriosItems.items.register(modEventBus);
-            modEventBus.addListener(this::enqueueIMC);
+            CuriosItems.items.register(bus);
+            bus.addListener(this::enqueueIMC);
         }
-        if (ModUtil.isSBLoad()) SBInits.init(modEventBus);
-        if (ModUtil.isAvaritiaLoad()) AvaritiaItems.items.register(modEventBus);
-        if (ModUtil.isFDLoad()) FDItem.item.register(modEventBus);
-        if (ModUtil.isFELoad()) FEItem.item.register(modEventBus);
-        DCTabs.inits(modEventBus);
+        if (ModUtil.isSBLoad()) SBInits.init(bus);
+        if (ModUtil.isAvaritiaLoad()) AvaritiaItems.items.register(bus);
+        if (ModUtil.isFDLoad()) FDItem.item.register(bus);
+        if (ModUtil.isFELoad()) FEInit.init(bus);
+        DCTabs.inits(bus);
         for (String s : strings) logger("[Update]" + s);
         for (String s : ModHelper.getAllModFileName()) logger("Obtained loaded mods " + s);
         if (ModUtil.isOmniMobLoad()) logger(Component.translatable("logger.daichang.omni_mob_load").getString());
         context.registerConfig(ModConfig.Type.CLIENT, Config.Client.client, "dc_mod-client.toml");
         context.registerConfig(ModConfig.Type.SERVER, Config.Server.server, "dc_mod-server.toml");
-        modEventBus.addListener(this::addCreative);
+        bus.addListener(this::addCreative);
 //        modEventBus.addListener(this::doClientStuff);
 //        modEventBus.addListener(this::bake);
 //        try {
@@ -112,7 +112,7 @@ public class DCMod implements DCBaseLib {
         if (event.getTabKey() == CreativeModeTabs.COMBAT) {
             for (RegistryObject<Item> object : DCItems.dc_normal) event.accept(object);
             for (RegistryObject<Item> object : DCItems.armors) event.accept(object);
-            if (ModUtil.isFELoad()) for (RegistryObject<Item> object : FEItem.list) event.accept(object);
+            if (ModUtil.isFELoad()) for (RegistryObject<Item> object : FEInit.list) event.accept(object);
             if (ModUtil.isFDLoad()) for (RegistryObject<Item> object : FDItem.list) event.accept(object);
             if (ModUtil.isAvaritiaLoad()) for (RegistryObject<Item> object : AvaritiaItems.list) event.accept(object);
             if (ModUtil.isCuriosLoad()) for (RegistryObject<Item> object : CuriosItems.curios) event.accept(object);
