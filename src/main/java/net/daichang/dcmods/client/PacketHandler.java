@@ -25,8 +25,12 @@ public class PacketHandler {
         }
     }
 
+    public static <MSG> void sendToServer(MSG msg) {
+        CHANNEL.send(PacketDistributor.SERVER.noArg(), msg);
+    }
+
     public static <MSG> void sendToPlayer(MSG msg) {
-        CHANNEL.sendToServer(msg);
+        CHANNEL.send(PacketDistributor.PLAYER.noArg(), msg);
     }
 
     public static void init() {
@@ -37,6 +41,14 @@ public class PacketHandler {
                     S2CSonicBoomPacket.class,
                     S2CSonicBoomPacket::encode,
                     S2CSonicBoomPacket::decode,
+                    (o1, o2) -> {},
+                    Optional.of(NetworkDirection.PLAY_TO_CLIENT)
+            );
+            CHANNEL.registerMessage(
+                    packetId++,
+                    ExcaliburPacket.class,
+                    ExcaliburPacket::encode,
+                    ExcaliburPacket::decode,
                     (o1, o2) -> {},
                     Optional.of(NetworkDirection.PLAY_TO_CLIENT)
             );
@@ -59,6 +71,14 @@ public class PacketHandler {
         });
         DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
             int packetId = 0;
+            CHANNEL.registerMessage(
+                    packetId++,
+                    ExcaliburPacket.class,
+                    ExcaliburPacket::encode,
+                    ExcaliburPacket::decode,
+                    ExcaliburPacket::handle,
+                    Optional.of(NetworkDirection.PLAY_TO_CLIENT)
+            );
             CHANNEL.registerMessage(
                     packetId++,
                     S2CSonicBoomPacket.class,

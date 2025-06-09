@@ -81,6 +81,7 @@ public class DCSuperArmor extends ArmorItem {
             mainHand.put(ModAttributes.EVASION.get(), new AttributeModifier(UUID.randomUUID(), NAME, 0.20D, AttributeModifier.Operation.MULTIPLY_TOTAL));
         }
         modifiers = mainHand.build();
+        SuperItemList.addItem(this);
     }
 
     @Override
@@ -225,7 +226,6 @@ public class DCSuperArmor extends ArmorItem {
     public static class Helmet extends DCSuperArmor {
         public Helmet() {
             super(Type.HELMET);
-            SuperItemList.addItem(this);
         }
 
         @Override
@@ -259,7 +259,6 @@ public class DCSuperArmor extends ArmorItem {
     public static class Chestplate extends DCSuperArmor {
         public Chestplate() {
             super(Type.CHESTPLATE);
-            SuperItemList.addItem(this);
         }
 
         @Override
@@ -286,7 +285,6 @@ public class DCSuperArmor extends ArmorItem {
     public static class Leggings extends DCSuperArmor  {
         public Leggings() {
             super(Type.LEGGINGS);
-            SuperItemList.addItem(this);
         }
 
         @Override
@@ -317,7 +315,6 @@ public class DCSuperArmor extends ArmorItem {
     public static class Boots extends DCSuperArmor {
         public Boots() {
             super(Type.BOOTS);
-            SuperItemList.addItem(this);
         }
 
         @Override
@@ -338,50 +335,10 @@ public class DCSuperArmor extends ArmorItem {
             super.appendHoverText(pStack, pLevel, pTooltipComponents, pIsAdvanced);
             pTooltipComponents.add(Component.translatable("tooltip.dc_m.has_boots"));
         }
+
+        @Override
+        public boolean canWalkOnPowderedSnow(ItemStack stack, LivingEntity wearer) {
+            return true;
+        }
     }
-    //public static class Helmet extends OlivineArmor {
-    //        public Helmet() {
-    //            super(Type.HELMET, new Properties());
-    //        }
-    //
-    //        @Override
-    //        public String getArmorTexture(UseCountItem stack, Entity entity, EquipmentSlot slot, String type) {
-    //            return "trom:textures/models/armor/olivine_layer_1.png";
-    //        }
-    //    }
-    //
-    //    public static class Chestplate extends OlivineArmor {
-    //        public Chestplate() {
-    //            super(Type.CHESTPLATE, new Properties());
-    //        }
-    //
-    //        @Override
-    //        public String getArmorTexture(UseCountItem stack, Entity entity, EquipmentSlot slot, String type) {
-    //            return "trom:textures/models/armor/olivine_layer_1.png";
-    //        }
-    //
-    //
-    //    }
-    //
-    //    public static class Leggings extends OlivineArmor {
-    //        public Leggings() {
-    //            super(Type.LEGGINGS, new Properties());
-    //        }
-    //
-    //        @Override
-    //        public String getArmorTexture(UseCountItem stack, Entity entity, EquipmentSlot slot, String type) {
-    //            return "trom:textures/models/armor/olivine_layer_2.png";
-    //        }
-    //    }
-    //
-    //    public static class Boots extends OlivineArmor {
-    //        public Boots() {
-    //            super(Type.BOOTS, new Properties());
-    //        }
-    //
-    //        @Override
-    //        public String getArmorTexture(UseCountItem stack, Entity entity, EquipmentSlot slot, String type) {
-    //            return "trom:textures/models/armor/olivine_layer_1.png";
-    //        }
-    //    }
 }

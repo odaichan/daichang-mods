@@ -45,11 +45,10 @@ public class FuckFont extends Font {
         float hueOffset = (float) Util.getMillis() / 800.0F;
         for (int index = 0; index < text.length(); index++) {
             String s = String.valueOf(text.charAt(index));
-            float offset_y = (float)(y + Math.sin(((float)Util.getMillis() / 500.0F + index / 5.0F)) * 3.0D);
             float hue = (hueOffset + (float) index / text.length()) % 1.0F;
             int c = rgb & 0xFF000000 | Mth.hsvToRgb(hue, 0.8F, 1.0F);
-            super.drawInBatch(s, x, offset_y, c, dropShadow, matrix4f, multiBufferSource, mode, i, i1);
-            super.drawInBatch(s, x  + 0.852F, offset_y, c, dropShadow, matrix4f, multiBufferSource, mode, i, i1);
+            super.drawInBatch(s, x, y, c, dropShadow, matrix4f, multiBufferSource, mode, i, i1);
+            super.drawInBatch(s, x  + 0.852F, y, c, dropShadow, matrix4f, multiBufferSource, mode, i, i1);
             x += width(s);
         }
         return (int) x;

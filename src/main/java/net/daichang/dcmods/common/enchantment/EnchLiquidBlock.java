@@ -1,10 +1,9 @@
 package net.daichang.dcmods.common.enchantment;
 
 import net.minecraft.world.entity.EquipmentSlot;
-import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentCategory;
 
-public class EnchLiquidBlock extends Enchantment {
+public class EnchLiquidBlock extends BaseEnch {
     public EnchLiquidBlock() {
         super(Rarity.VERY_RARE,EnchantmentCategory.ARMOR_FEET, new EquipmentSlot[]{EquipmentSlot.FEET});
     }

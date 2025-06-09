@@ -39,12 +39,12 @@ public class DCSteve extends BossEntity {
     public final AnimationState attackAnimationState_2 = new AnimationState();
     public DCSteve(EntityType<DCSteve> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
-        this.xpReward = 200905;
+        this.xpReward = 2009;
     }
 
     public DCSteve(PlayMessages.SpawnEntity spawnEntity, Level world) {
         super(DCEntities.DC_STEVE.get(), world);
-        this.xpReward = 200905;
+        this.xpReward = 2009;
     }
 
     @Override
@@ -83,7 +83,7 @@ public class DCSteve extends BossEntity {
     }
 
     @Override
-    public boolean hurt(DamageSource pSource, float pAmount) {
+    public boolean hurt(@NotNull DamageSource pSource, float pAmount) {
         if (isHerobrine()) return false;
         return super.hurt(pSource, pAmount);
     }
@@ -93,7 +93,7 @@ public class DCSteve extends BossEntity {
         super.customServerAiStep();
         if (this.tickCount % 20 == 0) {
             EntityHelper.forceHeal(this, 4);
-            if (Config.Server.steve_health_boost.get()) EntityHelper.forceHeal(this, 30);
+            if (Config.Common.steve_health_boost.get()) EntityHelper.forceHeal(this, 30);
         }
     }
 
@@ -202,7 +202,7 @@ public class DCSteve extends BossEntity {
 
     @Override
     public float getMaxHealth() {
-        if (Config.Server.steve_health_boost.get()) return 150.0F;
+        if (Config.Common.steve_health_boost.get()) return 150.0F;
         return 50.0F;
     }
 

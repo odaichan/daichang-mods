@@ -13,9 +13,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
 
+import static net.daichang.dcmods.inits.DCItems.all_item;
+
 public class FEInit {
 
     public static void init(IEventBus bus) {
+        DCMod.logger("Fantasy Ending is load");
         item.register(bus);
         MinecraftForge.EVENT_BUS.register(FEEventHandler.class);
     }
@@ -28,6 +31,8 @@ public class FEInit {
         long startTime = System.currentTimeMillis();
         DCMod.logger("try to register item " + id);
         RegistryObject<Item> object = item.register(id, target);
+        list.add(object);
+        all_item.add(object);
         long endTime = System.currentTimeMillis();
         long executionTime = endTime - startTime;
         DCMod.logger("item " + id + " registered in " + executionTime + " ms");

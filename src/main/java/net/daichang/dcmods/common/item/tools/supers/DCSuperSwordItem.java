@@ -3,6 +3,7 @@ package net.daichang.dcmods.common.item.tools.supers;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
 import net.daichang.dcmods.client.tool_tip.DCItemTip;
+import net.daichang.dcmods.client.KeyDown;
 import net.daichang.dcmods.common.item.UseCountItem;
 import net.daichang.dcmods.common.item.tools.ISwordItem;
 import net.daichang.dcmods.inits.DCAttributes;
@@ -14,7 +15,6 @@ import net.daichang.dcmods.utils.helpers.MathHelper;
 import net.daichang.dcmods.utils.lists.items.CanSwordBlockItem;
 import net.daichang.dcmods.utils.lists.items.SuperItemList;
 import net.minecraft.Util;
-import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
@@ -41,7 +41,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.UUID;
 
-public class DCSuperSwordItem extends ISwordItem implements UseCountItem {
+public class DCSuperSwordItem extends ISwordItem implements UseCountItem, KeyDown {
     public Multimap<Attribute, AttributeModifier> mainHandModifiers;
     public Multimap<Attribute, AttributeModifier> offHandModifiers;
 
@@ -93,7 +93,7 @@ public class DCSuperSwordItem extends ISwordItem implements UseCountItem {
 
     @Override
     public void appendHoverText(ItemStack stack, @Nullable Level p_41422_, @NotNull List<Component> list, @NotNull TooltipFlag p_41424_) {
-        if (Screen.hasShiftDown()) {
+        if (isLeftShiftDown() || isLeftCtrlDown()) {
             DCItemTip.addAttackCount(list, stack);
             list.add(Component.translatable("tooltip.dc_mods.tips"));
             list.add(Component.translatable("tooltip.dc_mods.tips_1"));
@@ -117,9 +117,10 @@ public class DCSuperSwordItem extends ISwordItem implements UseCountItem {
         else {
             list.add(Component.translatable("tool_tip.dc_mods.7meter"));
             list.add(Component.literal("Subscribe to DaiChang on Bilibili"));
-            list.add(Component.literal("< Press Shift to more >"));
+            list.add(Component.literal("< Press Left Shift to more >"));
+            list.add(Component.literal("< Press Left Ctrl to all >"));
         }
-        super.appendHoverText(stack, p_41422_, list, p_41424_);
+        if (isLeftCtrlDown()) super.appendHoverText(stack, p_41422_, list, p_41424_);
     }
 
     @Override
@@ -127,7 +128,7 @@ public class DCSuperSwordItem extends ISwordItem implements UseCountItem {
         if (living instanceof Player player) Utils.attackEntity(stack, target, player);
         return super.hurtEnemy(stack, target, living);
     }
-
+                                      
     @Override
     public boolean onLeftClickEntity(ItemStack stack, Player player, Entity entity) {
         if (entity instanceof LivingEntity living && player.level instanceof ServerLevel) hurtEnemy(stack, living, player);

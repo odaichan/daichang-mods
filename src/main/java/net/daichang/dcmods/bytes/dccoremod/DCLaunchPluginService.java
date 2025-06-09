@@ -18,6 +18,7 @@ import java.lang.module.ModuleReference;
 import java.lang.module.ResolvedModule;
 import java.lang.reflect.Field;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Map;
@@ -26,8 +27,12 @@ import java.util.function.BiFunction;
 public class DCLaunchPluginService implements ILaunchPluginService {
 
     public static void logger(String msg){
-        System.out.println("[" + LocalDateTime.now().getHour() + ":" + LocalDateTime.now().getMinute() + "]" + "[DC ASM]：" + msg);
+        LocalDateTime now = LocalDateTime.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss");
+        String formattedTime = now.format(formatter);
+        System.out.println("[" + formattedTime + "]" +"[DC ASM]" + msg);
     }
+
     private static final String DC_METHOD_OWER;
     private static final VarHandle packageLookup;
     private static final VarHandle parentLoaders;

@@ -5,6 +5,7 @@ import net.daichang.dcmods.event.DCForgeEventHandler;
 import net.daichang.dcmods.inits.DCAttributes;
 import net.daichang.dcmods.utils.EntityActuallyHurt;
 import net.daichang.dcmods.utils.helpers.DataHelper;
+import net.daichang.dcmods.utils.helpers.EntityHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.nbt.CompoundTag;
@@ -20,22 +21,30 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.RandomStrollGoal;
-import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class BossEntity extends Monster {
+public class BossEntity extends DCBaseMonster {
     public final DCServerBossEvent bossEvent;
-
+    private LivingEntity dcLastHurtTarget;
     private final BossMusic music = new BossMusic(this);
 
-    public BossEntity(EntityType<? extends Monster> pEntityType, Level pLevel) {
+    public BossEntity(EntityType<? extends DCBaseMonster> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
         this.bossEvent = new DCServerBossEvent(this, getBossBarColor());
         if (this.level().isClientSide()) DCForgeEventHandler.BOSSES.add(this);
+    }
+
+
+    public LivingEntity getDcLastHurtTarget() {
+        return dcLastHurtTarget;
+    }
+
+    public void setDcLastHurtTarget(LivingEntity dcLastHurtTarget) {
+        this.dcLastHurtTarget = dcLastHurtTarget;
     }
 
     @Override
@@ -45,15 +54,30 @@ public class BossEntity extends Monster {
     }
 
     @Override
-    public void startSeenByPlayer(ServerPlayer pServerPlayer) {
+    public void startSeenByPlayer(@NotNull ServerPlayer pServerPlayer) {
         super.startSeenByPlayer(pServerPlayer);
         this.bossEvent.addPlayer(pServerPlayer);
     }
 
     @Override
-    public void stopSeenByPlayer(ServerPlayer pServerPlayer) {
+    public void baseTick() {
+        super.baseTick();
+        if (dcLastHurtTarget != null) {
+            if (!dcLastHurtTarget.isAlive() && dcLastHurtTarget.isDeadOrDying())
+                setDcLastHurtTarget(null);
+        }
+    }
+
+    @Override
+    public void stopSeenByPlayer(@NotNull ServerPlayer pServerPlayer) {
         super.stopSeenByPlayer(pServerPlayer);
         this.bossEvent.removePlayer(pServerPlayer);
+    }
+
+    @Override
+    public void heal(float pHealAmount) {
+        super.heal(pHealAmount);
+        if (pHealAmount > 0) EntityHelper.forceHeal(this ,pHealAmount);
     }
 
     public ResourceLocation getBossBarOverlay() {
@@ -74,16 +98,14 @@ public class BossEntity extends Monster {
 
     @Override
     public boolean doHurtTarget(@NotNull Entity pEntity) {
-        if (Config.Server.boss_super_hurt.get()) {
+        if (Config.Common.boss_super_hurt.get()) {
             float damage = 0;
             damage = (float) (damage + this.getAttributeValue(Attributes.ATTACK_DAMAGE));
             damage = (float) (damage + this.getAttributeValue(DCAttributes.DC_SUPER_DAMAGE.get()));
             if (!(pEntity instanceof Player) && pEntity instanceof LivingEntity living) {
                 EntityActuallyHurt util = EntityActuallyHurt.getInstance(living, this);
                 util.dcHurt(damage);
-                if (living.getHealth() < 2) {
-                    DataHelper.setIsDead(living, true);
-                }
+                if (living.getHealth() < 2) DataHelper.setIsDead(living, true);
             }
         }
         return super.doHurtTarget(pEntity);
@@ -105,7 +127,6 @@ public class BossEntity extends Monster {
 
     @Override
     public void forceAddEffect(MobEffectInstance pInstance, @Nullable Entity pEntity) {
-
     }
 
     @Override
@@ -114,12 +135,13 @@ public class BossEntity extends Monster {
     }
 
     @Override
-    public boolean hurt(DamageSource pSource, float pAmount) {
+    public boolean hurt(@NotNull DamageSource pSource, float pAmount) {
         if (isUnsafeDamage(pSource)) return false;
         this.setDeltaMovement(Vec3.ZERO);
         Entity entity = pSource.getEntity();
         if (entity instanceof LivingEntity living && !(living instanceof BossEntity) && !(living instanceof Player)) this.setTarget(living);
         if (entity instanceof ServerPlayer player && !player.isCreative()) this.setTarget(player);
+        if (entity instanceof LivingEntity living) setDcLastHurtTarget(living);
         return super.hurt(pSource, pAmount);
     }
 
@@ -153,7 +175,7 @@ public class BossEntity extends Monster {
     @Override
     public void tick() {
         super.tick();
-        if (level().isClientSide() && Config.Client.boss_music.get()) BossMusic.playMusic(music ,this);
+        if (this.level().isClientSide() && Config.Client.boss_music.get()) BossMusic.playMusic(music, this);
         this.resetFallDistance();
         this.fallDistance = 0;
         bossEvent.setName(this.getDisplayName());

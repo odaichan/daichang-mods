@@ -10,6 +10,7 @@ import net.daichang.dcmods.utils.HelperLib;
 import org.jetbrains.annotations.NotNull;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -39,7 +40,10 @@ public class DCTransformationService implements ITransformationService {
     }
 
     static void println(Object input) {
-        System.out.println("[" + LocalDateTime.now().getHour() + ":" + LocalDateTime.now().getMinute() + "]" +"[DC ASM]" + input);
+        LocalDateTime now = LocalDateTime.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss");
+        String formattedTime = now.format(formatter);
+        System.out.println("[" + formattedTime + "]" +"[DC ASM]" + input);
     }
 
     @Override

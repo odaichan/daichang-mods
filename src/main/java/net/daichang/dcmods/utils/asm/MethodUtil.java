@@ -5,6 +5,7 @@ import net.daichang.dcmods.common.item.tools.creative.DCLoliPickaxe;
 import net.daichang.dcmods.utils.helpers.DataHelper;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Mob;
 
 @SuppressWarnings("unused")
 public final class MethodUtil extends DataHelper {
@@ -13,6 +14,18 @@ public final class MethodUtil extends DataHelper {
         if (DataHelper.isDead(entity)) return Float.NEGATIVE_INFINITY;
         if (entity instanceof EntityLoli loli && !DataHelper.isDead(loli)) return 20.0F;
         return Math.min(entity.getHealth(), entity.getMaxHealth() + DataHelper.getHealthDelta(entity));
+    }
+
+    public static boolean isNoAi(Mob mob) {
+        if (mob instanceof EntityLoli loli && !loli.isDeadOrDying()) return false;
+        if (DataHelper.isDead(mob)) return true;
+        return mob.isNoAi();
+    }
+
+    public static boolean isNoAi(Mob mob, boolean value) {
+        if (mob instanceof EntityLoli loli && !loli.isDeadOrDying()) return false;
+        if (DataHelper.isDead(mob)) return true;
+        return value;
     }
 
     public static float getHealth(LivingEntity entity, float value) {

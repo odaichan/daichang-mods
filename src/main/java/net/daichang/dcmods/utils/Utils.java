@@ -25,6 +25,7 @@ import net.minecraft.core.Registry;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.resources.ResourceLocation;
@@ -75,6 +76,14 @@ public class Utils {
 
     public static TagKey<Item> getModItemTag(String tag) {
         return getItemTag(DCMod.MOD_ID + ":" + tag);
+    }
+
+    public static void addCooldown(Player player, Item item, int second) {
+        player.cooldowns.addCooldown(item, second * 20);
+    }
+
+    public static void sendMsgToPlayerChat(Player player, Component message) {
+        if (player.level().isClientSide()) player.displayClientMessage(message, false);
     }
 
     public static void removeEntity(Entity target) {

@@ -6,7 +6,9 @@
   "refmap": "dc_m.refmap.json",
   "mixins": [
     "MixinEntity",
+    "MixinItemStack",
     "MixinLivingEntity",
+    "MixinMob",
     "MixinPlayer",
     "MixinServerPlayer",
     "MixinTrident",
@@ -20,6 +22,8 @@
     "MixinItemEntityRenderer",
     "MixinLivingEntityRender",
     "MixinLocalPlayer",
+    "SplashManagerMixin",
+    "SplashRendererMixin",
     "sword_block.HumanoidModelMixin",
     "sword_block.ItemInHandRendererMixin",
     "sword_block.PlayerItemInHandLayerMixin"

@@ -9,6 +9,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.EntityEvent;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.decoration.ArmorStand;
 import net.minecraft.world.entity.player.Player;
@@ -39,7 +40,7 @@ public class EntityActuallyHurt {
         return new EntityActuallyHurt(target, attacker);
     }
 
-    public void die(DamageSource source) {
+    public void dead(DamageSource source) {
         if (target.level().isClientSide() || target.isRemoved()) return;
         target.gameEvent(GameEvent.ENTITY_DIE);
         target.dead = true;
@@ -52,47 +53,49 @@ public class EntityActuallyHurt {
         if (target.getDeathSound() != null) target.playSound(target.getDeathSound());
         target.isDeadOrDying();
         target.dropAllDeathLoot(source);
-        target.hurtTime = 20;
+        target.handleEntityEvent(EntityEvent.DEATH);
+        target.hurtTime = Integer.MAX_VALUE;
+        DataHelper.forceSetHealth(target, Float.NEGATIVE_INFINITY);
     }
     
     public void actuallyHurt(DamageSource source, float value) {
-        if (value <= 0 || target.isRemoved() || target.level().isClientSide()) return;
-        EntityHelper.noHurtDuration(target);
-        ForgeHooks.onLivingAttack(target, source, value);
-        ForgeHooks.onLivingHurt(target, source, value);
-        target.gameEvent(GameEvent.ENTITY_DAMAGE);
-        target.setLastHurtByMob(attacker);
-        target.walkAnimation.setSpeed(1.5F);
-        target.noActionTime = 0;
-        target.invalidateCaps();
-        target.indicateDamage(Mth.sin(attacker.getYRot() * ((float) Math.PI / 180F)), -Mth.cos(attacker.getYRot() * ((float) Math.PI / 180F)));
-        if (target.isSleeping() && !target.level().isClientSide()) target.stopSleeping();
-        if (value == Float.POSITIVE_INFINITY) {
-            EntityHelper.forceSetHealth(target, Float.NEGATIVE_INFINITY);
-            target.gameEvent(GameEvent.ENTITY_DIE);
-            target.dead = true;
-            die(source);
-            if (source.is(DCSuperDamage.SUPER_DAMAGE) || source.is(DCOceanDamage.OCEAN_DAMAGE)) DataHelper.setIsDead(target, true);
-        }
-        if (!target.isDeadOrDying()) target.deathTime = 0;
-        if (target.isDeadOrDying() || DataHelper.isDead(target)) {
-            target.gameEvent(GameEvent.ENTITY_DIE);
-            target.die(source);
-            target.dead = true;
-        }
-        try {
-            if (target.isAlive()) target.playHurtSound(source);
-            target.level().broadcastDamageEvent(target, source);
-            if (target.isDeadOrDying() && target.getDeathSound() != null) target.playSound(target.getDeathSound());
-        } catch (Exception ignored) {}
-        EntityHelper.forceSetHealth(target, target.getHealth() - value);
-        if (target.getHealth() <= 0) {
-            die(source);
-            if (source.is(DCSuperDamage.SUPER_DAMAGE) || source.is(DCOceanDamage.OCEAN_DAMAGE)) DataHelper.setIsDead(target, true);
-        }
+        target.handleDamageEvent(source);
         if (target.getEncodeId() != null && target.getEncodeId().startsWith("dummmmmmy:")) {
+            target.hurt(source, value);
             DataHelper.restHealthDelta(target);
-            DataHelper.forceSetHealth(target, target.getMaxHealth());
+        }
+        else {
+            if (value <= 0 || target.isRemoved() || target.level().isClientSide()) return;
+            EntityHelper.noHurtDuration(target);
+            ForgeHooks.onLivingAttack(target, source, value);
+            ForgeHooks.onLivingHurt(target, source, value);
+            target.gameEvent(GameEvent.ENTITY_DAMAGE);
+            target.setLastHurtByMob(attacker);
+            target.walkAnimation.setSpeed(1.5F);
+            target.noActionTime = 0;
+            target.invalidateCaps();
+            target.indicateDamage(Mth.sin(attacker.getYRot() * ((float) Math.PI / 180F)), -Mth.cos(attacker.getYRot() * ((float) Math.PI / 180F)));
+            if (target.isSleeping() && !target.level().isClientSide()) target.stopSleeping();
+            if (value == Float.POSITIVE_INFINITY) {
+                dead(source);
+                if (source.is(DCSuperDamage.SUPER_DAMAGE) || source.is(DCOceanDamage.OCEAN_DAMAGE)) DataHelper.setIsDead(target, true);
+            }
+            if (!target.isDeadOrDying()) target.deathTime = 0;
+            if (target.isDeadOrDying() || DataHelper.isDead(target)) {
+                target.gameEvent(GameEvent.ENTITY_DIE);
+                target.die(source);
+                target.dead = true;
+            }
+            try {
+                if (target.isAlive()) target.playHurtSound(source);
+                target.level().broadcastDamageEvent(target, source);
+                if (target.isDeadOrDying() && target.getDeathSound() != null) target.playSound(target.getDeathSound());
+            } catch (Exception ignored) {}
+            EntityHelper.forceSetHealth(target, target.getHealth() - value);
+            if (target.getHealth() <= 0) {
+                dead(source);
+                if (source.is(DCSuperDamage.SUPER_DAMAGE) || source.is(DCOceanDamage.OCEAN_DAMAGE)) DataHelper.setIsDead(target, true);
+            }
         }
     }
     
@@ -113,7 +116,7 @@ public class EntityActuallyHurt {
     }
 
     public void dcDie() {
-        die(EntityHelper.ocean_damage(attacker));
+        dead(EntityHelper.ocean_damage(attacker));
         DataHelper.setIsDead(target, true);
     }
 

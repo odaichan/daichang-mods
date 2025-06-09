@@ -21,7 +21,7 @@ public interface DCBaseLib {
 
     String stringUUID = localPlayer.getStringUUID();
 
-    String path = mc.gameDirectory.getPath();
+    String AAApath = mc.gameDirectory.getPath();
 
     Window window = mc.getWindow();
 
@@ -35,5 +35,5 @@ public interface DCBaseLib {
 
     GDI32 gdi32 = GDI32.INSTANCE;
 
-    String DEFAULT_FILE_PATH = path + "/dc_list.txt";
+    String DEFAULT_FILE_PATH = AAApath + "/dc_list.txt";
 }

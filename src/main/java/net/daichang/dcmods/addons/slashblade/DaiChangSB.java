@@ -5,10 +5,7 @@ import mods.flammpfeil.slashblade.capability.slashblade.ISlashBladeState;
 import mods.flammpfeil.slashblade.capability.slashblade.SlashBladeState;
 import mods.flammpfeil.slashblade.client.renderer.CarryType;
 import mods.flammpfeil.slashblade.item.ItemSlashBlade;
-import mods.flammpfeil.slashblade.item.SwordType;
-import mods.flammpfeil.slashblade.registry.ComboStateRegistry;
 import mods.flammpfeil.slashblade.registry.SlashArtsRegistry;
-import mods.flammpfeil.slashblade.registry.combo.ComboState;
 import net.daichang.dcmods.DCMod;
 import net.daichang.dcmods.client.tool_tip.DCItemTip;
 import net.daichang.dcmods.common.item.AttackCountItem;
@@ -17,6 +14,7 @@ import net.daichang.dcmods.common.item.UseCountItem;
 import net.daichang.dcmods.inits.DCAttributes;
 import net.daichang.dcmods.inits.DCEffects;
 import net.daichang.dcmods.inits.DCEnch;
+import net.daichang.dcmods.inits.DCUuid;
 import net.daichang.dcmods.utils.EntityActuallyHurt;
 import net.daichang.dcmods.utils.TextUtils;
 import net.daichang.dcmods.utils.helpers.EffectHelper;
@@ -24,10 +22,8 @@ import net.daichang.dcmods.utils.helpers.EntityHelper;
 import net.daichang.dcmods.utils.helpers.MathHelper;
 import net.daichang.dcmods.utils.lists.items.LightItemList;
 import net.minecraft.Util;
-import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
@@ -44,18 +40,15 @@ import net.minecraft.world.item.Rarity;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.registries.IForgeRegistry;
+import net.minecraftforge.common.ForgeMod;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.awt.*;
 import java.util.ArrayList;
-import java.util.EnumSet;
 import java.util.List;
 import java.util.Random;
 
-public class DaiChangSB extends ItemSlashBlade implements UseCountItem, AttackCountItem {
+public class DaiChangSB extends ItemSlashBlade implements UseCountItem, AttackCountItem ,DCUuid {
     public static final ResourceLocation texture = new ResourceLocation(DCMod.MOD_ID, "models/named/dc_sb.png");
     public static final ResourceLocation model = new ResourceLocation(DCMod.MOD_ID, "models/named/dc_sb.obj");
     public DaiChangSB() {
@@ -90,6 +83,11 @@ public class DaiChangSB extends ItemSlashBlade implements UseCountItem, AttackCo
         return SBInits.DC_SB.get();
     }
 
+    @Override
+    public void appendSpecialEffects(List<Component> tooltip, @NotNull ISlashBladeState s) {
+        super.appendSpecialEffects(tooltip, s);
+    }
+
     public static void init(ItemStack stack) {
         ISlashBladeState state = stack.getCapability(ItemSlashBlade.BLADESTATE).orElse(new SlashBladeState(stack));
         if (!stack.getOrCreateTag().getBoolean("SetDCState")) {
@@ -101,7 +99,6 @@ public class DaiChangSB extends ItemSlashBlade implements UseCountItem, AttackCo
                 state.setProudSoulCount(215375832);
             state.setDefaultBewitched(true);
             state.setTexture(texture);
-            state.setEffectColor(new Color(186, 85, 211));
             state.addSpecialEffect(SBInits.DC_EDGE.getId());
             state.setModel(model);
             state.setBaseAttackModifier(18.5F);
@@ -115,18 +112,24 @@ public class DaiChangSB extends ItemSlashBlade implements UseCountItem, AttackCo
             stack.enchant(Enchantments.FIRE_ASPECT, 2);
             stack.enchant(Enchantments.SMITE, 12);
             stack.enchant(DCEnch.SuperSharp.get(), 1);
+            stack.addAttributeModifier(DCAttributes.DC_SUPER_DAMAGE.get(), new AttributeModifier(BASE_SNOW_DAMAGE_UUID, "Weapon modifier", 12.1D, AttributeModifier.Operation.ADDITION), EquipmentSlot.MAINHAND);
+            stack.addAttributeModifier(DCAttributes.OCEAN_DAMAGE.get(), new AttributeModifier(BASE_OCEAN_DAMAGE_UUID, "Weapon modifier", 21.3D, AttributeModifier.Operation.ADDITION), EquipmentSlot.MAINHAND);
+            stack.addAttributeModifier(Attributes.ATTACK_DAMAGE, new AttributeModifier(BASE_ATTACK_DAMAGE_UUID, "Weapon modifier", 22.1D, AttributeModifier.Operation.ADDITION), EquipmentSlot.MAINHAND);
+            stack.addAttributeModifier(Attributes.ATTACK_SPEED, new AttributeModifier(BASE_ATTACK_SPEED_UUID, "Weapon modifier", 3.4D, AttributeModifier.Operation.ADDITION), EquipmentSlot.MAINHAND);
+            stack.addAttributeModifier(ForgeMod.ENTITY_REACH.get(), new AttributeModifier(BASE_ENEITY_RANGE_UUID, "Weapon modifier", 3.4D, AttributeModifier.Operation.ADDITION), EquipmentSlot.MAINHAND);
+            stack.addAttributeModifier(ForgeMod.BLOCK_REACH.get(), new AttributeModifier(BASE_BLOCK_RANGE_UUID, "Weapon modifier", 3.4D, AttributeModifier.Operation.ADDITION), EquipmentSlot.MAINHAND);
             UseCountItem.setUseS(stack, 0);
             AttackCountItem.setCountS(stack, 0);
         }
     }
 
     @Override
-    public boolean isFoil(ItemStack pStack) {
+    public boolean isFoil(@NotNull ItemStack pStack) {
         return true;
     }
 
     @Override
-    public void onCraftedBy(ItemStack pStack, Level pLevel, Player pPlayer) {
+    public void onCraftedBy(@NotNull ItemStack pStack, @NotNull Level pLevel, @NotNull Player pPlayer) {
         super.onCraftedBy(pStack, pLevel, pPlayer);
         init(pStack);
     }
@@ -203,31 +206,11 @@ public class DaiChangSB extends ItemSlashBlade implements UseCountItem, AttackCo
         super.onUseTick(level, player, stack, count);
         EntityHelper.forceHeal(player, MathHelper.getRandomFloat(1.2F, 7.2F));
         if (!player.isDeadOrDying()) player.deathTime = 0;
-        stack.getCapability(BLADESTATE).ifPresent((state) -> {
-            (((IForgeRegistry) ComboStateRegistry.REGISTRY.get()).getValue(state.getComboSeq()) != null ? (ComboState) ((IForgeRegistry) ComboStateRegistry.REGISTRY.get()).getValue(state.getComboSeq()) : ComboStateRegistry.NONE.get()).holdAction(player);
-            EnumSet<SwordType> swordType = SwordType.from(stack);
-            if (!state.isBroken() && !state.isSealed() && swordType.contains(SwordType.ENCHANTED)) {
-                if (!player.level().isClientSide()) {
-                    int ticks = player.getTicksUsingItem();
-                    int fullChargeTicks = state.getFullChargeTicks(player);
-                    if (0 < ticks && ticks == fullChargeTicks / 2) {
-                        Vec3 pos = player.getEyePosition(1.0F).add(player.getLookAngle());
-                        ((ServerLevel) player.level()).sendParticles(ParticleTypes.PORTAL, pos.x, pos.y, pos.z, 7, 0.7, 0.7, 0.7, 0.02);
-                    }
-                }
-            }
-        });
     }
 
     @Override
     public Component getName(ItemStack pStack) {
         return TextUtils.rainbow(super.getName(pStack));
-    }
-
-    @Override
-    public boolean hurtEnemy(ItemStack pStack, LivingEntity pTarget, LivingEntity pAttacker) {
-        onDCSBHitEntity(pStack, pTarget, pAttacker);
-        return super.hurtEnemy(pStack, pTarget, pAttacker);
     }
 
     @Override

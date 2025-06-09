@@ -19,8 +19,13 @@ public class DCEnch {
     public static List<RegistryObject<Enchantment>> list = new ArrayList<>();
 
     public static RegistryObject<Enchantment> registry(String id, Supplier<? extends Enchantment> target) {
+        long startTime = System.currentTimeMillis();
+        DCMod.logger("try to register enchantment " + id);
         RegistryObject<Enchantment> object = ench.register(id, target);
         list.add(object);
+        long endTime = System.currentTimeMillis();
+        long executionTime = endTime - startTime;
+        DCMod.logger("enchantment " + id + " registered in " + executionTime + " ms");
         return object;
     }
 

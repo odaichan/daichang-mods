@@ -11,6 +11,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
 
+import static net.daichang.dcmods.inits.DCItems.all_item;
+
 public class FDItem {
     public static List<RegistryObject<Item>> list = new ArrayList<>();
 
@@ -20,6 +22,8 @@ public class FDItem {
         long startTime = System.currentTimeMillis();
         DCMod.logger("try to register item " + id);
         RegistryObject<Item> object = item.register(id, target);
+        list.add(object);
+        all_item.add(object);
         long endTime = System.currentTimeMillis();
         long executionTime = endTime - startTime;
         DCMod.logger("item " + id + " registered in " + executionTime + " ms");

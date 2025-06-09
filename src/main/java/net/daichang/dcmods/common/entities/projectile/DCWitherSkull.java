@@ -1,6 +1,5 @@
 package net.daichang.dcmods.common.entities.projectile;
 
-import net.daichang.dcmods.common.entities.boss.DCLoveElaina;
 import net.daichang.dcmods.common.entities.entity.RainbowLightingEntity;
 import net.daichang.dcmods.inits.DCEffects;
 import net.daichang.dcmods.inits.DCEntities;
@@ -21,6 +20,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class DCWitherSkull extends WitherSkull {
     public int age = 0;
+    public Entity shootEntity;
     public DCWitherSkull(EntityType<DCWitherSkull> p_37598_, Level p_37599_) {
         super(p_37598_, p_37599_);
     }
@@ -29,7 +29,6 @@ public class DCWitherSkull extends WitherSkull {
     protected void onHitEntity(@NotNull EntityHitResult p_36757_) {
         Entity entity = p_36757_.getEntity();
         killEntity(entity);
-
     }
 
     @Override
@@ -44,12 +43,16 @@ public class DCWitherSkull extends WitherSkull {
         this.remove(RemovalReason.DISCARDED);
     }
 
+    public void setShootEntity(Entity shootEntity) {
+        this.shootEntity = shootEntity;
+    }
+
     void killEntity(Entity entity) {
-        if (entity instanceof LivingEntity living) {
+        if (entity instanceof LivingEntity living && living != shootEntity) {
             RainbowLightingEntity lighting = new RainbowLightingEntity(DCEntities.RAINBOW_LIGHTING.get(), this.level);
             lighting.setPos(entity.getX(), entity.getY(), entity.getZ());
             this.level.addFreshEntity(lighting);
-            if (!(living instanceof DCLoveElaina) && !(living instanceof Player)) {
+            if (!(living instanceof Player)) {
                 float damage = living.getMaxHealth() * 0.1F + 47;
                 EntityActuallyHurt.getInstance(living).dcHurt(damage);
             }
@@ -68,7 +71,7 @@ public class DCWitherSkull extends WitherSkull {
     public void tick() {
         super.tick();
         age++;
-        if (age > 180) {
+        if (age > 40 && this.getDeltaMovement().lengthSqr() == 0) {
             double x = getX();
             double y = getY();
             double z = getZ();
@@ -76,5 +79,6 @@ public class DCWitherSkull extends WitherSkull {
             ExplodeHelper.boom(level, x, y, z, this, 5.0F);
             for (Entity entity : EntityHelper.getEntity(level, x, y, z, 5)) killEntity(entity);
         }
+        if (shootEntity == null) setShootEntity(this);
     }
 }

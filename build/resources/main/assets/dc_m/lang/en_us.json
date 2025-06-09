@@ -66,7 +66,7 @@
   "entities.dc_mods.dc_wither_name" : "Elaina",
   "entities.dc_mods.dc_wither_name_tow" : "Elaina [Angry]",
   "tooltip.dc_mods.spawn_mods_egg" : "Summon the DaiChang's Wife with this item",
-  "chat.dc_mods.world_loading" : "Welcome to use [DaiChang's Random Creations]",
+  "chat.dc_mods.world_loading" : "ὉWelcome to use [DaiChang's Random Creations]Ὁ",
   "chat.dc_mods.core_loading" : "The current loading status of the Coremod:",
   "effect.dc_m.bloodshed" : "Bloodshed",
   "block.dc_m.red_spider_lily" : "Red Spider Lily",
@@ -198,5 +198,16 @@
   "slashblade.dc_m.daichang_blade.tool_tip_1": "When the Phantom Sword attacks entities, it ignores the entity's invincibility time",
   "slashblade.dc_m.daichang_blade.tool_tip_2": "It will increase attack damage based on the number of kills",
   "se.dc_m.daichang_se" : "Fear value",
-  "logger.daichang.omni_mob_load": "Found Omni mod mod. If you want to kill entities in this mod, you can use the Starlight Mod made with DaiChang"
+  "logger.daichang.omni_mob_load": "Found Omni mod mod. If you want to kill entities in this mod, you can use the Starlight Mod made with DaiChang",
+  "irons_spellbooks.dc_mods.schooltype_name": "Ocean",
+  "chat.dc_m.ex_calibur_1": "⌊ 束ねるは星の息吹 ⌉",
+  "chat.dc_m.ex_calibur_2": "⌊ 輝ける命の奔流 ⌉",
+  "chat.dc_m.ex_calibur_3": "⌊ 受けるが良い ⌉",
+  "chat.dc_m.ex_calibur_press": "『 約束された勝利の剣 』",
+  "item.dc_m.excalibur": "『 約束された勝利の剣 』",
+  "item.dc_m.dc_wither_boss_spawn_egg": "Spawn DaiChang Wither Boss Egg",
+  "tooltip.dc_m.excalibur": "Proof of the King's legend, cutting through darkness",
+  "item.dc_m.dc_loli_spawn_egg": "Loli Spawn Egg",
+  "tabs.dc_mods.all_items": "DaiChang's All Items",
+  "entity.dc_m.wither" : "Wither"
 }

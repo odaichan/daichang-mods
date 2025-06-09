@@ -1,5 +1,6 @@
 package net.daichang.dcmods.addons.slashblade;
 
+import mods.flammpfeil.slashblade.item.ItemSlashBlade;
 import mods.flammpfeil.slashblade.registry.specialeffects.SpecialEffect;
 import net.daichang.dcmods.DCMod;
 import net.minecraft.world.item.Item;
@@ -14,23 +15,25 @@ import java.util.List;
 import java.util.function.Supplier;
 
 public class SBInits {
-    public static List<RegistryObject<Item>> list = new ArrayList<>();
+    public static List<RegistryObject<ItemSlashBlade>> list = new ArrayList<>();
 
     public static final DeferredRegister<Item> item;
     public static final RegistryObject<SpecialEffect> DC_EDGE;
 
-    public static RegistryObject<Item> registry(String id, Supplier<? extends Item> target) {
+    public static RegistryObject<ItemSlashBlade> registry(String id, Supplier<? extends ItemSlashBlade> target) {
         long startTime = System.currentTimeMillis();
-        DCMod.logger("try to register item " + id);
-        RegistryObject<Item> object = item.register(id, target);
+        DCMod.logger("try to register slashblade " + id);
+        RegistryObject<ItemSlashBlade> object = item.register(id, target);
+        list.add(object);
         long endTime = System.currentTimeMillis();
         long executionTime = endTime - startTime;
-        DCMod.logger("item " + id + " registered in " + executionTime + " ms");
+        DCMod.logger("slashblade " + id + " registered in " + executionTime + " ms");
         return object;
     }
-    public static final RegistryObject<Item> DC_SB;
+    public static final RegistryObject<ItemSlashBlade> DC_SB;
 
     public static void init(IEventBus eventBus) {
+        DCMod.logger("slashblade is load");
         effect.register(eventBus);
         item.register(eventBus);
         MinecraftForge.EVENT_BUS.register(DaiChangSpecialEffect.class);
@@ -38,11 +41,21 @@ public class SBInits {
 
     public static final DeferredRegister<SpecialEffect> effect;
 
+    public static RegistryObject<SpecialEffect> register(String id, Supplier<? extends SpecialEffect> supplier) {
+        long startTime = System.currentTimeMillis();
+        DCMod.logger("try to register slashblade special effect " + id);
+        RegistryObject<SpecialEffect> object = effect.register(id, supplier);
+        long endTime = System.currentTimeMillis();
+        long executionTime = endTime - startTime;
+        DCMod.logger("slashblade special effect " + id + " registered in " + executionTime + " ms");
+        return object;
+    }
+
     static {
         item = DeferredRegister.create(ForgeRegistries.ITEMS, DCMod.MOD_ID);
         DC_SB = registry("daichang_slash_blade", DaiChangSB::new);
         effect = DeferredRegister.create(SpecialEffect.REGISTRY_KEY, DCMod.MOD_ID);
-        DC_EDGE = effect.register("daichang_se", DaiChangSpecialEffect::new);
+        DC_EDGE = register("daichang_se", DaiChangSpecialEffect::new);
     }
 
 //    private static ResourceKey<SlashBladeDefinition> init(String id) {

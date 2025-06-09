@@ -16,17 +16,20 @@ public class Config {
 
         public static final ForgeConfigSpec client;
 
+        public static final ForgeConfigSpec.BooleanValue can_change_splash;
+
         static {
             clientBuild =  new ForgeConfigSpec.Builder();
             rainbow_font = clientBuild.comment("Mod Name Rainbow Font").define("Mod Name Rainbow Font", true);
             boss_music = clientBuild.comment("Boss Music").define("Boss Music", true);
+            can_change_splash = clientBuild.comment("Can Change Splash").define("Can Change Splash", false);
             tool_tip_render = clientBuild.comment("More tooltip render").define("More tooltip render", true);
             toop_tip_background_color = clientBuild.comment("Tool Tip Custom Render").define("Tool Tip Custom Render", false);
             client = clientBuild.build();
         }
     }
 
-    public static class Server {
+    public static class Common {
         public static final ForgeConfigSpec.Builder serverBuild;
 
         public static final ForgeConfigSpec.BooleanValue boss_super_hurt;
@@ -43,7 +46,7 @@ public class Config {
 
         public static final ForgeConfigSpec.BooleanValue rest_fe_ban_heal;
 
-        public static final ForgeConfigSpec server;
+        public static final ForgeConfigSpec common;
 
         static {
             serverBuild =  new ForgeConfigSpec.Builder();
@@ -54,7 +57,7 @@ public class Config {
             anti_heal = serverBuild.comment("Prohibition of treatment").define("Prohibition of treatment", true);
             steve_health_boost = serverBuild.comment("Steve Health Boost").define("Steve Health Boost", false);
             rest_fe_ban_heal = serverBuild.comment("Reset Fantasy Ending Health Delta").define("Reset FE Health Delta", false);
-            server = serverBuild.build();
+            common = serverBuild.build();
         }
     }
 }

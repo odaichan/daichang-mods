@@ -1,9 +1,11 @@
 package net.daichang.dcmods.utils.helpers;
 
+import com.mega.uom.util.entity.EntityASMUtil;
 import net.daichang.dcmods.Config;
 import net.daichang.dcmods.client.PacketHandler;
 import net.daichang.dcmods.client.network.S2CSyncSetFloatField;
 import net.daichang.dcmods.utils.ClassUtil;
+import net.daichang.dcmods.utils.ModUtil;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.util.Mth;
@@ -108,7 +110,7 @@ public class DataHelper {
     }
 
     public static void setHealthDelta(LivingEntity living, float value) {
-        if (Config.Server.anti_heal.get()) living.getEntityData().set(DC_GET_HEALTH_DATA, value);
+        if (Config.Common.anti_heal.get()) living.getEntityData().set(DC_GET_HEALTH_DATA, value);
     }
 
     public static int getDeathTime(LivingEntity living) {
@@ -141,5 +143,6 @@ public class DataHelper {
 
     public static void restHealthDelta(LivingEntity living) {
         setHealthDelta(living, 0.0F);
+        if (ModUtil.isFELoad() && Config.Common.rest_fe_ban_heal.get()) EntityASMUtil.setHealthDelta(living, 0);
     }
 }

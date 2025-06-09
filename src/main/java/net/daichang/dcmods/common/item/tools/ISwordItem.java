@@ -20,8 +20,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Random;
-
 public class ISwordItem extends SwordItem {
     public ISwordItem(Tier pTier, int pAttackDamageModifier, float pAttackSpeedModifier, Properties pProperties) {
         super(pTier, pAttackDamageModifier, pAttackSpeedModifier, pProperties);
@@ -30,8 +28,6 @@ public class ISwordItem extends SwordItem {
 
     @Override
     public @NotNull InteractionResultHolder<ItemStack> use(@NotNull Level pLevel, Player pPlayer, @NotNull InteractionHand pUsedHand) {
-        ItemStack stack = pPlayer.getItemInHand(pUsedHand);
-        if (stack.getTag() != null) stack.getTag().putInt("onDCSwordBlock", new Random().nextInt());
         pPlayer.startUsingItem(pUsedHand);
         return super.use(pLevel, pPlayer, pUsedHand);
     }
@@ -42,16 +38,9 @@ public class ISwordItem extends SwordItem {
     }
 
     @Override
-    public Multimap<Attribute, AttributeModifier> getAttributeModifiers(EquipmentSlot slot, ItemStack stack) {
-        if (stack.getTag() != null && !(stack.getTag().contains("onDCSwordBlock"))) stack.getTag().putInt("onDCSwordBlock", 0);
-        return super.getAttributeModifiers(slot, stack);
-    }
-
-    @Override
     public boolean hurtEnemy(ItemStack pStack, @NotNull LivingEntity pTarget, @NotNull LivingEntity pAttacker) {
         EntityHelper.noHurtDuration(pTarget);
         pTarget.hurt(EntityHelper.player_attack_damage(pAttacker), 5);
-        if (pStack.getTag() != null) pStack.getTag().putInt("onDCSwordBlock", new Random().nextInt());
         return super.hurtEnemy(pStack, pTarget, pAttacker);
     }
 

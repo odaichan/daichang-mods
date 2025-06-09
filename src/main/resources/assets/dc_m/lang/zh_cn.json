@@ -62,7 +62,7 @@
   "entities.dc_mods.dc_wither_name_tow": "伊雷娜[伤心]",
   "tooltip.dc_mods.spawn_mods_egg": "此物可召唤 DaiChang's Wife",
   "item.dc_m.dc_wither_spawn_egg": "管理世界[封]",
-  "chat.dc_mods.world_loading": "欢迎使用[带长的随意创作]",
+  "chat.dc_mods.world_loading": "Ὁ欢迎使用[带长的随意创作]Ὁ",
   "chat.dc_mods.core_loading": "当前CoreMod加载情况:",
   "effect.dc_m.bloodshed": "流血",
   "block.dc_m.red_spider_lily": "彼岸花",
@@ -198,5 +198,16 @@
   "slashblade.dc_m.daichang_blade.tool_tip_1": "幻影剑攻击无视无敌时间",
   "slashblade.dc_m.daichang_blade.tool_tip_2": "根据击杀数提升伤害",
   "se.dc_m.daichang_se": "祝福之力",
-  "logger.daichang.omni_mob_load": "找到了Omni mod mod. 如果你想杀死其Mod中的实体，请使用带长制作的逐梦星光Mod"
+  "logger.daichang.omni_mob_load": "找到了Omni mod mod. 如果你想杀死其Mod中的实体，请使用带长制作的逐梦星光Mod",
+  "irons_spellbooks.dc_mods.schooltype_name": "海洋",
+  "chat.dc_m.ex_calibur_1": "⌊ 汇聚的星之吐息 ⌉",
+  "chat.dc_m.ex_calibur_2": "⌊ 闪烁的生命奔流 ⌉",
+  "chat.dc_m.ex_calibur_3": "⌊ 接下吧 ⌉",
+  "chat.dc_m.ex_calibur_press": "『 EXCALIBUR 』",
+  "item.dc_m.excalibur": "誓约胜利之剑",
+  "tooltip.dc_m.excalibur": "此乃斩断黑暗的传说之证，王者的光辉",
+  "item.dc_m.dc_loli_spawn_egg": "召唤 萝莉",
+  "tabs.dc_mods.all_items": "带长的全部物品",
+  "item.dc_m.dc_wither_boss_spawn_egg": "召唤 带长的凋灵",
+  "entity.dc_m.wither": "凋零"
 }

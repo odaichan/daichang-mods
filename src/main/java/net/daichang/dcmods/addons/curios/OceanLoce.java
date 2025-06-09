@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
 import net.daichang.dcmods.client.font.DCOceanItemFont;
 import net.daichang.dcmods.inits.DCAttributes;
+import net.daichang.dcmods.inits.DCUuid;
 import net.daichang.dcmods.utils.helpers.DataHelper;
 import net.daichang.dcmods.utils.helpers.EntityHelper;
 import net.minecraft.client.gui.Font;
@@ -28,11 +29,12 @@ public class OceanLoce extends Item implements ICurioItem {
     public OceanLoce() {
         super(new Properties().stacksTo(1).fireResistant());
         ImmutableMultimap.Builder<Attribute, AttributeModifier> mainHand = ImmutableMultimap.builder();
-        mainHand.put(Attributes.ATTACK_DAMAGE, new AttributeModifier(UUID.randomUUID(), "Weapon modifier", 23.2D, AttributeModifier.Operation.MULTIPLY_BASE));
+        mainHand.put(Attributes.ATTACK_DAMAGE, new AttributeModifier(BASE_ATTACK_DAMAGE_UUID, "Weapon modifier", 23.2D, AttributeModifier.Operation.MULTIPLY_BASE));
         mainHand.put(Attributes.MAX_HEALTH, new AttributeModifier(UUID.randomUUID(), "Weapon modifier", 12.34D, AttributeModifier.Operation.MULTIPLY_TOTAL));
         mainHand.put(ForgeMod.SWIM_SPEED.get(), new AttributeModifier(UUID.randomUUID(), "Weapon modifier", 0.2D, AttributeModifier.Operation.MULTIPLY_TOTAL));
-        mainHand.put(DCAttributes.DC_SUPER_DAMAGE.get(), new AttributeModifier(UUID.randomUUID(), "Item modifier", 5.2D, AttributeModifier.Operation.MULTIPLY_TOTAL));
-        mainHand.put(DCAttributes.DC_DEFENSE.get(), new AttributeModifier(UUID.randomUUID(), "Item modifier", 5.20D, AttributeModifier.Operation.MULTIPLY_TOTAL));
+        mainHand.put(DCAttributes.DC_SUPER_DAMAGE.get(), new AttributeModifier(DCUuid.BASE_SNOW_DAMAGE_UUID, "Item modifier", 5.2D, AttributeModifier.Operation.MULTIPLY_TOTAL));
+        mainHand.put(DCAttributes.DC_DEFENSE.get(), new AttributeModifier(DCUuid.BASE_SNOW_RESIT_UUID, "Item modifier", 5.20D, AttributeModifier.Operation.MULTIPLY_TOTAL));
+        mainHand.put(DCAttributes.OCEAN_DAMAGE.get(), new AttributeModifier(DCUuid.BASE_OCEAN_DAMAGE_UUID, "Item modifier", 25.20D, AttributeModifier.Operation.MULTIPLY_TOTAL));
         mainHand.put(ForgeMod.ENTITY_REACH.get(), new AttributeModifier(UUID.randomUUID(), "Item modifier", 0.4D, AttributeModifier.Operation.MULTIPLY_TOTAL));
         mainHand.put(ForgeMod.BLOCK_REACH.get(), new AttributeModifier(UUID.randomUUID(), "Item modifier", 0.4D, AttributeModifier.Operation.MULTIPLY_TOTAL));
         multimap = mainHand.build();

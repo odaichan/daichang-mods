@@ -2,6 +2,7 @@ package net.daichang.dcmods.inits;
 
 import net.daichang.dcmods.DCMod;
 import net.daichang.dcmods.common.item.BaseSuperItem;
+import net.daichang.dcmods.common.item.DCBaseSpawnEgg;
 import net.daichang.dcmods.common.item.DCTier;
 import net.daichang.dcmods.common.item.armors.DCSuperArmor;
 import net.daichang.dcmods.common.item.crafts.HeartOfTheOcean;
@@ -19,21 +20,25 @@ import net.daichang.dcmods.common.item.tools.normal.IPickaxeItem;
 import net.daichang.dcmods.common.item.tools.normal.IShovelItem;
 import net.daichang.dcmods.common.item.tools.supers.*;
 import net.minecraft.world.item.*;
+import net.minecraftforge.common.ForgeSpawnEggItem;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
 
 public class DCItems {
+    public static final List<RegistryObject<Item>> all_item = new ArrayList<>();
     public static final DeferredRegister<Item> items = DeferredRegister.create(ForgeRegistries.ITEMS, DCMod.MOD_ID);
 
     public static RegistryObject<Item> registry(String id, Supplier<? extends Item> target) {
         long startTime = System.currentTimeMillis();
         DCMod.logger("try to register item " + id);
         RegistryObject<Item> item = items.register(id, target);
+        all_item.add(item);
         long endTime = System.currentTimeMillis();
         long executionTime = endTime - startTime;
         DCMod.logger("item " + id + " registered in " + executionTime + " ms");
@@ -51,7 +56,7 @@ public class DCItems {
         return object;
     }
 
-    public static RegistryObject<Item> eggRegister(String id, Supplier<? extends Item> target) {
+    public static RegistryObject<Item> eggRegister(String id, Supplier<? extends ForgeSpawnEggItem> target) {
         RegistryObject<Item> object = registry(id, target);
         spawn_egg.add(object);
         return object;
@@ -118,6 +123,8 @@ public class DCItems {
     public static final RegistryObject<Item> ELIANIA_MODE;
     public static final RegistryObject<Item> OCEAN_SCYTHE;
     public static final RegistryObject<Item> LOLI_SPAWN;
+    public static final RegistryObject<Item> EX_CALIBUR;
+    public static final RegistryObject<Item> DC_WITHER_SPWAN;
 
     static {
         WOOD_INGOT = normalItemRegister("wood_ingot", ()-> new Item(new Item.Properties().stacksTo(16).rarity(Rarity.COMMON)));
@@ -158,7 +165,8 @@ public class DCItems {
 
         LoliPickaxe = creativeItemRegister("loli_pickaxe", DCLoliPickaxe::new);
 
-        WOOD_TOTEM = registry("super_wood_totem", SuperWoodTotem::new);
+        WOOD_TOTEM = normalItemRegister("super_wood_totem", SuperWoodTotem::new);
+        EX_CALIBUR = creativeItemRegister("excalibur", EXCalibur::new);
 
         //ARMOR
         HEART_OF_THE_OCEAN = normalItemRegister("heart_of_the_ocean", HeartOfTheOcean::new);
@@ -168,5 +176,6 @@ public class DCItems {
         WOOD_BOOTS = armorRegister("super_wood_boots", DCSuperArmor.Boots::new);
         OCEAN_SCYTHE = normalItemRegister("ocean_scythe", OceanScythe::new);
         ELIANIA_MODE = creativeItemRegister("set_dead", DCElainaMode::new);
+        DC_WITHER_SPWAN = eggRegister("dc_wither_boss_spawn_egg", ()-> new DCBaseSpawnEgg(DCEntities.DC_WITHER, Color.DARK_GRAY.getRGB(), Color.BLACK.getRGB(), new Item.Properties()));
     }
 }

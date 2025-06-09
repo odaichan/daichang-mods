@@ -9,6 +9,7 @@ import net.daichang.dcmods.common.entities.BossEntity;
 import net.daichang.dcmods.common.entities.boss.DCLoveElaina;
 import net.daichang.dcmods.common.item.armors.DCSuperArmor;
 import net.daichang.dcmods.common.item.tools.creative.DCLoliPickaxe;
+import net.daichang.dcmods.inits.DCAttributes;
 import net.daichang.dcmods.inits.DCEffects;
 import net.daichang.dcmods.inits.DCEntities;
 import net.daichang.dcmods.inits.DCItems;
@@ -70,6 +71,10 @@ public class DCForgeEventHandler {
     @SubscribeEvent
     public static void hurtEvent(@NotNull LivingHurtEvent event) {
         LivingEntity hurtEntity = event.getEntity();
+        if (hurtEntity.getAttribute(DCAttributes.DC_DEFENSE.get()) != null && hurtEntity.getAttributeValue(DCAttributes.DC_DEFENSE.get()) > 0) {
+            float resitValue = (float) hurtEntity.getAttributeValue(DCAttributes.DC_DEFENSE.get()) * 0.8F + 1.0F;
+            event.setAmount(event.getAmount() - resitValue);
+        }
         if (Utils.isBlocking(hurtEntity)) {
             hurtEntity.playSound(SoundEvents.SHIELD_BLOCK);
             event.setCanceled(true);
@@ -208,14 +213,9 @@ public class DCForgeEventHandler {
     public static void renderTooltipEventColor(RenderTooltipEvent.Color event) {
         ItemStack stack = event.getItemStack();
         Item item = stack.getItem();
-        float index = 0.5F;
-        float hueOffset = (float) Util.getMillis() / 16000.0F;
-        float hue = hueOffset + index * index;
-        float saturation = 1.0F;
-        float brightness = 1.0F;
-        int c = Color.HSBtoRGB((((hue * 720.0F + index) % 720.0F >= 360.0F) ? (720.0F - (hue * 720.0F + index) % 720.0F) : ((hue * 720.0F + index) % 720.0F)) / 256.0F, saturation, brightness);
+        int c = ColorHelper.rainBowColor();
         if (Config.Client.tool_tip_render.get()) {
-            if (Utils.isSuperTool(stack)){
+            if (Utils.isSuperTool(stack) || Utils.isLightItem(stack)){
                 event.setBorderStart(c);
                 event.setBorderEnd(c);
                 if (Config.Client.toop_tip_background_color.get()) {
@@ -389,7 +389,7 @@ public class DCForgeEventHandler {
     @SubscribeEvent
     public static void sendMessageOfPlayer(PlayerEvent.PlayerLoggedInEvent e){
         Player player = e.getEntity();
-        player.displayClientMessage(TextUtils.rainbow(Component.translatable("chat.dc_mods.world_loading")), false);
+        player.displayClientMessage(Component.translatable("chat.dc_mods.world_loading"), false);
     }
 
     @OnlyIn(Dist.CLIENT)
@@ -424,7 +424,7 @@ public class DCForgeEventHandler {
         double x = living.getX();
         double y = living.getY();
         double z = living.getZ();
-        if (living.getType() == EntityType.TROPICAL_FISH && Config.Server.ocean_heart.get()) {
+        if (living.getType() == EntityType.TROPICAL_FISH && Config.Common.ocean_heart.get()) {
             double random = MathHelper.getRandomDouble(0.00D, 1.00D);
             if (random == 0.01D) {
                 ItemEntity item = new ItemEntity(living.level(), x, y, z, new ItemStack(DCItems.HEART_OF_THE_OCEAN.get()));
@@ -449,7 +449,7 @@ public class DCForgeEventHandler {
     public static void playerTickEvent(TickEvent.PlayerTickEvent event) {
         Player player = event.player;
         if (Utils.isBlocking(player) && player.tickCount % 10 == 0 && DataHelper.getHealthDelta(player) <= 0) {
-            DataHelper.addHealthDelta(player, Config.Server.heal_count.get());
+            DataHelper.addHealthDelta(player, Config.Common.heal_count.get());
             player.heal(0.5F);
         }
     }

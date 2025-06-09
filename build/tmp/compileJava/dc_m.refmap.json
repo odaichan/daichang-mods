@@ -51,6 +51,9 @@
     "net/daichang/dcmods/bytes/mixins/MixinItemEntityRenderer": {
       "render(Lnet/minecraft/world/entity/item/ItemEntity;FFLcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;I)V": "Lnet/minecraft/client/renderer/entity/ItemEntityRenderer;m_7392_(Lnet/minecraft/world/entity/item/ItemEntity;FFLcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;I)V"
     },
+    "net/daichang/dcmods/bytes/mixins/MixinMob": {
+      "isNoAi": "Lnet/minecraft/world/entity/Mob;m_21525_()Z"
+    },
     "net/daichang/dcmods/bytes/mixins/MixinFont": {
       "drawInBatch(Lnet/minecraft/util/FormattedCharSequence;FFIZLorg/joml/Matrix4f;Lnet/minecraft/client/renderer/MultiBufferSource;Lnet/minecraft/client/gui/Font$DisplayMode;II)I": "Lnet/minecraft/client/gui/Font;m_272191_(Lnet/minecraft/util/FormattedCharSequence;FFIZLorg/joml/Matrix4f;Lnet/minecraft/client/renderer/MultiBufferSource;Lnet/minecraft/client/gui/Font$DisplayMode;II)I"
     },
@@ -65,6 +68,12 @@
       "readAdditionalSaveData": "Lnet/minecraft/world/entity/LivingEntity;m_7378_(Lnet/minecraft/nbt/CompoundTag;)V",
       "getHealth": "Lnet/minecraft/world/entity/LivingEntity;m_21223_()F",
       "isDeadOrDying": "Lnet/minecraft/world/entity/LivingEntity;m_21224_()Z"
+    },
+    "net/daichang/dcmods/bytes/mixins/SplashRendererMixin": {
+      "render": "Lnet/minecraft/client/gui/components/SplashRenderer;m_280672_(Lnet/minecraft/client/gui/GuiGraphics;ILnet/minecraft/client/gui/Font;I)V"
+    },
+    "net/daichang/dcmods/bytes/mixins/SplashManagerMixin": {
+      "getSplash": "Lnet/minecraft/client/resources/SplashManager;m_280369_()Lnet/minecraft/client/gui/components/SplashRenderer;"
     },
     "net/daichang/dcmods/bytes/mixins/sword_block/PlayerItemInHandLayerMixin": {
       "renderArmWithItem": "Lnet/minecraft/client/renderer/entity/layers/PlayerItemInHandLayer;m_117184_(Lnet/minecraft/world/entity/LivingEntity;Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/item/ItemDisplayContext;Lnet/minecraft/world/entity/HumanoidArm;Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;I)V"
@@ -123,6 +132,9 @@
       "net/daichang/dcmods/bytes/mixins/MixinItemEntityRenderer": {
         "render(Lnet/minecraft/world/entity/item/ItemEntity;FFLcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;I)V": "Lnet/minecraft/client/renderer/entity/ItemEntityRenderer;m_7392_(Lnet/minecraft/world/entity/item/ItemEntity;FFLcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;I)V"
       },
+      "net/daichang/dcmods/bytes/mixins/MixinMob": {
+        "isNoAi": "Lnet/minecraft/world/entity/Mob;m_21525_()Z"
+      },
       "net/daichang/dcmods/bytes/mixins/MixinFont": {
         "drawInBatch(Lnet/minecraft/util/FormattedCharSequence;FFIZLorg/joml/Matrix4f;Lnet/minecraft/client/renderer/MultiBufferSource;Lnet/minecraft/client/gui/Font$DisplayMode;II)I": "Lnet/minecraft/client/gui/Font;m_272191_(Lnet/minecraft/util/FormattedCharSequence;FFIZLorg/joml/Matrix4f;Lnet/minecraft/client/renderer/MultiBufferSource;Lnet/minecraft/client/gui/Font$DisplayMode;II)I"
       },
@@ -137,6 +149,12 @@
         "readAdditionalSaveData": "Lnet/minecraft/world/entity/LivingEntity;m_7378_(Lnet/minecraft/nbt/CompoundTag;)V",
         "getHealth": "Lnet/minecraft/world/entity/LivingEntity;m_21223_()F",
         "isDeadOrDying": "Lnet/minecraft/world/entity/LivingEntity;m_21224_()Z"
+      },
+      "net/daichang/dcmods/bytes/mixins/SplashRendererMixin": {
+        "render": "Lnet/minecraft/client/gui/components/SplashRenderer;m_280672_(Lnet/minecraft/client/gui/GuiGraphics;ILnet/minecraft/client/gui/Font;I)V"
+      },
+      "net/daichang/dcmods/bytes/mixins/SplashManagerMixin": {
+        "getSplash": "Lnet/minecraft/client/resources/SplashManager;m_280369_()Lnet/minecraft/client/gui/components/SplashRenderer;"
       },
       "net/daichang/dcmods/bytes/mixins/sword_block/PlayerItemInHandLayerMixin": {
         "renderArmWithItem": "Lnet/minecraft/client/renderer/entity/layers/PlayerItemInHandLayer;m_117184_(Lnet/minecraft/world/entity/LivingEntity;Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/item/ItemDisplayContext;Lnet/minecraft/world/entity/HumanoidArm;Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;I)V"

@@ -78,7 +78,19 @@ public abstract class MixinFont {
         int darkerC;
         int width = width(text);
         int height = lineHeight;
-        if (text.equals(getString("item.dc_m.ocean_scythe")) || text.equals(getString("entities.dc_mods.dc_wither_name")) || text.equals(getString("entities.dc_mods.dc_wither_name_tow"))) {
+        if (text.equals(getString("item.dc_m.ocean_scythe")) || text.contains(getString("chat.dc_mods.world_loading")) || text.equals(getString("entities.dc_mods.dc_wither_name")) || text.equals(getString("entities.dc_mods.dc_wither_name_tow"))) {
+            darkerC = daichangmod$getDarkColor(c);
+            for (int index = 0; index < text.length(); index++) {
+                String s = String.valueOf(text.charAt(index));
+                float offset_y = (float)(pY + Math.sin(((float) Util.getMillis() / 500.0F + index / 5.0F)) * 3.0D);
+                drawInBatch(s, pX, offset_y, c, pDropShadow, pMatrix, pBuffer, pDisplayMode, pBackgroundColor, pPackedLightCoords);
+                drawInBatch(s, pX+0.45F, offset_y+0.45F, darkerC, pDropShadow, pMatrix, pBuffer, pDisplayMode, pBackgroundColor, pPackedLightCoords);
+                pX += width(s);
+            }
+            cir.setReturnValue((int) pX);
+        }
+        if (text.contains(getString("chat.dc_m.ex_calibur_press")) || text.contains(getString("item.dc_m.excalibur"))) {
+            c = rgb & 0xFFFFD700;
             darkerC = daichangmod$getDarkColor(c);
             for (int index = 0; index < text.length(); index++) {
                 String s = String.valueOf(text.charAt(index));

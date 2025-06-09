@@ -3,8 +3,9 @@ package net.daichang.dcmods.addons.slashblade;
 import mods.flammpfeil.slashblade.capability.slashblade.ISlashBladeState;
 import mods.flammpfeil.slashblade.event.SlashBladeEvent;
 import mods.flammpfeil.slashblade.registry.specialeffects.SpecialEffect;
+import net.daichang.dcmods.utils.TextUtils;
+import net.daichang.dcmods.utils.helpers.ColorHelper;
 import net.daichang.dcmods.utils.helpers.EffectHelper;
-import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
@@ -37,6 +38,7 @@ public class DaiChangSpecialEffect extends SpecialEffect {
                 if (SpecialEffect.isEffective(SBInits.DC_EDGE.getId(), level)) {
                     living.addEffect(new MobEffectInstance(MobEffects.HEAL, 100, 1));
                     living.addEffect(new MobEffectInstance(MobEffects.SATURATION, 100, 2));
+                    state.setEffectColor(ColorHelper.getRainbowColor());
                 }
             }
         }
@@ -51,17 +53,17 @@ public class DaiChangSpecialEffect extends SpecialEffect {
         ISlashBladeState state = event.getSlashBladeState();
         LivingEntity target = event.getTarget();
         if (state.hasSpecialEffect(SBInits.DC_EDGE.getId())) {
-            if (!(event.getUser() instanceof Player player)) {
-                return;
-            }
+            if (!(event.getUser() instanceof Player player)) return;
             int level = player.experienceLevel;
-            if (SpecialEffect.isEffective(SBInits.DC_EDGE.getId(), level))
+            if (SpecialEffect.isEffective(SBInits.DC_EDGE.getId(), level)) {
                 target.addEffect(EffectHelper.addEffect(MobEffects.DARKNESS, 20));
+                DaiChangSB.onDCSBHitEntity(event.getBlade(), target, event.getUser());
+            }
         }
     }
 
     @Override
     public Component getDescription() {
-        return Component.literal(super.getDescription().getString()).withStyle(ChatFormatting.BLUE);
+        return TextUtils.rainbow(super.getDescription().getString());
     }
 }

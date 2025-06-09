@@ -20,7 +20,13 @@ public class DCEffects {
     public static final RegistryObject<MobEffect> EnchantressMercy;
 
     public static RegistryObject<MobEffect> register(String id, Supplier<? extends MobEffect> supplier) {
-        return effects.register(id, supplier);
+        long startTime = System.currentTimeMillis();
+        DCMod.logger("try to register mob effect " + id);
+        RegistryObject<MobEffect> object = effects.register(id, supplier);
+        long endTime = System.currentTimeMillis();
+        long executionTime = endTime - startTime;
+        DCMod.logger("mob effect " + id + " registered in " + executionTime + " ms");
+        return object;
     }
 
     static {

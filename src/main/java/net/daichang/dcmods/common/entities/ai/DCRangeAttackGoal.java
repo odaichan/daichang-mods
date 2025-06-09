@@ -1,5 +1,7 @@
 package net.daichang.dcmods.common.entities.ai;
 
+import net.daichang.dcmods.inits.DCEffects;
+import net.daichang.dcmods.utils.helpers.EffectHelper;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.ai.goal.RangedAttackGoal;
 import net.minecraft.world.entity.monster.RangedAttackMob;
@@ -11,6 +13,10 @@ public class DCRangeAttackGoal extends RangedAttackGoal {
 
     @Override
     public void tick() {
+        if (target != null) {
+            target.addEffect(EffectHelper.addEffect(DCEffects.Bloodshed.get()));
+            target.addEffect(EffectHelper.addEffect(DCEffects.Freeze.get()));
+        }
         double $$0 = this.mob.distanceToSqr(this.target.getX(), this.target.getY(), this.target.getZ());
         boolean $$1 = this.mob.getSensing().hasLineOfSight(this.target);
         if ($$1) {
@@ -30,7 +36,7 @@ public class DCRangeAttackGoal extends RangedAttackGoal {
             this.rangedAttackMob.performRangedAttack(this.target, $$3);
             this.attackTime = Mth.floor($$2 * (float)(this.attackIntervalMax - this.attackIntervalMin) + (float)this.attackIntervalMin);
         } else if (this.attackTime < 0) {
-            this.attackTime = Mth.floor(Mth.lerp(Math.sqrt($$0) / (double)this.attackRadius, (double)this.attackIntervalMin, (double)this.attackIntervalMax));
+            this.attackTime = Mth.floor(Mth.lerp(Math.sqrt($$0) / (double)this.attackRadius, this.attackIntervalMin, this.attackIntervalMax));
         }
     }
 }

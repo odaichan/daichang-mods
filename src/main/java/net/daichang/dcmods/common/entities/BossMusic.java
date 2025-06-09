@@ -12,7 +12,7 @@ public class BossMusic extends AbstractTickableSoundInstance {
     BossEntity boss;
 
     protected BossMusic(BossEntity boss) {
-        super(boss.getBossMusic(), SoundSource.RECORDS, RandomSource.create());
+        super(boss.getBossMusic(), SoundSource.MUSIC, RandomSource.create());
         this.boss = boss;
         this.volume = 1.0f;
         this.pitch = 1.0f;
@@ -24,16 +24,18 @@ public class BossMusic extends AbstractTickableSoundInstance {
         if (Minecraft.getInstance().level == null) {
             return;
         }
-        boolean b = Config.Client.boss_music.get();
-        for (Entity entity : Minecraft.getInstance().level.entitiesForRendering()) {
-            if (Minecraft.getInstance().player != null) {
-                if (entity.equals(this.boss)) this.boss.distanceTo(Minecraft.getInstance().player);
+        boolean b = false;
+        if (Config.Client.boss_music.get()) {
+            for (Entity entity : Minecraft.getInstance().level.entitiesForRendering()) {
+                if (Minecraft.getInstance().player != null && (!entity.equals(this.boss) || !(this.boss.distanceTo(Minecraft.getInstance().player) < (float) (Minecraft.getInstance().options.renderDistance().get() * 16))))
+                    continue;
+                b = true;
+            }
+            if (Minecraft.getInstance().options.getSoundSourceVolume(SoundSource.MUSIC) <= 0.0f) {
+                this.volume = 0.0f;
             }
         }
-        if (Minecraft.getInstance().options.getSoundSourceVolume(SoundSource.MUSIC) <= 0.0f) {
-            this.volume = 0.0f;
-        }
-        if (!b) {
+        if (!b || !Config.Client.boss_music.get()) {
             Minecraft.getInstance().getSoundManager().stop(this);
         }
     }
@@ -52,7 +54,7 @@ public class BossMusic extends AbstractTickableSoundInstance {
     }
 
     public static void playMusic(BossMusic music, BossEntity bossEntity) {
-        if (Minecraft.getInstance().options.getSoundSourceVolume(SoundSource.MUSIC) <= 0.0f) {
+        if (Minecraft.getInstance().options.getSoundSourceVolume(SoundSource.MUSIC) <= 0.0f || Config.Client.boss_music.get()) {
             music = null;
         }
         if (music != null) {

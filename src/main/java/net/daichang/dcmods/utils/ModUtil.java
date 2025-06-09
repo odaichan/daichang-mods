@@ -59,6 +59,11 @@ public class ModUtil extends ModHelper {
         return isModLoading("farmersdelight");
     }
 
+    //铁魔法
+    public static boolean isIronSBLoad() {
+        return isModLoading("irons_spellbooks");
+    }
+
     //帕秋莉手册(用于做教程)
     public static boolean isPatchouliLoad() {
         return isModLoading("patchouli");

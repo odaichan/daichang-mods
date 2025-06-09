@@ -1,10 +1,11 @@
 package net.daichang.dcmods.common.item;
 
 import net.daichang.dcmods.client.font.DCEntityFont;
+import net.daichang.dcmods.common.entities.DCBaseMonster;
+import net.daichang.dcmods.utils.lists.items.CreativeItemList;
 import net.minecraft.client.gui.Font;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.Mob;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
@@ -18,17 +19,22 @@ import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 public class DCBaseSpawnEgg extends ForgeSpawnEggItem {
-    Supplier<? extends EntityType<? extends Mob>> type;
-    public DCBaseSpawnEgg(Supplier<? extends EntityType<? extends Mob>> type, int backgroundColor, int highlightColor, Properties props) {
-        super(type, backgroundColor, highlightColor, props);
+    Supplier<? extends EntityType<? extends DCBaseMonster>> type;
+    public DCBaseSpawnEgg(Supplier<? extends EntityType<? extends DCBaseMonster>> type, int backgroundColor, int highlightColor, Properties props) {
+        super(type, backgroundColor, highlightColor, props.stacksTo(16));
+        CreativeItemList.addItem(this);
         this.type = type;
     }
 
     @Override
-    public void appendHoverText(ItemStack pStack, @Nullable Level pLevel, List<Component> list, TooltipFlag pIsAdvanced) {
+    public void appendHoverText(@NotNull ItemStack pStack, @Nullable Level pLevel, @NotNull List<Component> list, @NotNull TooltipFlag pIsAdvanced) {
         super.appendHoverText(pStack, pLevel, list, pIsAdvanced);
         list.add(Component.literal(" "));
         list.add(Component.translatable("tool_tip.dc_m.spwan_entity"));
+        if (pLevel != null) {
+            DCBaseMonster boss = new DCBaseMonster(type.get(), pLevel);
+            list.add(boss.getDCName());
+        }
         list.add(Component.literal(type.get().getDescriptionId()));
     }
 

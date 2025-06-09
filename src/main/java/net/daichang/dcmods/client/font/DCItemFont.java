@@ -32,7 +32,11 @@ public class DCItemFont extends Font {
     }
 
     public static boolean isTabFont(String s) {
-        return s.contains(getString("tabs.dc_mods.tab")) || s.contains(getString("tabs.dc_mods.tab_creative")) || s.contains(getString("tabs.dc_mods.tab_block"));
+        return s.contains(getString("tabs.dc_mods.tab")) ||
+                s.contains(getString("tabs.dc_mods.tab_creative")) ||
+                s.contains(getString("tabs.dc_mods.all_items")) ||
+                s.contains(getString("tabs.dc_mods.tab_block"))
+                ;
     }
 
     public static boolean isWarnTip(String s) {

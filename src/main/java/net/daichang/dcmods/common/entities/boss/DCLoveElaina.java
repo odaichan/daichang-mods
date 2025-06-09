@@ -77,11 +77,13 @@ public class DCLoveElaina extends BossEntity implements PowerableMob, RangedAtta
     public DCLoveElaina(EntityType<DCLoveElaina> p_31437_, Level p_31438_) {
         super(p_31437_, p_31438_);
         this.xpReward = 200000;
+        this.setItemInHand(InteractionHand.MAIN_HAND, this.superSword());
     }
 
     public DCLoveElaina(PlayMessages.SpawnEntity spawnEntity, Level world) {
         super(DCEntities.ELAINA.get(), world);
         this.xpReward = 200000;
+        this.setItemInHand(InteractionHand.MAIN_HAND, this.superSword());
     }
 
     @Override
@@ -92,17 +94,12 @@ public class DCLoveElaina extends BossEntity implements PowerableMob, RangedAtta
             protected double getAttackReachSqr(@NotNull LivingEntity entity) {
                 return 74.0D;
             }
-
-            @Override
-            protected void resetAttackCooldown() {
-                super.resetAttackCooldown();
-            }
         });
         this.targetSelector.addGoal(1, new HurtByTargetGoal(this).setAlertOthers());
         this.goalSelector.addGoal(1, new NearestAttackableTargetGoal<>(this, LivingEntity.class, true, false){
             @Override
             protected double getFollowDistance() {
-                return 74.0D;
+                return 128.0D;
             }
         });
         this.goalSelector.addGoal(2, new LookAtPlayerGoal(this, Player.class, 8.0F));
@@ -119,11 +116,14 @@ public class DCLoveElaina extends BossEntity implements PowerableMob, RangedAtta
         if (getHealth() <= 0 || isDeadOrDying()) return false;
         this.addAttackCount(1);
         Entity entity = damageSource.getEntity();
-        if (entity instanceof LivingEntity living)
-            EntityActuallyHurt.getInstance(living, this).actuallyHurt(damageSource, damage);
+        if (entity instanceof LivingEntity living) {
+            float value = living.getHealth() * 0.0001F + living.getMaxHealth() * 0.0001F;
+            if (damage < 200) value = value + damage / 10;
+            else value = value + damage / 5;
+            EntityActuallyHurt.getInstance(living, this).actuallyHurt(damageSource, value);
+        }
         return super.hurt(damageSource, damage);
     }
-
 
     @Override
     public @NotNull MobType getMobType() {
@@ -165,7 +165,7 @@ public class DCLoveElaina extends BossEntity implements PowerableMob, RangedAtta
     public void tickDeath() {
         ++this.deathTime;
         isDeadAnimationState.startIfStopped(tickCount);
-        if (this.deathTime >= maxDeathTime + 100) {
+        if (this.getDeathTime() >= 100) {
             try {
                 this.playSound(this.getDeathSound());
             } catch (Exception ignored){}
@@ -314,7 +314,7 @@ public class DCLoveElaina extends BossEntity implements PowerableMob, RangedAtta
                         case NORMAL -> value = 7;
                         case HARD -> value = 200;
                     }
-                    if (Config.Server.elaina_super_mode.get()) value = 2000;
+                    if (Config.Common.elaina_super_mode.get()) value = 2000;
                     EntityHelper.forceHeal(this, value);
                 }
                 if (this.getTarget() == null && this.tickCount % 100 == 0) {
@@ -419,7 +419,7 @@ public class DCLoveElaina extends BossEntity implements PowerableMob, RangedAtta
 
     @Override
     public float getMaxHealth() {
-        if (Config.Server.elaina_super_mode.get()) return 5200.0F;
+        if (Config.Common.elaina_super_mode.get()) return 5200.0F;
         return 520.0F;
     }
 
@@ -444,6 +444,7 @@ public class DCLoveElaina extends BossEntity implements PowerableMob, RangedAtta
         float g = -Mth.sin(pitch * ((float) Math.PI / 180F));
         float h = Mth.cos(yaw * ((float) Math.PI / 180F)) * Mth.cos(pitch * ((float) Math.PI / 180F));
         skull.shoot(f, g, h, 4, (float) 12.0);
+        skull.setShootEntity(this);
         skull.lookAt(EntityAnchorArgument.Anchor.EYES, livingEntity.position());
         if (!(livingEntity instanceof Player) && !isCanRangeAttack(this)) {
             livingEntity.addEffect(EffectHelper.addEffect(DCEffects.Freeze.get(), 3));

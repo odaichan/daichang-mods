@@ -13,6 +13,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
 
+import static net.daichang.dcmods.inits.DCItems.all_item;
+
 public class DCBlockItems {
     public static final DeferredRegister<Item> items = DeferredRegister.create(ForgeRegistries.ITEMS, DCMod.MOD_ID);
 
@@ -21,6 +23,7 @@ public class DCBlockItems {
     public static RegistryObject<Item> registry(String id, Supplier<? extends BlockItem> clazz) {
         RegistryObject<Item> object = items.register(id, clazz);
         list.add(object);
+        all_item.add(object);
         return object;
     }
 

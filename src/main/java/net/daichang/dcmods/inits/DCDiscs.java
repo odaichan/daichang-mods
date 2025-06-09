@@ -11,6 +11,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
 
+import static net.daichang.dcmods.inits.DCItems.all_item;
+
 public class DCDiscs {
     public static final DeferredRegister<Item> items = DeferredRegister.create(ForgeRegistries.ITEMS, DCMod.MOD_ID);
     public static final List<RegistryObject<Item>> discs = new ArrayList<>();
@@ -22,6 +24,7 @@ public class DCDiscs {
     public static RegistryObject<Item> discRegister(String id, Supplier<? extends Item> target) {
         RegistryObject<Item> object = items.register(id, target);
         discs.add(object);
+        all_item.add(object);
         return object;
     }
 

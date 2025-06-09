@@ -1,5 +1,6 @@
 package net.daichang.dcmods.common.entities.creative;
 
+import net.daichang.dcmods.common.entities.DCBaseMonster;
 import net.daichang.dcmods.common.item.tools.creative.DCLoliPickaxe;
 import net.daichang.dcmods.inits.DCEntities;
 import net.daichang.dcmods.utils.Utils;
@@ -16,7 +17,6 @@ import net.minecraft.world.entity.ai.goal.MeleeAttackGoal;
 import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
 import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
-import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -27,7 +27,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Random;
 import java.util.Set;
 
-public class EntityLoli extends Monster {
+public class EntityLoli extends DCBaseMonster {
     public EntityLoli(EntityType<EntityLoli> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
     }
@@ -68,7 +68,7 @@ public class EntityLoli extends Monster {
     }
 
     @Override
-    public boolean hurt(DamageSource pSource, float pAmount) {
+    public boolean hurt(@NotNull DamageSource pSource, float pAmount) {
         return false;
     }
 

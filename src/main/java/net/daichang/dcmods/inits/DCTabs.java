@@ -6,6 +6,7 @@ import net.daichang.dcmods.addons.fantasy_ending.FEInit;
 import net.daichang.dcmods.addons.farmers_delight.FDItem;
 import net.daichang.dcmods.addons.slashblade.DaiChangSB;
 import net.daichang.dcmods.addons.slashblade.SBInits;
+import net.daichang.dcmods.common.item.UseCountItem;
 import net.daichang.dcmods.utils.ModUtil;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
@@ -55,7 +56,6 @@ public class DCTabs {
                         tabData.accept(DCItems.DC_BOW.get());
                         tabData.accept(DCItems.DC_ARROW.get());
 
-                        tabData.accept(DCItems.WOOD_TOTEM.get());
                         for (RegistryObject<Item> object : DCItems.dc_normal) tabData.accept(object.get());
                         for (RegistryObject<Item> object : DCItems.armors) tabData.accept(object.get());
                         for (RegistryObject<Item> object : DCDiscs.discs) tabData.accept(object.get());
@@ -80,23 +80,27 @@ public class DCTabs {
                     .displayItems((parameters, tabData) -> {
                         for (RegistryObject<Item> object : DCItems.dc_creative) tabData.accept(object.get());
 
-                        ItemStack sword = new ItemStack(DCItems.SUPER_WOOD_SWORD.get());
-                        sword.getTag().putInt("dc_attking", Integer.MAX_VALUE);
-                        sword.enchant(Enchantments.SHARPNESS, 255);
-                        sword.enchant(Enchantments.MOB_LOOTING, 255);
-                        sword.enchant(DCEnch.SuperSharp.get(), 255);
-                        tabData.accept(sword);
+                        Item[] items = {DCItems.SUPER_WOOD_SWORD.get(), DCItems.OCEAN_SCYTHE.get(), DCItems.SUPER_WOOD_AXE.get()};
 
-                        ItemStack scythe = new ItemStack(DCItems.OCEAN_SCYTHE.get());
-                        scythe.getTag().putInt("dc_attking", Integer.MAX_VALUE);
-                        scythe.enchant(Enchantments.SHARPNESS, 255);
-                        scythe.enchant(Enchantments.MOB_LOOTING, 255);
-                        scythe.enchant(DCEnch.SuperSharp.get(), 255);
-                        tabData.accept(scythe);
+                        for (Item item : items) {
+                            ItemStack stack = new ItemStack(item);
+                            UseCountItem.setUseS(stack, Integer.MAX_VALUE);
+                            stack.enchant(Enchantments.SHARPNESS, 12);
+                            stack.enchant(Enchantments.MOB_LOOTING, 10);
+                            stack.enchant(DCEnch.SuperSharp.get(), 24);
+                            stack.getOrCreateTag().putBoolean("Unbreakable", true);
+                            tabData.accept(stack);
+                        }
 
-                        ItemStack dc_head = new ItemStack(Items.PLAYER_HEAD);
-                        dc_head.getOrCreateTag().putString("SkullOwner", "DaiHardcore");
-                        tabData.accept(dc_head);
+                        String[] names = {"DaiHardcore", "Hacker_LX", "MY_Ender" };
+
+                        for (String name : names) {
+                            ItemStack head = new ItemStack(Items.PLAYER_HEAD);
+                            head.getOrCreateTag().putString("SkullOwner", name);
+                            head.enchant(Enchantments.BLOCK_FORTUNE, 52);
+                            tabData.accept(head);
+                        }
+
                         for (RegistryObject<Item> object : DCItems.spawn_egg) tabData.accept(object.get());
 
                         for (RegistryObject<Enchantment> ench : DCEnch.list) {
@@ -117,6 +121,22 @@ public class DCTabs {
                     .displayItems((parameters, tabData) -> {
                         tabData.accept(DCBlocks.RED_SPIDER_LILY.get());
                         tabData.accept(DCBlocks.CurseTheSoil.get());
+                    }).build());
+
+    public static final RegistryObject<CreativeModeTab> DC_ITEM_ALL = tab.register("dc_all_item_tab",
+            () -> CreativeModeTab.builder()
+                    .title(Component.translatable("tabs.dc_mods.all_items"))
+                    .withBackgroundLocation(backGround)
+                    .withTabsImage(tabsImage)
+                    .icon(() -> new ItemStack(DCItems.EX_CALIBUR.get()))
+                    .withTabsBefore(DC_MOD_BLOCK_TAB.getKey())
+                    .displayItems((parameters, tabData) -> {
+                        for (RegistryObject<Item> object : DCItems.all_item) tabData.accept(object.get());
+                        if (ModUtil.isSBLoad()) {
+                            ItemStack stack = new ItemStack(SBInits.DC_SB.get());
+                            DaiChangSB.init(stack);
+                            tabData.accept(stack);
+                        }
                     }).build());
 
     public static void inits(IEventBus event) {
