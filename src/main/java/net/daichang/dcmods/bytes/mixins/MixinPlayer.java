@@ -32,9 +32,7 @@ public abstract class MixinPlayer {
         NonNullList<ItemStack> armor = inventory.armor;
         for (ItemStack stack : armor) {
             Map<Enchantment, Integer> enchantments = stack.getAllEnchantments();
-            if (enchantments.containsKey(DCEnch.NightVison.get())) {
-                daichangmod$player.addEffect(EffectHelper.addEffect(MobEffects.NIGHT_VISION, 4, 1, true));
-            }
+            if (enchantments.containsKey(DCEnch.NightVison.get())) daichangmod$player.addEffect(EffectHelper.addEffect(MobEffects.NIGHT_VISION, 4, 1, true));
         }
     }
 

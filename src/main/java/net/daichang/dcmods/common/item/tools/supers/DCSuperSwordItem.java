@@ -2,8 +2,8 @@ package net.daichang.dcmods.common.item.tools.supers;
 
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
-import net.daichang.dcmods.client.tool_tip.DCItemTip;
 import net.daichang.dcmods.client.KeyDown;
+import net.daichang.dcmods.common.item.AttackCountItem;
 import net.daichang.dcmods.common.item.UseCountItem;
 import net.daichang.dcmods.common.item.tools.ISwordItem;
 import net.daichang.dcmods.inits.DCAttributes;
@@ -15,7 +15,6 @@ import net.daichang.dcmods.utils.helpers.MathHelper;
 import net.daichang.dcmods.utils.lists.items.CanSwordBlockItem;
 import net.daichang.dcmods.utils.lists.items.SuperItemList;
 import net.minecraft.Util;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.effect.MobEffects;
@@ -41,7 +40,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.UUID;
 
-public class DCSuperSwordItem extends ISwordItem implements UseCountItem, KeyDown {
+public class DCSuperSwordItem extends ISwordItem implements UseCountItem, KeyDown, AttackCountItem {
     public Multimap<Attribute, AttributeModifier> mainHandModifiers;
     public Multimap<Attribute, AttributeModifier> offHandModifiers;
 
@@ -66,10 +65,7 @@ public class DCSuperSwordItem extends ISwordItem implements UseCountItem, KeyDow
 
     @Override
     public Multimap<Attribute, AttributeModifier> getAttributeModifiers(EquipmentSlot equipmentSlot, ItemStack stack) {
-        CompoundTag comTag = stack.getTag();
-        if (comTag != null) {
-            if (!comTag.contains("dc_attking")) setUse(stack, 0);
-        }
+        if (!isUseCountItem(stack)) setUseCountItem(stack);
         return super.getAttributeModifiers(equipmentSlot, stack);
     }
 
@@ -87,6 +83,7 @@ public class DCSuperSwordItem extends ISwordItem implements UseCountItem, KeyDow
         living.heal(5.5F);
         EntityHelper.forceHeal(living, 5.5F);
         if (DataHelper.getHealthDelta(living) <= 0) DataHelper.addHealthDelta(living, 10.5F);
+        if (DataHelper.getHealthDelta(living) > 0) DataHelper.restHealthDelta(living);
         living.invulnerableTime = 1;
         super.onUseTick(p_41428_, living, p_41430_, p_41431_);
     }
@@ -94,7 +91,7 @@ public class DCSuperSwordItem extends ISwordItem implements UseCountItem, KeyDow
     @Override
     public void appendHoverText(ItemStack stack, @Nullable Level p_41422_, @NotNull List<Component> list, @NotNull TooltipFlag p_41424_) {
         if (isLeftShiftDown() || isLeftCtrlDown()) {
-            DCItemTip.addAttackCount(list, stack);
+            super.appendHoverText(stack, p_41422_, list, p_41424_);
             list.add(Component.translatable("tooltip.dc_mods.tips"));
             list.add(Component.translatable("tooltip.dc_mods.tips_1"));
             list.add(Component.translatable("tooltip.dc_mods.tips_2"));
@@ -117,10 +114,8 @@ public class DCSuperSwordItem extends ISwordItem implements UseCountItem, KeyDow
         else {
             list.add(Component.translatable("tool_tip.dc_mods.7meter"));
             list.add(Component.literal("Subscribe to DaiChang on Bilibili"));
-            list.add(Component.literal("< Press Left Shift to more >"));
-            list.add(Component.literal("< Press Left Ctrl to all >"));
+            list.add(Component.literal("< Press Left Shift Or Left Ctrl to more >"));
         }
-        if (isLeftCtrlDown()) super.appendHoverText(stack, p_41422_, list, p_41424_);
     }
 
     @Override
@@ -132,6 +127,7 @@ public class DCSuperSwordItem extends ISwordItem implements UseCountItem, KeyDow
     @Override
     public boolean onLeftClickEntity(ItemStack stack, Player player, Entity entity) {
         if (entity instanceof LivingEntity living && player.level instanceof ServerLevel) hurtEnemy(stack, living, player);
+        addUse(stack, 1);
         return super.onLeftClickEntity(stack, player, entity);
     }
 

@@ -11,20 +11,20 @@ public class EffectHelper {
         return new MobEffectInstance(mobEffect);
     }
 
-    public static MobEffectInstance addEffect(MobEffect mobEffect, int second, int level, boolean isVis) {
-        return new MobEffectInstance(mobEffect, second * 20, level, false, isVis);
+    public static MobEffectInstance addEffect(MobEffect mobEffect, float second, int level, boolean isVis) {
+        return new MobEffectInstance(mobEffect, (int) (second * 20), level, false, isVis);
     }
 
-    public static MobEffectInstance addEffect(MobEffect mobEffect, int second) {
-        return new MobEffectInstance(mobEffect, second * 20);
+    public static MobEffectInstance addEffect(MobEffect mobEffect, float second) {
+        return new MobEffectInstance(mobEffect, (int) (second * 20));
     }
 
 
-    public static MobEffectInstance addEffect(MobEffect mobEffect, int second, int level) {
-        return new MobEffectInstance(mobEffect, second * 20, level, false, false);
+    public static MobEffectInstance addEffect(MobEffect mobEffect, float second, int level) {
+        return new MobEffectInstance(mobEffect, (int) (second * 20), level, false, false);
     }
 
-    public static MobEffectInstance addEffect(MobEffect mobEffect, int second, boolean isVis) {
+    public static MobEffectInstance addEffect(MobEffect mobEffect, float second, boolean isVis) {
         return addEffect(mobEffect, second * 20, 1, isVis);
     }
 

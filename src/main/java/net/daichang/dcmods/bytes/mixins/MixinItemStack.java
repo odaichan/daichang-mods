@@ -14,7 +14,7 @@ public class MixinItemStack {
 //    private void onEnchant(Enchantment pEnchantment, int pLevel, CallbackInfo ci) {
 //        if (pEnchantment instanceof BaseEnch baseEnch) {
 //            ListTag enchantments = daichangmod$stack.getEnchantmentTags();
-//            enchantments.add(EnchantmentHelper.storeEnchantment(EnchantmentHelper.getEnchantmentId(baseEnch), pLevel));
+//            enchantments.add(EnchantmentHelpers.storeEnchantment(EnchantmentHelpers.getEnchantmentId(baseEnch), pLevel));
 //            daichangmod$stack.getOrCreateTag().put("Enchantments", enchantments);
 //            ci.cancel();
 //        }

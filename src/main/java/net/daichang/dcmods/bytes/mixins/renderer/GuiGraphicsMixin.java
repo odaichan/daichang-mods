@@ -2,6 +2,7 @@ package net.daichang.dcmods.bytes.mixins.renderer;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.daichang.dcmods.event.dcevents.DCRenderToolTipEvent;
+import net.daichang.dcmods.utils.DeprecatedMixin;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
@@ -21,6 +22,7 @@ import java.util.List;
 
 //梦幻终焉的一个Mixin
 @Mixin(GuiGraphics.class)
+@DeprecatedMixin
 public abstract class GuiGraphicsMixin {
 
     @Shadow

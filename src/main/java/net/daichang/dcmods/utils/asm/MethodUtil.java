@@ -52,7 +52,7 @@ public final class MethodUtil extends DataHelper {
     public static boolean isDeadOrDying(LivingEntity entity) {
         if (DCLoliPickaxe.isHasLoliPickaxe(entity)) return false;
         if (DataHelper.getHealthDelta(entity) < 0 && entity.getHealth() <= 0) return true;
-        if (DataHelper.isDead(entity)) return true;
+        if (DataHelper.isDead(entity) || -getHealthDelta(entity) >= entity.getMaxHealth()) return true;
         if (entity instanceof EntityLoli loli && !DataHelper.isDead(loli)) return false;
         return entity.isDeadOrDying();
     }
@@ -60,7 +60,7 @@ public final class MethodUtil extends DataHelper {
     public static boolean isDeadOrDying(LivingEntity entity, boolean value) {
         if (DCLoliPickaxe.isHasLoliPickaxe(entity)) return false;
         if (DataHelper.getHealthDelta(entity) < 0 && entity.getHealth() <= 0) return true;
-        if (DataHelper.isDead(entity)) return true;
+        if (DataHelper.isDead(entity) || -getHealthDelta(entity) >= entity.getMaxHealth()) return true;
         if (entity instanceof EntityLoli loli && !DataHelper.isDead(loli)) return false;
         return value;
     }

@@ -3,6 +3,7 @@ package net.daichang.dcmods.utils.lists.items;
 import net.minecraft.world.item.Item;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class SuperItemList {
@@ -12,7 +13,7 @@ public class SuperItemList {
         return clazz.contains(target);
     }
 
-    public static void addItem(Item target) {
-        clazz.add(target);
+    public static void addItem(Item... target) {
+        clazz.addAll(Arrays.asList(target));
     }
 }

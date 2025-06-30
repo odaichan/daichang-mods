@@ -2,8 +2,10 @@ package net.daichang.dcmods.addons.tconstruct;
 
 import com.c2h6s.etstlib.entity.specialDamageSources.LegacyDamageSource;
 import com.c2h6s.etstlib.register.EtSTLibHooks;
+import com.c2h6s.etstlib.tool.hooks.ArrowHitModifierHook;
 import com.c2h6s.etstlib.tool.hooks.ModifyDamageSourceModifierHook;
 import net.daichang.dcmods.inits.DCAttributes;
+import net.daichang.dcmods.utils.EntityActuallyHurt;
 import net.daichang.dcmods.utils.TextUtils;
 import net.daichang.dcmods.utils.helpers.EntityHelper;
 import net.minecraft.network.chat.Component;
@@ -14,6 +16,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraftforge.common.ToolAction;
 import org.jetbrains.annotations.NotNull;
@@ -27,19 +30,26 @@ import slimeknights.tconstruct.library.modifiers.hook.behavior.ToolActionModifie
 import slimeknights.tconstruct.library.modifiers.hook.display.TooltipModifierHook;
 import slimeknights.tconstruct.library.module.ModuleHookMap;
 import slimeknights.tconstruct.library.tools.nbt.IToolStackView;
+import slimeknights.tconstruct.library.tools.nbt.ModDataNBT;
+import slimeknights.tconstruct.library.tools.nbt.ModifierNBT;
 
 import java.util.List;
 import java.util.UUID;
 import java.util.function.BiConsumer;
 
-public class SuperWoodIngot extends Modifier implements ModifyDamageSourceModifierHook, TooltipModifierHook, ToolActionModifierHook, AttributesModifierHook {
+public class SuperWoodIngot extends Modifier implements ModifyDamageSourceModifierHook, TooltipModifierHook, ToolActionModifierHook, AttributesModifierHook, ArrowHitModifierHook {
     @Override
     protected void registerHooks(ModuleHookMap.@NotNull Builder hookBuilder) {
-        hookBuilder.addHook(this, EtSTLibHooks.MODIFY_DAMAGE_SOURCE, ModifierHooks.TOOLTIP, ModifierHooks.TOOL_ACTION, ModifierHooks.ATTRIBUTES);
+        hookBuilder.addHook(this, EtSTLibHooks.MODIFY_DAMAGE_SOURCE, ModifierHooks.TOOLTIP, ModifierHooks.TOOL_ACTION, ModifierHooks.ATTRIBUTES, EtSTLibHooks.ARROW_HIT);
     }
 
     @Override
     public LegacyDamageSource modifyDamageSource(IToolStackView tool, ModifierEntry entry, LivingEntity attacker, InteractionHand hand, Entity target, EquipmentSlot sourceSlot, boolean isFullyCharged, boolean isExtraAttack, boolean isCritical, LegacyDamageSource source) {
+        return new LegacyDamageSource(EntityHelper.dc_damage(attacker));
+    }
+
+    @Override
+    public LegacyDamageSource modifyArrowDamageSource(ModifierNBT modifiers, ModDataNBT persistentData, ModifierEntry modifier, AbstractArrow arrow, @Nullable LivingEntity attacker, @Nullable Entity target, LegacyDamageSource source) {
         return new LegacyDamageSource(EntityHelper.dc_damage(attacker));
     }
 
@@ -59,5 +69,11 @@ public class SuperWoodIngot extends Modifier implements ModifyDamageSourceModifi
             AttributeModifier modifier = new AttributeModifier(UUID.randomUUID(), "Item modifer", modifierEntry.getLevel() * 4.5F, AttributeModifier.Operation.ADDITION);
             biConsumer.accept(DCAttributes.DC_SUPER_DAMAGE.get(), modifier);
         }
+    }
+
+    @Override
+    public void afterArrowHit(ModDataNBT persistentData, ModifierEntry entry, ModifierNBT modifiers, AbstractArrow arrow, @Nullable LivingEntity attacker, @NotNull LivingEntity target, float damageDealt) {
+        ArrowHitModifierHook.super.afterArrowHit(persistentData, entry, modifiers, arrow, attacker, target, damageDealt);
+        EntityActuallyHurt.getInstance(attacker, target).actuallyHurt(EntityHelper.generic_damage(attacker), damageDealt);
     }
 }

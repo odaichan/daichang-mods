@@ -5,6 +5,7 @@ import net.daichang.dcmods.common.entities.BossEntity;
 import net.daichang.dcmods.common.entities.ai.DCRangeAttackGoal;
 import net.daichang.dcmods.common.entities.projectile.DCWitherSkull;
 import net.daichang.dcmods.common.item.UseCountItem;
+import net.daichang.dcmods.inits.DCAttributes;
 import net.daichang.dcmods.inits.DCEntities;
 import net.daichang.dcmods.inits.DCItems;
 import net.daichang.dcmods.inits.DCSounds;
@@ -91,6 +92,7 @@ public class DCWither extends BossEntity implements PowerableMob, RangedAttackMo
         }
     }
 
+    @Override
     protected PathNavigation createNavigation(Level pLevel) {
         FlyingPathNavigation flyingpathnavigation = new FlyingPathNavigation(this, pLevel);
         flyingpathnavigation.setCanOpenDoors(false);
@@ -99,6 +101,12 @@ public class DCWither extends BossEntity implements PowerableMob, RangedAttackMo
         return flyingpathnavigation;
     }
 
+    @Override
+    public void baseTick() {
+        super.baseTick();
+    }
+
+    @Override
     protected void registerGoals() {
         this.goalSelector.addGoal(0, new DCWither.WitherDoNothingGoal());
         this.goalSelector.addGoal(2, new DCRangeAttackGoal(this, 1.0F, 40, 120, 128.0F));
@@ -109,6 +117,7 @@ public class DCWither extends BossEntity implements PowerableMob, RangedAttackMo
         this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, LivingEntity.class, 0, false, false, LIVING_ENTITY_SELECTOR));
     }
 
+    @Override
     public void defineSynchedData() {
         super.defineSynchedData();
         this.entityData.define(DATA_TARGET_A, 0);
@@ -118,20 +127,22 @@ public class DCWither extends BossEntity implements PowerableMob, RangedAttackMo
         this.entityData.define(DEATH_TIME_BOOM, 0);
     }
 
+    @Override
     public void addAdditionalSaveData(CompoundTag pCompound) {
         super.addAdditionalSaveData(pCompound);
         pCompound.putInt("Invul", this.getInvulnerableTicks());
     }
 
+    @Override
     public void readAdditionalSaveData(CompoundTag pCompound) {
         super.readAdditionalSaveData(pCompound);
         this.setInvulnerableTicks(pCompound.getInt("Invul"));
         this.bossEvent.setName(this.getDisplayName());
     }
 
+    @Override
     public void setCustomName(@Nullable Component pName) {
         super.setCustomName(pName);
-        this.bossEvent.setName(this.getDisplayName());
     }
 
     @Override
@@ -152,13 +163,11 @@ public class DCWither extends BossEntity implements PowerableMob, RangedAttackMo
     @Override
     public void tick() {
         super.tick();
-        if (tickCount % 40 == 0 && this.isAlive() && this.getHealth() > 0) heal(20);
         LivingEntity living = this.getTarget();
-        if (!this.isDeadOrDying() && living != null) {
-            this.lookAt(EntityAnchorArgument.Anchor.FEET, living.position());
-        }
+        if (!this.isDeadOrDying() && living != null) this.lookAt(EntityAnchorArgument.Anchor.FEET, living.position());
     }
 
+    @Override
     public void aiStep() {
         Vec3 vec3 = this.getDeltaMovement().multiply(1.0F, 0.6, 1.0F);
         if (!this.level().isClientSide && this.getAlternativeTarget(0) > 0) {
@@ -235,6 +244,7 @@ public class DCWither extends BossEntity implements PowerableMob, RangedAttackMo
 
     }
 
+    @Override
     protected void customServerAiStep() {
         if (this.getInvulnerableTicks() > 0) {
             int k1 = this.getInvulnerableTicks() - 1;
@@ -347,14 +357,17 @@ public class DCWither extends BossEntity implements PowerableMob, RangedAttackMo
         this.setHealth(this.getMaxHealth() / 3.0F);
     }
 
+    @Override
     public void makeStuckInBlock(BlockState pState, Vec3 pMotionMultiplier) {
     }
 
+    @Override
     public void startSeenByPlayer(@NotNull ServerPlayer pPlayer) {
         super.startSeenByPlayer(pPlayer);
         this.bossEvent.addPlayer(pPlayer);
     }
 
+    @Override
     public void stopSeenByPlayer(@NotNull ServerPlayer pPlayer) {
         super.stopSeenByPlayer(pPlayer);
         this.bossEvent.removePlayer(pPlayer);
@@ -426,6 +439,7 @@ public class DCWither extends BossEntity implements PowerableMob, RangedAttackMo
         level.addFreshEntity(witherskull);
     }
 
+    @Override
     public void performRangedAttack(LivingEntity pTarget, float pDistanceFactor) {
         this.performRangedAttack(0, pTarget);
     }
@@ -443,6 +457,7 @@ public class DCWither extends BossEntity implements PowerableMob, RangedAttackMo
     }
 
 
+    @Override
     public void checkDespawn() {
         if (this.level().getDifficulty() == Difficulty.PEACEFUL && this.shouldDespawnInPeaceful()) {
             this.discard();
@@ -476,6 +491,7 @@ public class DCWither extends BossEntity implements PowerableMob, RangedAttackMo
                 .add(Attributes.MOVEMENT_SPEED, 0.6F)
                 .add(Attributes.FLYING_SPEED, 0.6F)
                 .add(Attributes.FOLLOW_RANGE, 40.0F)
+                .add(DCAttributes.DC_DEFENSE.get(), 2.3D)
                 .add(Attributes.ARMOR, 4.0F);
     }
 

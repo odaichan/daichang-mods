@@ -21,14 +21,6 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import static net.daichang.dcmods.client.font.DCItemFont.*;
-import static net.daichang.dcmods.client.font.DCItemFont.az;
-import static net.daichang.dcmods.client.font.DCItemFont.getString;
-import static net.daichang.dcmods.client.font.DCItemFont.isCraftTip;
-import static net.daichang.dcmods.client.font.DCItemFont.isCreativeItem;
-import static net.daichang.dcmods.client.font.DCItemFont.isDCEnchFont;
-import static net.daichang.dcmods.client.font.DCItemFont.isSwordTip;
-import static net.daichang.dcmods.client.font.DCItemFont.isWarnTip;
-import static net.daichang.dcmods.client.font.DCItemFont.randomSource;
 
 @Mixin(Font.class)
 public abstract class MixinFont {
@@ -73,7 +65,7 @@ public abstract class MixinFont {
         String text = stringBuilder.toString();
         if (DCItemFont.isTabFont(text)) cir.setReturnValue(DCItemFont.getFont().drawInBatch(p_273262_, pX, pY, rgb, pDropShadow, pMatrix, pBuffer, pDisplayMode, pBackgroundColor, pPackedLightCoords));
         if (DCEntityFont.isEntityName(text)) cir.setReturnValue(DCEntityFont.getFont().drawInBatch(p_273262_, pX, pY, rgb, pDropShadow, pMatrix, pBuffer, pDisplayMode, pBackgroundColor, pPackedLightCoords));
-        if (text.equals("DaiChangMod") && Config.Client.rainbow_font.get()) cir.setReturnValue(FuckFont.getFont().drawInBatch(p_273262_, pX, pY, rgb, pDropShadow, pMatrix, pBuffer, pDisplayMode, pBackgroundColor, pPackedLightCoords));
+        if (text.equals("DaiChangMod") && Config.Client.rainbow_font.get() || text.contains(getString("chat.dc_mods.player_loading_mod"))) cir.setReturnValue(FuckFont.getFont().drawInBatch(p_273262_, pX, pY, rgb, pDropShadow, pMatrix, pBuffer, pDisplayMode, pBackgroundColor, pPackedLightCoords));
         int c = rgb;
         int darkerC;
         int width = width(text);
@@ -180,13 +172,13 @@ public abstract class MixinFont {
             drawInBatch(text, pX+0.85F, pY+0.55F, darkerC, pDropShadow, pMatrix, pBuffer, pDisplayMode, pBackgroundColor, pPackedLightCoords);
             cir.setReturnValue((int) pX);
         }
-        if (isDCEnchFont(text)) {
-            c = rgb & 0xFFF0F0F0;
-            darkerC = daichangmod$getDarkColor(c);
-            drawInBatch(text, pX, pY, c, pDropShadow, pMatrix, pBuffer, pDisplayMode, pBackgroundColor, pPackedLightCoords);
-            drawInBatch(text, pX+0.85F, pY+0.55F, darkerC, pDropShadow, pMatrix, pBuffer, pDisplayMode, pBackgroundColor, pPackedLightCoords);
-            cir.setReturnValue((int) pX);
-        }
+//        if (isDCEnchFont(text)) {
+//            c = rgb & 0xFFF0F0F0;
+//            darkerC = daichangmod$getDarkColor(c);
+//            drawInBatch(text, pX, pY, c, pDropShadow, pMatrix, pBuffer, pDisplayMode, pBackgroundColor, pPackedLightCoords);
+//            drawInBatch(text, pX+0.85F, pY+0.55F, darkerC, pDropShadow, pMatrix, pBuffer, pDisplayMode, pBackgroundColor, pPackedLightCoords);
+//            cir.setReturnValue((int) pX);
+//        }
         if (text.contains(getString("tool_tip.dc_mods.default")) || text.contains(getString("tool_tip.dc_mods.ocean"))) {
             c = rgb & 0xFFFF9999;
             darkerC = daichangmod$getDarkColor(c);

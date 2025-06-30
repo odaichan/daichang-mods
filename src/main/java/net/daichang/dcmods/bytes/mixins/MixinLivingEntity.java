@@ -2,6 +2,8 @@ package net.daichang.dcmods.bytes.mixins;
 
 import net.daichang.dcmods.inits.DCAttributes;
 import net.daichang.dcmods.inits.DCEffects;
+import net.daichang.dcmods.inits.DCOceanDamage;
+import net.daichang.dcmods.inits.DCSuperDamage;
 import net.daichang.dcmods.utils.Utils;
 import net.daichang.dcmods.utils.asm.MethodUtil;
 import net.daichang.dcmods.utils.helpers.DataHelper;
@@ -10,6 +12,7 @@ import net.daichang.dcmods.utils.helpers.EntityHelper;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -60,6 +63,26 @@ public abstract class MixinLivingEntity extends Entity {
         }
     }
 
+    @Inject(method = "hurt" ,at = @At("RETURN"))
+    private void hurt(DamageSource pSource, float pAmount, CallbackInfoReturnable<Boolean> cir) {
+        if (pSource.is(DCOceanDamage.OCEAN_DAMAGE) || pSource.is(DCSuperDamage.SUPER_DAMAGE)) {
+            EntityHelper.noHurtDuration(dc_mod$living);
+            dc_mod$living.setDeltaMovement(Vec3.ZERO);
+            EntityHelper.addHealthDelta(dc_mod$living, -pAmount);
+            dc_mod$living.walkAnimation.setSpeed(1.5F);
+            dc_mod$living.playHurtSound(pSource);
+            dc_mod$living.handleDamageEvent(pSource);
+        }
+//        DCHurtEntityEvent event = new DCHurtEntityEvent(dc_mod$living, pSource.getEntity(), pSource, pAmount);
+//        MinecraftForge.EVENT_BUS.post(event);
+    }
+
+//    @Inject(method = "handleDamageEvent", at = @At("HEAD"))
+//    private void handleDamageEvent(DamageSource pSource, CallbackInfo ci) {
+//        DCHurtEntityEvent event = new DCHurtEntityEvent(dc_mod$living, pSource.getEntity(), pSource, 0.0F);
+//        MinecraftForge.EVENT_BUS.post(event);
+//    }
+
     @Inject(method = "isDeadOrDying", at = @At("RETURN"), cancellable = true)
     private void isDeadOrDying(CallbackInfoReturnable<Boolean> cir) {
         cir.setReturnValue(MethodUtil.isDeadOrDying(dc_mod$living, cir.getReturnValue()));
@@ -92,6 +115,15 @@ public abstract class MixinLivingEntity extends Entity {
         DataHelper.setHealthDelta(dc_mod$living, tag.getInt(DataHelper.DC_GET_HEALTH));
         DataHelper.setDeathTime(dc_mod$living, tag.getInt(DataHelper.DC_ENTITY_DEATH_TIME));
         DataHelper.setIsDead(dc_mod$living, tag.getBoolean(DataHelper.DC_ENTITY_DIE));
+    }
+
+    @Inject(method = "handleEntityEvent", at = @At("HEAD"))
+    private void event(byte pId, CallbackInfo ci) {
+        switch (pId) {
+            case (byte) 294 -> EntityHelper.noHurtDuration(dc_mod$living);
+            case (byte) 395 -> EntityHelper.setIsDead(dc_mod$living, true);
+            case (byte) 928 -> EntityHelper.restHealthDelta(dc_mod$living);
+        }
     }
 
     @Inject(method = "addAdditionalSaveData", at = @At("TAIL"))

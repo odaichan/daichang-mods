@@ -1,0 +1,7 @@
+JVM:         D:\tools\Java\jdk17\bin\java.exe
+JVM Args:    
+Run Args:    "--client", "D:\JavaWorkspace\DaiChangMod\build\fg_cache\mcp\1.20.1-20230612.114412\joined\5045390264ff9bac52c08b653f6c795f98c1750c\stripClient\output.jar", "--server", "D:\JavaWorkspace\DaiChangMod\build\fg_cache\mcp\1.20.1-20230612.114412\joined\5045390264ff9bac52c08b653f6c795f98c1750c\stripServer\output.jar", "--ann", "1.20.1", "--output", "D:\JavaWorkspace\DaiChangMod\build\fg_cache\mcp\1.20.1-20230612.114412\joined\5045390264ff9bac52c08b653f6c795f98c1750c\merge\output.jar", "--inject", "false"
+Classpath:   C:\Users\diyou\.gradle\caches\forge_gradle\maven_downloader\net\minecraftforge\mergetool\1.1.7\mergetool-1.1.7-fatjar.jar
+Working Dir: D:\JavaWorkspace\DaiChangMod\build\fg_cache\mcp\1.20.1-20230612.114412\joined\5045390264ff9bac52c08b653f6c795f98c1750c\merge
+Main Class:  net.minecraftforge.mergetool.ConsoleMerger
+Could not delete output file: D:\JavaWorkspace\DaiChangMod\build\fg_cache\mcp\1.20.1-20230612.114412\joined\5045390264ff9bac52c08b653f6c795f98c1750c\merge\output.jar

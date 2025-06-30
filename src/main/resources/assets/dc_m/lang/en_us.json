@@ -2,6 +2,8 @@
   "enchantment.dc_m.super_sharp" : "Super Sharpness",
   "enchantment.dc_m.night_vison" : "Night Vison",
   "enchantment.dc_m.liquid_walk" : "Liqiud Walk",
+  "enchantment.dc_m.super_protection" : "Super Protection",
+  "enchantment.dc_m.underwater_curse" : "Underwater Curse",
   "item.dc_m.super_wood_ingot" : "Super Wood Ingot",
   "item.dc_m.wood_ingot" : "Wood Ingot",
   "tabs.dc_mods.tab" : "DC MOD TAB",
@@ -209,5 +211,15 @@
   "tooltip.dc_m.excalibur": "Proof of the King's legend, cutting through darkness",
   "item.dc_m.dc_loli_spawn_egg": "Loli Spawn Egg",
   "tabs.dc_mods.all_items": "DaiChang's All Items",
-  "entity.dc_m.wither" : "Wither"
+  "entity.dc_m.wither" : "Wither",
+  "dc_mod.command.set_target": "Set %s target to %s",
+  "dc_mod.command.force_kill_entity": "%s was be killed",
+  "dc_mod.command.force_kill_entity_range": "Killed %s entities",
+  "dc_mod.command.hurt_entity": "Applied %s damage to %s entities",
+  "chat.dc_mods.player_loading_mod": "Please subscribe to DaiChang on BiliBili",
+  "chat.dc_mods.etst_load_faile": "The Etst support library is not installed, which may result in incomplete functionality. Please install the Etst support library",
+  "material.dc_m.normal_wood_ingot" : "Normal Wood Ingot",
+  "modifier.dc_m.normal_wood_ingot" : "Slow",
+  "modifier.dc_m.normal_wood_ingot.flavor" : "Slowly",
+  "modifier.dc_m.normal_wood_ingot.description" : "When attacking a target, it causes a slow effect on the target"
 }

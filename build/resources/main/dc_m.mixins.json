@@ -6,16 +6,20 @@
   "refmap": "dc_m.refmap.json",
   "mixins": [
     "MixinEntity",
+    "MixinItem",
     "MixinItemStack",
     "MixinLivingEntity",
     "MixinMob",
     "MixinPlayer",
     "MixinServerPlayer",
     "MixinTrident",
+    "omni_mob.HealthManagerMixin",
+    "slashblade.ItemStackMixin",
     "sword_block.UseAnimMixin"
   ],
   "client": [
     "ItemRendererMixin",
+    "MixinClientPlayer",
     "MixinFont",
     "MixinGameRenderer",
     "MixinHealthOverlay",
@@ -28,7 +32,11 @@
     "sword_block.ItemInHandRendererMixin",
     "sword_block.PlayerItemInHandLayerMixin"
   ],
+  "server": [
+  ],
   "injectors": {
     "defaultRequire": 1
-  }
+  },
+  "plugin": "net.daichang.dcmods.bytes.dccoremod.DCMixinPlugin",
+  "priority": 114514
 }

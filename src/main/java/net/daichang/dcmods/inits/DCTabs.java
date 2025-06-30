@@ -1,11 +1,12 @@
 package net.daichang.dcmods.inits;
 
-import net.daichang.dcmods.addons.avaritia.AvaritiaItems;
+import net.daichang.dcmods.addons.avaritia.AvaritiaInit;
 import net.daichang.dcmods.addons.curios.CuriosItems;
 import net.daichang.dcmods.addons.fantasy_ending.FEInit;
 import net.daichang.dcmods.addons.farmers_delight.FDItem;
 import net.daichang.dcmods.addons.slashblade.DaiChangSB;
 import net.daichang.dcmods.addons.slashblade.SBInits;
+import net.daichang.dcmods.common.creative.DCCreativeModeTab;
 import net.daichang.dcmods.common.item.UseCountItem;
 import net.daichang.dcmods.utils.ModUtil;
 import net.minecraft.core.registries.Registries;
@@ -27,12 +28,12 @@ public class DCTabs {
     public static final DeferredRegister<CreativeModeTab> tab = DeferredRegister.create(Registries.CREATIVE_MODE_TAB, MOD_ID);
 
     public static final RegistryObject<CreativeModeTab> DC_MOD_TAB = tab.register("dc_mod_tab",
-            () -> CreativeModeTab.builder()
+            () -> DCCreativeModeTab.builder()
                     .title(Component.translatable("tabs.dc_mods.tab"))
                     .icon(() -> new ItemStack(DCItems.SUPER_WOOD_SWORD.get()))
-                    .withTabsBefore(CreativeModeTabs.COMBAT)
-                    .withBackgroundLocation(backGround)
                     .withTabsImage(tabsImage)
+                    .withBackgroundLocation(backGround)
+                    .withTabsBefore(CreativeModeTabs.COMBAT)
                     .displayItems((parameters, tabData) -> {
                         //super
                         tabData.accept(DCItems.SUPER_WOOD_SWORD.get());
@@ -60,7 +61,7 @@ public class DCTabs {
                         for (RegistryObject<Item> object : DCItems.armors) tabData.accept(object.get());
                         for (RegistryObject<Item> object : DCDiscs.discs) tabData.accept(object.get());
                         if (ModUtil.isCuriosLoad()) for (RegistryObject<Item> object : CuriosItems.curios) tabData.accept(object.get());
-                        if (ModUtil.isAvaritiaLoad()) for (RegistryObject<Item> object : AvaritiaItems.list) tabData.accept(object.get());
+                        if (ModUtil.isAvaritiaLoad()) for (RegistryObject<Item> object : AvaritiaInit.list) tabData.accept(object.get());
                         if (ModUtil.isFDLoad()) for (RegistryObject<Item> object : FDItem.list) tabData.accept(object.get());
                         if (ModUtil.isFELoad()) for (RegistryObject<Item> object : FEInit.list) tabData.accept(object.get());
                         if (ModUtil.isSBLoad()) {
@@ -71,12 +72,12 @@ public class DCTabs {
                     }).build());
 
     public static final RegistryObject<CreativeModeTab> DC_MOD_CREATIVE_TAB = tab.register("dc_mod_creative_tab",
-            () -> CreativeModeTab.builder()
+            () -> DCCreativeModeTab.builder()
                     .title(Component.translatable("tabs.dc_mods.tab_creative"))
                     .icon(() -> new ItemStack(DCItems.DC_CRAFT.get()))
-                    .withTabsBefore(DC_MOD_TAB.getKey())
-                    .withBackgroundLocation(backGround)
                     .withTabsImage(tabsImage)
+                    .withBackgroundLocation(backGround)
+                    .withTabsBefore(DC_MOD_TAB.getKey())
                     .displayItems((parameters, tabData) -> {
                         for (RegistryObject<Item> object : DCItems.dc_creative) tabData.accept(object.get());
 
@@ -112,11 +113,11 @@ public class DCTabs {
 
 
     public static final RegistryObject<CreativeModeTab> DC_MOD_BLOCK_TAB = tab.register("dc_mod_block_tab",
-            () -> CreativeModeTab.builder()
+            () -> DCCreativeModeTab.builder()
                     .title(Component.translatable("tabs.dc_mods.tab_block"))
-                    .withBackgroundLocation(backGround)
-                    .withTabsImage(tabsImage)
                     .icon(() -> new ItemStack(DCBlockItems.RED_SPIDER_LILY.get()))
+                    .withTabsImage(tabsImage)
+                    .withBackgroundLocation(backGround)
                     .withTabsBefore(DC_MOD_CREATIVE_TAB.getKey())
                     .displayItems((parameters, tabData) -> {
                         tabData.accept(DCBlocks.RED_SPIDER_LILY.get());
@@ -124,10 +125,10 @@ public class DCTabs {
                     }).build());
 
     public static final RegistryObject<CreativeModeTab> DC_ITEM_ALL = tab.register("dc_all_item_tab",
-            () -> CreativeModeTab.builder()
+            () -> DCCreativeModeTab.builder()
                     .title(Component.translatable("tabs.dc_mods.all_items"))
-                    .withBackgroundLocation(backGround)
                     .withTabsImage(tabsImage)
+                    .withBackgroundLocation(backGround)
                     .icon(() -> new ItemStack(DCItems.EX_CALIBUR.get()))
                     .withTabsBefore(DC_MOD_BLOCK_TAB.getKey())
                     .displayItems((parameters, tabData) -> {

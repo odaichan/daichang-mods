@@ -1,0 +1,9 @@
+JVM:         D:\tools\Java\jdk17\bin\java.exe
+JVM Args:    
+Run Args:    "--strip", "--input", "D:\JavaWorkspace\DaiChangMod\build\fg_cache\mcp\1.20.1-20230612.114412\joined\5045390264ff9bac52c08b653f6c795f98c1750c\AccessTransformer\output.jar", "--output", "D:\JavaWorkspace\DaiChangMod\build\fg_cache\mcp\1.20.1-20230612.114412\joined\5045390264ff9bac52c08b653f6c795f98c1750c\SideStripper\output.jar", "--data", "D:\JavaWorkspace\DaiChangMod\build\fg_cache\mcp\1.20.1-20230612.114412\joined\5045390264ff9bac52c08b653f6c795f98c1750c\SideStripper\string_data.sas"
+Classpath:   C:\Users\diyou\.gradle\caches\forge_gradle\maven_downloader\net\minecraftforge\mergetool\1.1.7\mergetool-1.1.7-fatjar.jar
+Working Dir: D:\JavaWorkspace\DaiChangMod\build\fg_cache\mcp\1.20.1-20230612.114412\joined\5045390264ff9bac52c08b653f6c795f98c1750c\SideStripper
+Main Class:  net.minecraftforge.mergetool.ConsoleMerger
+Input:  D:\JavaWorkspace\DaiChangMod\build\fg_cache\mcp\1.20.1-20230612.114412\joined\5045390264ff9bac52c08b653f6c795f98c1750c\AccessTransformer\output.jar
+Output: D:\JavaWorkspace\DaiChangMod\build\fg_cache\mcp\1.20.1-20230612.114412\joined\5045390264ff9bac52c08b653f6c795f98c1750c\SideStripper\output.jar
+Data:   D:\JavaWorkspace\DaiChangMod\build\fg_cache\mcp\1.20.1-20230612.114412\joined\5045390264ff9bac52c08b653f6c795f98c1750c\SideStripper\string_data.sas

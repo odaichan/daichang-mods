@@ -1,6 +1,7 @@
 {
   "modifier.dc_m" : {
     "super_wood_ingot" : "#9400D3",
-    "ocean_heart" : "#1CCDB5"
+    "ocean_heart" : "#1CCDB5",
+    "normal_wood_ingot" : "#F08080"
   }
 }

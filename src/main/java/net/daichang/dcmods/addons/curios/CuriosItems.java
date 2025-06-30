@@ -1,6 +1,8 @@
 package net.daichang.dcmods.addons.curios;
 
 import net.daichang.dcmods.DCMod;
+import net.daichang.dcmods.addons.curios.items.OceanLoce;
+import net.daichang.dcmods.addons.curios.items.SuperWoodRing;
 import net.minecraft.world.item.Item;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;

@@ -209,5 +209,17 @@
   "item.dc_m.dc_loli_spawn_egg": "召唤 萝莉",
   "tabs.dc_mods.all_items": "带长的全部物品",
   "item.dc_m.dc_wither_boss_spawn_egg": "召唤 带长的凋灵",
-  "entity.dc_m.wither": "凋零"
+  "entity.dc_m.wither": "凋零",
+  "dc_mod.command.set_target": "设置 %s 目标为 %s",
+  "dc_mod.command.force_kill_entity": "杀死了 %s",
+  "dc_mod.command.force_kill_entity_range": "杀死了 %s 个实体",
+  "dc_mod.command.hurt_entity": "已将 %s 点伤害施予了 %s 个实体",
+  "chat.dc_mods.player_loading_mod": "如有可能，希望能在 BiliBili 上订阅带长",
+  "chat.dc_mods.etst_load_faile": "Etst支持库并未安装，会导致功能不完整，请安装Etst支持库",
+  "enchantment.dc_m.super_protection": "高级防护",
+  "material.dc_m.normal_wood_ingot": "普通木制锭",
+  "modifier.dc_m.normal_wood_ingot": "缓慢",
+  "modifier.dc_m.normal_wood_ingot.flavor": "缓慢",
+  "modifier.dc_m.normal_wood_ingot.description": "攻击目标时，对目标造成缓慢效果",
+  "enchantment.dc_m.underwater_curse": "水下诅咒"
 }

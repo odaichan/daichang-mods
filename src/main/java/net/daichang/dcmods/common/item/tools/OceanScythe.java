@@ -3,7 +3,6 @@ package net.daichang.dcmods.common.item.tools;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
 import com.mega.uom.attribute.ModAttributes;
-import net.daichang.dcmods.client.tool_tip.DCItemTip;
 import net.daichang.dcmods.common.item.AttackCountItem;
 import net.daichang.dcmods.common.item.DCTier;
 import net.daichang.dcmods.common.item.DCTierItem;
@@ -84,7 +83,7 @@ public class OceanScythe extends DCTierItem implements UseCountItem, AttackCount
 
     @Override
     public Multimap<Attribute, AttributeModifier> getAttributeModifiers(EquipmentSlot slot, ItemStack stack) {
-        if (!stack.getTag().contains("dc_attking")) setUse(stack, 0);
+        if (!isUseCountItem(stack)) setUseCountItem(stack);
         if (!stack.getTag().contains("dcAttackValue")) setCount(stack, 0);
         return super.getAttributeModifiers(slot, stack);
     }
@@ -126,7 +125,6 @@ public class OceanScythe extends DCTierItem implements UseCountItem, AttackCount
 
     @Override
     public void appendHoverText(ItemStack pStack, @Nullable Level pLevel, List<Component> list, TooltipFlag pIsAdvanced) {
-        DCItemTip.addAttackCount(list, pStack);
         list.add(Component.translatable("tool_tip.dc_m.ocean_tip_1").withStyle(ChatFormatting.AQUA));
         list.add(Component.translatable("tool_tip.dc_m.ocean_tip_2").withStyle(ChatFormatting.AQUA));
         list.add(Component.translatable("tool_tip.dc_m.ocean_tip_3").withStyle(ChatFormatting.AQUA));
@@ -143,8 +141,6 @@ public class OceanScythe extends DCTierItem implements UseCountItem, AttackCount
         if (useValue >= 1000) value = value + 50;
         if (useValue >= 10000) value = value + 30;
         if (useValue >= 12000) value = value + 20;
-        if (useValue < Integer.MAX_VALUE) addUse(stack, 1);
-        if (useValue < 0)  setUse(stack, 0);
         if (AttackCountItem.getCountS(stack) >= 10) {
             target.addEffect(EffectHelper.addEffect(DCEffects.Freeze.get(), 5, 1));
             target.addEffect(EffectHelper.addEffect(DCEffects.Bloodshed.get(), 5, 1));
@@ -159,7 +155,7 @@ public class OceanScythe extends DCTierItem implements UseCountItem, AttackCount
     }
 
     @Override
-    public boolean hurtEnemy(ItemStack stack, LivingEntity target, LivingEntity me) {
+    public boolean hurtEnemy(ItemStack stack, LivingEntity target, @NotNull LivingEntity me) {
         hurtEntity(target,me, stack);
         return super.hurtEnemy(stack, target, me);
     }
@@ -167,6 +163,7 @@ public class OceanScythe extends DCTierItem implements UseCountItem, AttackCount
     @Override
     public boolean onLeftClickEntity(ItemStack stack, Player player, Entity entity) {
         if (entity instanceof LivingEntity living) hurtEnemy(stack, living, player);
+        addUse(stack, 1);
         return super.onLeftClickEntity(stack, player, entity);
     }
 

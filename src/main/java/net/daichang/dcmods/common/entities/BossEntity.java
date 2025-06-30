@@ -184,6 +184,11 @@ public class BossEntity extends DCBaseMonster {
     }
 
     @Override
+    public void handleEntityEvent(byte pId) {
+        super.handleEntityEvent(pId);
+    }
+
+    @Override
     public void defineSynchedData() {
         super.defineSynchedData();
     }

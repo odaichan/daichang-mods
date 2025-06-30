@@ -62,12 +62,12 @@ public class DCItemFont extends Font {
                 ;
     }
 
-    public static boolean isDCEnchFont(String s) {
-        return s.contains(getString("enchantment.dc_m.super_sharp"))
-                || s.contains(getString("enchantment.dc_m.night_vison"))
-                || s.contains(getString("enchantment.dc_m.liquid_walk"))
-                ;
-    }
+//    public static boolean isDCEnchFont(String s) {
+//        return s.contains(getString("enchantment.dc_m.super_sharp"))
+//                || s.contains(getString("enchantment.dc_m.night_vison"))
+//                || s.contains(getString("enchantment.dc_m.liquid_walk"))
+//                ;
+//    }
 
     public static boolean isSwordTip(String s) {
         return s.contains(getString("tooltip.dc_mods.tips"))
@@ -189,12 +189,12 @@ public class DCItemFont extends Font {
             super.drawInBatch(s, x + 0.55F, y + 0.55F, darkerC, dropShadow, matrix4f, bufferSource, mode, i, i1);
             return (int) x;
         }
-        if (isDCEnchFont(s)) {
-            c = rgb & 0xFFF0F0F0;
-            super.drawInBatch(s, x, y, c, dropShadow, matrix4f, bufferSource, mode, i, i1);
-            super.drawInBatch(s, x + 0.55F, y + 0.55F, darkerC, dropShadow, matrix4f, bufferSource, mode, i, i1);
-            return (int) x;
-        }
+//        if (isDCEnchFont(s)) {
+//            c = rgb & 0xFFF0F0F0;
+//            super.drawInBatch(s, x, y, c, dropShadow, matrix4f, bufferSource, mode, i, i1);
+//            super.drawInBatch(s, x + 0.55F, y + 0.55F, darkerC, dropShadow, matrix4f, bufferSource, mode, i, i1);
+//            return (int) x;
+//        }
         if (isTabFont(s)) {
             c = rgb & 0xFFFFD700;
             super.drawInBatch(s, x, y, c, dropShadow, matrix4f, bufferSource, mode, i, i1);

@@ -7,7 +7,6 @@ import mods.flammpfeil.slashblade.client.renderer.CarryType;
 import mods.flammpfeil.slashblade.item.ItemSlashBlade;
 import mods.flammpfeil.slashblade.registry.SlashArtsRegistry;
 import net.daichang.dcmods.DCMod;
-import net.daichang.dcmods.client.tool_tip.DCItemTip;
 import net.daichang.dcmods.common.item.AttackCountItem;
 import net.daichang.dcmods.common.item.DCTier;
 import net.daichang.dcmods.common.item.UseCountItem;
@@ -54,6 +53,7 @@ public class DaiChangSB extends ItemSlashBlade implements UseCountItem, AttackCo
     public DaiChangSB() {
         super(DCTier.OCEAN_HEART, 45, 1024, new Properties().fireResistant().rarity(Rarity.EPIC));
         LightItemList.addItem(this);
+        setUseCountItem(this.getDefaultInstance());
     }
 
     @Override
@@ -76,6 +76,12 @@ public class DaiChangSB extends ItemSlashBlade implements UseCountItem, AttackCo
         ItemStack stack = new ItemStack(SBInits.DC_SB.get());
         init(stack);
         return stack;
+    }
+
+    @Override
+    public boolean onDroppedByPlayer(ItemStack item, Player player) {
+        init(item);
+        return super.onDroppedByPlayer(item, player);
     }
 
     @Override
@@ -118,7 +124,6 @@ public class DaiChangSB extends ItemSlashBlade implements UseCountItem, AttackCo
             stack.addAttributeModifier(Attributes.ATTACK_SPEED, new AttributeModifier(BASE_ATTACK_SPEED_UUID, "Weapon modifier", 3.4D, AttributeModifier.Operation.ADDITION), EquipmentSlot.MAINHAND);
             stack.addAttributeModifier(ForgeMod.ENTITY_REACH.get(), new AttributeModifier(BASE_ENEITY_RANGE_UUID, "Weapon modifier", 3.4D, AttributeModifier.Operation.ADDITION), EquipmentSlot.MAINHAND);
             stack.addAttributeModifier(ForgeMod.BLOCK_REACH.get(), new AttributeModifier(BASE_BLOCK_RANGE_UUID, "Weapon modifier", 3.4D, AttributeModifier.Operation.ADDITION), EquipmentSlot.MAINHAND);
-            UseCountItem.setUseS(stack, 0);
             AttackCountItem.setCountS(stack, 0);
         }
     }
@@ -149,7 +154,6 @@ public class DaiChangSB extends ItemSlashBlade implements UseCountItem, AttackCo
         ISlashBladeState state = pStack.getCapability(ItemSlashBlade.BLADESTATE).orElse(new SlashBladeState(pStack));
         int count = UseCountItem.getUseS(pStack);
         AttackCountItem.addCountS(pStack, 1);
-        UseCountItem.addUseS(pStack, 1);
         if (AttackCountItem.getCountS(pStack) == 10) {
             pTarget.addEffect(EffectHelper.addEffect(DCEffects.Freeze.get(), 3, 1));
             pTarget.addEffect(EffectHelper.addEffect(DCEffects.Bloodshed.get(), 3, 1));
@@ -194,7 +198,6 @@ public class DaiChangSB extends ItemSlashBlade implements UseCountItem, AttackCo
 
     @Override
     public void appendHoverText(ItemStack pStack, @Nullable Level pLevel, List<Component> list, TooltipFlag pIsAdvanced) {
-        DCItemTip.addAttackCount(list, pStack);
         list.add(Component.translatable("tool_tip.dc_m.ocean_tip_2"));
         list.add(Component.translatable("tool_tip.dc_m.ocean_tip_3"));
         list.add(Component.translatable("tool_tip.iaxe_item"));
@@ -216,12 +219,12 @@ public class DaiChangSB extends ItemSlashBlade implements UseCountItem, AttackCo
     @Override
     public boolean onLeftClickEntity(ItemStack itemstack, Player playerIn, Entity entity) {
         if (entity instanceof LivingEntity living) EntityHelper.noHurtDuration(living);
-        addUse(itemstack, 1);
         return super.onLeftClickEntity(itemstack, playerIn, entity);
     }
 
     @Override
     public Multimap<Attribute, AttributeModifier> getAttributeModifiers(EquipmentSlot slot, ItemStack stack) {
+        if (!isUseCountItem(stack)) setUseCountItem(stack);
         return super.getAttributeModifiers(slot, stack);
     }
 

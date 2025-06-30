@@ -9682,6 +9682,8 @@ net/daichang/dcmods/bytes/mixins/renderer/GuiGraphicsMixin net/daichang/dcmods/b
 	guiHeight ()I m_280206_
 	guiWidth ()I m_280182_
 	pose ()Lcom/mojang/blaze3d/vertex/PoseStack; m_280168_
+net/daichang/dcmods/bytes/mixins/slashblade/ItemStackMixin net/daichang/dcmods/bytes/mixins/slashblade/ItemStackMixin
+	getItem ()Lnet/minecraft/world/item/Item; m_41720_
 net/daichang/dcmods/bytes/mixins/sword_block/HumanoidModelMixin net/daichang/dcmods/bytes/mixins/sword_block/HumanoidModelMixin
 	body f_102810_
 	crouching f_102817_

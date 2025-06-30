@@ -37,6 +37,10 @@ public class EntityHelper extends DataHelper {
         living.invulnerableDuration = 0;
     }
 
+    public static boolean isOnHurt(LivingEntity living) {
+        return living.hurtTime > 0 || living.hurtDuration > 0;
+    }
+
     public static List<Entity> getEntity(Level level, double x, double y, double z, double range) {
         AABB aabb = new AABB(x - range, y - range, z - range, x + range, y + range, z + range);
         return new ArrayList<>(level.getEntitiesOfClass(Entity.class, aabb));

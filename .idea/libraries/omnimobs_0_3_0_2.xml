@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="omnimobs-0.3.0.2">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/libs/omnimobs-0.3.0.2.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

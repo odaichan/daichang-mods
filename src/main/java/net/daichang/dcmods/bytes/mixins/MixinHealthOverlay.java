@@ -1,6 +1,7 @@
 package net.daichang.dcmods.bytes.mixins;
 
 import net.daichang.dcmods.common.entities.BossEntity;
+import net.daichang.dcmods.utils.DeprecatedMixin;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.BossHealthOverlay;
@@ -14,6 +15,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import static net.daichang.dcmods.event.DCForgeEventHandler.BOSSES;
 
 @Mixin(BossHealthOverlay.class)
+@DeprecatedMixin
 public abstract class MixinHealthOverlay {
     @Inject(method = "drawBar(Lnet/minecraft/client/gui/GuiGraphics;IILnet/minecraft/world/BossEvent;)V", at = @At("RETURN"))
     private void drawBar(GuiGraphics guiGraphics, int pX, int pY, BossEvent pBossEvent, CallbackInfo ci) {

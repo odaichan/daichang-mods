@@ -31,6 +31,7 @@ public class DCLaunchPluginService implements ILaunchPluginService {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss");
         String formattedTime = now.format(formatter);
         System.out.println("[" + formattedTime + "]" +"[DC ASM]" + msg);
+        System.out.print("");
     }
 
     private static final String DC_METHOD_OWER;

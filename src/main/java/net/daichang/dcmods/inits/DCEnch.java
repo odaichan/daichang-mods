@@ -1,10 +1,7 @@
 package net.daichang.dcmods.inits;
 
 import net.daichang.dcmods.DCMod;
-import net.daichang.dcmods.common.enchantment.EnchFastBow;
-import net.daichang.dcmods.common.enchantment.EnchLiquidBlock;
-import net.daichang.dcmods.common.enchantment.EnchNightVision;
-import net.daichang.dcmods.common.enchantment.EnchSuperSharp;
+import net.daichang.dcmods.common.enchantment.dc_enchs.*;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -30,14 +27,18 @@ public class DCEnch {
     }
 
     public static final RegistryObject<Enchantment> SuperSharp;
+    public static final RegistryObject<Enchantment> SuperProtect;
     public static final RegistryObject<Enchantment> NightVison;
     public static final RegistryObject<Enchantment> FAST_BOW;
     public static final RegistryObject<Enchantment> LIQUID_WALK;
+    public static final RegistryObject<Enchantment> WATER_DEATH;
 
     static {
         SuperSharp = registry("super_sharp", EnchSuperSharp::new);
         NightVison = registry("night_vison", EnchNightVision::new);
         FAST_BOW = registry("fast_bow", EnchFastBow::new);
         LIQUID_WALK = registry("liquid_walk", EnchLiquidBlock::new);
+        SuperProtect = registry("super_protection", EnchSuperProtection::new);
+        WATER_DEATH = registry("underwater_curse",EnchWaterDeath::new);
     }
 }

@@ -1,12 +1,15 @@
 package net.daichang.dcmods.common.item.tools.supers;
 
-import net.daichang.dcmods.client.tool_tip.DCItemTip;
+import com.google.common.collect.Multimap;
 import net.daichang.dcmods.common.item.UseCountItem;
 import net.daichang.dcmods.utils.EntityActuallyHurt;
 import net.daichang.dcmods.utils.lists.items.SuperItemList;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.attributes.Attribute;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.AxeItem;
 import net.minecraft.world.item.ItemStack;
@@ -24,8 +27,13 @@ public class DCAxeItem extends AxeItem implements UseCountItem  {
     }
 
     @Override
+    public Multimap<Attribute, AttributeModifier> getAttributeModifiers(EquipmentSlot slot, ItemStack stack) {
+        if (!isUseCountItem(stack)) setUseCountItem(stack);
+        return super.getAttributeModifiers(slot, stack);
+    }
+
+    @Override
     public void appendHoverText(ItemStack p_41421_, @Nullable Level p_41422_, List<Component> list, TooltipFlag p_41424_) {
-        DCItemTip.addAttackCount(list, p_41421_);
         list.add(Component.translatable("tooltip.dc_mods.minecraft"));
         list.add(Component.translatable("tooltip.dc_mods.axe"));
         super.appendHoverText(p_41421_, p_41422_, list, p_41424_);
@@ -33,7 +41,6 @@ public class DCAxeItem extends AxeItem implements UseCountItem  {
 
     @Override
     public boolean hurtEnemy(ItemStack pStack, LivingEntity pTarget, LivingEntity pAttacker) {
-        addUse(pStack, 1);
         pTarget.wasOnFire = true;
         pTarget.setRemainingFireTicks(300);
         EntityActuallyHurt util = EntityActuallyHurt.getInstance(pTarget, pAttacker);
@@ -47,6 +54,7 @@ public class DCAxeItem extends AxeItem implements UseCountItem  {
     @Override
     public boolean onLeftClickEntity(ItemStack stack, Player player, Entity entity) {
         if (entity instanceof LivingEntity living) hurtEnemy(stack, living, player);
+        addUse(stack,1);
         return super.onLeftClickEntity(stack, player, entity);
     }
 }

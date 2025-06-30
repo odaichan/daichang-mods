@@ -311,7 +311,6 @@ public class Utils {
         if (dc_kill_count >= 1000) damage = damage + 50;
         if (dc_kill_count >= 10000) damage = damage + 30;
         if (dc_kill_count >= 12000) damage = damage + 20;
-        if (dc_kill_count < Integer.MAX_VALUE) UseCountItem.addUseS(stack, 1);
         if (dc_kill_count < 0)  UseCountItem.setUseS(stack, 0);
         if (target.attributes.hasAttribute(Attributes.MAX_HEALTH)) Objects.requireNonNull(target.getAttribute(Attributes.MAX_HEALTH)).setBaseValue(target.getMaxHealth() - 10);
         if (!(target instanceof Player) && target.getHealth() <= 0 || target.entityData.get(LivingEntity.DATA_HEALTH_ID) <= 0) dataHealthSet(target);

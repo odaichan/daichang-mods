@@ -4,11 +4,10 @@ import com.mojang.blaze3d.platform.InputConstants;
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.common.extensions.IForgeItem;
 import org.lwjgl.glfw.GLFW;
 
 @OnlyIn(Dist.CLIENT)
-public interface KeyDown extends IForgeItem {
+public interface KeyDown {
     long window = Minecraft.getInstance().getWindow().getWindow();
 
     default boolean isLeftShiftDown() {
@@ -25,5 +24,11 @@ public interface KeyDown extends IForgeItem {
 
     default boolean isRightCtrlDown() {
         return InputConstants.isKeyDown(window, GLFW.GLFW_KEY_RIGHT_SHIFT);
+    }
+
+    //使用 OpenGL 的按键按下
+    //如 GLFW.GLFW_KEY_RIGHT_SHIFT
+    default boolean isKeyDown(int key) {
+        return InputConstants.isKeyDown(window, key);
     }
 }

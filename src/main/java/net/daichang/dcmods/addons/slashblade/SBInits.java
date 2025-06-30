@@ -33,7 +33,7 @@ public class SBInits {
     public static final RegistryObject<ItemSlashBlade> DC_SB;
 
     public static void init(IEventBus eventBus) {
-        DCMod.logger("slashblade is load");
+        DCMod.logger("Slashblade is load");
         effect.register(eventBus);
         item.register(eventBus);
         MinecraftForge.EVENT_BUS.register(DaiChangSpecialEffect.class);

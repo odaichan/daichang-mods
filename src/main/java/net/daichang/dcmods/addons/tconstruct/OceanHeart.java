@@ -2,10 +2,10 @@ package net.daichang.dcmods.addons.tconstruct;
 
 import com.c2h6s.etstlib.entity.specialDamageSources.LegacyDamageSource;
 import com.c2h6s.etstlib.register.EtSTLibHooks;
+import com.c2h6s.etstlib.tool.hooks.ArrowHitModifierHook;
 import com.c2h6s.etstlib.tool.hooks.ModifyDamageSourceModifierHook;
 import net.daichang.dcmods.inits.DCAttributes;
 import net.daichang.dcmods.utils.TextUtils;
-import net.daichang.dcmods.utils.helpers.DataHelper;
 import net.daichang.dcmods.utils.helpers.EntityHelper;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
@@ -15,6 +15,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraftforge.common.ToolAction;
@@ -29,12 +30,14 @@ import slimeknights.tconstruct.library.modifiers.hook.behavior.ToolActionModifie
 import slimeknights.tconstruct.library.modifiers.hook.display.TooltipModifierHook;
 import slimeknights.tconstruct.library.module.ModuleHookMap;
 import slimeknights.tconstruct.library.tools.nbt.IToolStackView;
+import slimeknights.tconstruct.library.tools.nbt.ModDataNBT;
+import slimeknights.tconstruct.library.tools.nbt.ModifierNBT;
 
 import java.util.List;
 import java.util.UUID;
 import java.util.function.BiConsumer;
 
-public class OceanHeart extends Modifier implements ModifyDamageSourceModifierHook, TooltipModifierHook, ToolActionModifierHook, AttributesModifierHook {
+public class OceanHeart extends Modifier implements ModifyDamageSourceModifierHook, TooltipModifierHook, ToolActionModifierHook, AttributesModifierHook, ArrowHitModifierHook {
     @Override
     protected void registerHooks(ModuleHookMap.@NotNull Builder hookBuilder) {
         hookBuilder.addHook(this, EtSTLibHooks.MODIFY_DAMAGE_SOURCE, ModifierHooks.TOOLTIP, ModifierHooks.TOOL_ACTION, ModifierHooks.ATTRIBUTES);
@@ -42,7 +45,11 @@ public class OceanHeart extends Modifier implements ModifyDamageSourceModifierHo
 
     @Override
     public LegacyDamageSource modifyDamageSource(IToolStackView tool, ModifierEntry entry, LivingEntity attacker, InteractionHand hand, Entity target, EquipmentSlot sourceSlot, boolean isFullyCharged, boolean isExtraAttack, boolean isCritical, LegacyDamageSource source) {
-        DataHelper.addHealthDelta(attacker, 2);
+        return new LegacyDamageSource(EntityHelper.ocean_damage(attacker));
+    }
+
+    @Override
+    public LegacyDamageSource modifyArrowDamageSource(ModifierNBT modifiers, ModDataNBT persistentData, ModifierEntry modifier, AbstractArrow arrow, @Nullable LivingEntity attacker, @Nullable Entity target, LegacyDamageSource source) {
         return new LegacyDamageSource(EntityHelper.ocean_damage(attacker));
     }
 

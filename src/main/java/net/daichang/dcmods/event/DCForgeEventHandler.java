@@ -97,6 +97,8 @@ public class DCForgeEventHandler {
         Player player = e.getEntity();
         Level level = e.getLevel();
         BlockPos pos = e.getPos();
+        BlockState state = level.getBlockState(pos);
+        Block block = state.getBlock();
         if (player.getMainHandItem().getItem() == DCItems.DESTROY_BLOCK.get() || player.getMainHandItem().getItem() == DCItems.LoliPickaxe.get()){
             ItemEntity item = new ItemEntity(level, pos.getX(), pos.getY(), pos.getZ(), (new ItemStack(level.getBlockState(pos).getBlock())));
             item.setPickUpDelay(0);
@@ -218,9 +220,23 @@ public class DCForgeEventHandler {
             if (Utils.isSuperTool(stack) || Utils.isLightItem(stack)){
                 event.setBorderStart(c);
                 event.setBorderEnd(c);
-                if (Config.Client.toop_tip_background_color.get()) {
-                    event.setBackgroundEnd(Color.WHITE.getRGB());
-                    event.setBackgroundStart(Color.LIGHT_GRAY.getRGB());
+                if (Config.Client.tool_tip_background_color.get()) {
+                    int color;
+                    ToolTipColor eum = Config.Client.tool_tip_background_color_get.get();
+                    color = switch (eum) {
+                        case BLUE -> Color.BLUE.getRGB();
+                        case RED -> Color.RED.getRGB();
+                        case GREEN -> Color.GREEN.getRGB();
+                        case CYAN -> Color.CYAN.getRGB();
+                        case WHITE -> Color.WHITE.getRGB();
+                        case ORANGE -> Color.ORANGE.getRGB();
+                        case YELLOW -> Color.YELLOW.getRGB();
+                        case GRAY -> Color.GRAY.getRGB();
+                        case PINK -> Color.PINK.getRGB();
+                        case RAINBOW -> ColorHelper.rainBowColor();
+                    };
+                    event.setBackgroundEnd(color);
+                    event.setBackgroundStart(color);
                 }
             }
             else if (Utils.isCreativeItem(stack)) {
@@ -242,8 +258,8 @@ public class DCForgeEventHandler {
             else if (ModUtil.isDCLoad() && FontUtil.isCanRenderFont(stack)) {
                 event.setBorderStart(c);
                 event.setBorderEnd(c);
+                }
             }
-        }
     }
 
 //    @OnlyIn(Dist.CLIENT)
@@ -265,27 +281,6 @@ public class DCForgeEventHandler {
     public static void registerCommand(RegisterCommandsEvent event) {
         event.getDispatcher()
                 .register(Commands.literal("dc_mods")
-                        .then(Commands.literal("attack")
-                                .then(Commands.argument("attacker", EntityArgument.entity())
-                                        .then(Commands.argument("target", EntityArgument.entity())
-                                                .executes(cs ->{
-                                                    Entity attacker = EntityArgument.getEntity(cs, "attacker");
-                                                    Entity target = EntityArgument.getEntity(cs, "target");
-                                                    if (attacker instanceof LivingEntity living) living.doHurtTarget(target);
-                                                    else target.hurt(EntityHelper.generic_damage(attacker), 1);
-                                                    return 2;
-                                                })
-                                        )
-                                )
-                        )
-                        .then(Commands.literal("dc_boss")
-                                .then(Commands.literal("clear_boss_bar")
-                                        .executes(cs -> {
-                                            DCForgeEventHandler.bossList.clear();
-                                            return 2;
-                                        })
-                                )
-                        )
                         .then(Commands.literal("setTarget")
                                 .then(Commands.argument("attacker", EntityArgument.entity())
                                         .then(Commands.argument("target", EntityArgument.entity())
@@ -293,6 +288,7 @@ public class DCForgeEventHandler {
                                                     Entity attacker = EntityArgument.getEntity(cs, "attacker");
                                                     Entity target = EntityArgument.getEntity(cs, "target");
                                                     if (attacker instanceof Monster monster && target instanceof LivingEntity living) monster.setTarget(living);
+                                                    cs.getSource().sendSuccess(()-> Component.translatable("dc_mod.command.set_target", attacker.getDisplayName(), target.getDisplayName()), true);
                                                     return 2;
                                                 })
                                         )
@@ -312,25 +308,43 @@ public class DCForgeEventHandler {
                                 .executes(cs->{
                                     Entity entity = cs.getSource().getEntity();
                                     DCLoliPickaxe.killEntity(entity, entity);
+                                    cs.getSource().sendSuccess(()->Component.translatable("dc_mod.command.force_kill_entity", entity.getDisplayName()), true);
                                     return 2;
                                 })
                                 .then(Commands.argument("radius", FloatArgumentType.floatArg(0, Float.MAX_VALUE))
                                         .executes(cs->{
+                                            int killCount = 0;
                                             ServerPlayer p = cs.getSource().getPlayer();
                                             double x = p.getX();
                                             double y = p.getY();
                                             double z = p.getY();
-                                            for (Entity entity : EntityHelper.getEntity(cs.getSource().getLevel(),x,y,z, FloatArgumentType.getFloat(cs, "radius") * 10)) if (entity != p)  DCLoliPickaxe.killEntity(entity, entity);
+                                            for (Entity entity : EntityHelper.getEntity(cs.getSource().getLevel(),x,y,z, FloatArgumentType.getFloat(cs, "radius") * 10)) {
+                                                if (entity != p) {
+                                                    DCLoliPickaxe.killEntity(entity, entity);
+                                                    entity.kill();
+                                                    killCount++;
+                                                }
+                                            }
+                                            int finalKillCount = killCount;
+                                            cs.getSource().sendSuccess(()->Component.translatable("dc_mod.command.force_kill_entity_range", finalKillCount), true);
                                             return 4;
                                         }))
                                 .then(Commands.argument("entities", EntityArgument.entities()).executes(cs->{
-                                    for (Entity entity : EntityArgument.getEntities(cs, "entities")) DCLoliPickaxe.killEntity(entity, entity);
+                                    int killCount = 0;
+                                    for (Entity entity : EntityArgument.getEntities(cs, "entities")) {
+                                        DCLoliPickaxe.killEntity(entity, entity);
+                                        entity.kill();
+                                        killCount++;
+                                    }
+                                    int finalKillCount = killCount;
+                                    cs.getSource().sendSuccess(()->Component.translatable("dc_mod.command.force_kill_entity_range", finalKillCount), true);
                                     return 2;
                                 })))
                         .then(Commands.literal("forceHurtEntity")
                                 .then(Commands.argument("target", EntityArgument.entities())
                                         .then(Commands.argument("value", FloatArgumentType.floatArg(0, Float.MAX_VALUE))
                                                 .executes(cs->{
+                                                    int count = 0;
                                                     float value = FloatArgumentType.getFloat(cs, "value");
                                                     for (Entity target : EntityArgument.getEntities(cs, "target")) {
                                                         if (target instanceof LivingEntity living) {
@@ -338,7 +352,10 @@ public class DCForgeEventHandler {
                                                             if (value >= living.getMaxHealth()) DCLoliPickaxe.killEntity(living, living);
                                                         }
                                                         else target.hurt(EntityHelper.dc_damage(target), value);
+                                                        ++count;
                                                     }
+                                                    int finalCount = count;
+                                                    cs.getSource().sendSuccess(() -> Component.translatable("dc_mod.command.hurt_entity", value, finalCount), true);
                                                     return 0;
                                                 })
                                         )))
@@ -347,37 +364,22 @@ public class DCForgeEventHandler {
                                         .then(Commands.argument("damageType", ResourceArgument.resource(event.getBuildContext(), Registries.DAMAGE_TYPE))
                                                 .then(Commands.argument("value", FloatArgumentType.floatArg(0, Float.POSITIVE_INFINITY))
                                                         .executes(cs->{
+                                                            int count = 0;
+                                                            float value  = FloatArgumentType.getFloat(cs, "value");
                                                             DamageSource source = new DamageSource(ResourceArgument.getResource(cs, "damageType", Registries.DAMAGE_TYPE));
                                                             for (Entity target : EntityArgument.getEntities(cs, "target")) {
-                                                                if (target instanceof LivingEntity living) EntityActuallyHurt.getInstance(living).actuallyHurt(source, FloatArgumentType.getFloat(cs, "value"));
+                                                                if (target instanceof LivingEntity living) EntityActuallyHurt.getInstance(living).actuallyHurt(source, value);
                                                                 else target.gameEvent(GameEvent.ENTITY_DIE);
+                                                                count++;
                                                             }
+                                                            int finalCount = count;
+                                                            cs.getSource().sendSuccess(() -> Component.translatable("dc_mod.command.hurt_entity", value, finalCount), true);
                                                             return 2;
                                                         })
                                                 )
                                         )
                                 )
                         )
-                        .then(Commands.literal("add_def_entity")
-                                .executes(cs->{
-                                    Entity entity = cs.getSource().getEntity();
-                                    FileHelper.defaultWriteYouItem(entity);
-                                    return 4;
-                                })
-                                .then(Commands.argument("entities", EntityArgument.entity()).executes(cs->{
-                                    for (Entity entity : EntityArgument.getEntities(cs, "entities")) FileHelper.defaultWriteYouItem(entity);
-                                    return 2;
-                                })))
-                        .then(Commands.literal("remove_def_player")
-                                .executes(cs->{
-                                    Entity entity = cs.getSource().getEntity();
-                                    FileHelper.removeDefaultItem(entity);
-                                    return 4;
-                                })
-                                .then(Commands.argument("entities", EntityArgument.entity()).executes(cs->{
-                                    for (Entity entity : EntityArgument.getEntities(cs, "entities")) FileHelper.removeDefaultItem(entity);
-                                    return 2;
-                                })))
                 );
     }
 
@@ -390,6 +392,8 @@ public class DCForgeEventHandler {
     public static void sendMessageOfPlayer(PlayerEvent.PlayerLoggedInEvent e){
         Player player = e.getEntity();
         player.displayClientMessage(Component.translatable("chat.dc_mods.world_loading"), false);
+        player.displayClientMessage(Component.translatable("chat.dc_mods.player_loading_mod"), false);
+        if (ModUtil.isTconstructLoad() && !ModUtil.isEtstLoad()) player.displayClientMessage(Component.translatable("chat.dc_mods.etst_load_faile"), true);
     }
 
     @OnlyIn(Dist.CLIENT)
@@ -400,14 +404,12 @@ public class DCForgeEventHandler {
             int size = tooltip.size();
             MutableComponent mutableComponent1 = Component.translatable("attribute.name.generic.attack_damage");
             MutableComponent mutableComponent2 = Component.translatable("attribute.name.generic.attack_speed");
-            MutableComponent mutableComponent3 = Component.literal(ChatFormatting.GRAY + " +" + TextUtils.rainbow("(TREE)3") +  " " + ChatFormatting.GRAY + mutableComponent1.getString());
-            MutableComponent mutableComponent4 = Component.literal(ChatFormatting.GRAY + " +" + TextUtils.rainbow("(TREE)3") +  " " + ChatFormatting.GRAY + mutableComponent2.getString());
+            MutableComponent mutableComponent3 = Component.literal(ChatFormatting.DARK_GREEN + "(TREE)3 " +  mutableComponent1.getString());
+            MutableComponent mutableComponent4 = Component.literal(ChatFormatting.DARK_GREEN + "(TREE)3 " + mutableComponent2.getString());
             for (int i = 0; i < size; i++) {
                 Component line = tooltip.get(i);
-                if (line.contains(mutableComponent1))
-                    tooltip.set(i, mutableComponent3);
-                if (line.contains(mutableComponent2))
-                    tooltip.set(i, mutableComponent4);
+                if (line.contains(mutableComponent1)) tooltip.set(i, mutableComponent3);
+                if (line.contains(mutableComponent2)) tooltip.set(i, mutableComponent4);
             }
         }
     }
@@ -424,7 +426,7 @@ public class DCForgeEventHandler {
         double x = living.getX();
         double y = living.getY();
         double z = living.getZ();
-        if (living.getType() == EntityType.TROPICAL_FISH && Config.Common.ocean_heart.get()) {
+        if (living.getType() == EntityType.TROPICAL_FISH && Config.Server.ocean_heart.get()) {
             double random = MathHelper.getRandomDouble(0.00D, 1.00D);
             if (random == 0.01D) {
                 ItemEntity item = new ItemEntity(living.level(), x, y, z, new ItemStack(DCItems.HEART_OF_THE_OCEAN.get()));
@@ -442,16 +444,15 @@ public class DCForgeEventHandler {
     @SubscribeEvent
     public static void livingTickEvent(LivingEvent.LivingTickEvent event) {
         LivingEntity living = event.getEntity();
-        if (living.tickCount % 100 == 0 && DataHelper.getHealthDelta(living) <= 0 && living.isAlive() && !living.isInvulnerable()) DataHelper.addHealthDelta(living, 1.0F);
+        if (living.tickCount % 100 == 0 && DataHelper.getHealthDelta(living) < 0 && living.isAlive() && EntityHelper.isOnHurt(living) && !DataHelper.isDead(living))
+            DataHelper.addHealthDelta(living, 1.0F);
     }
 
     @SubscribeEvent
     public static void playerTickEvent(TickEvent.PlayerTickEvent event) {
         Player player = event.player;
-        if (Utils.isBlocking(player) && player.tickCount % 10 == 0 && DataHelper.getHealthDelta(player) <= 0) {
+        if (Utils.isBlocking(player) && player.tickCount % 100 == 0 && DataHelper.getHealthDelta(player) < 0 && player.isAlive() && !DataHelper.isDead(player))
             DataHelper.addHealthDelta(player, Config.Common.heal_count.get());
-            player.heal(0.5F);
-        }
     }
 
     @SubscribeEvent
@@ -464,5 +465,20 @@ public class DCForgeEventHandler {
                 living.level.addFreshEntity(item);
             } catch (Exception ignored){}
         }
+    }
+
+
+    @OnlyIn(Dist.CLIENT)
+    public enum ToolTipColor {
+        WHITE,
+        ORANGE,
+        BLUE,
+        RED,
+        YELLOW,
+        CYAN,
+        GREEN,
+        PINK,
+        GRAY,
+        RAINBOW
     }
 }
